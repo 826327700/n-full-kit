@@ -1,0 +1,69 @@
+body{
+    --border-radius-small:6px!important;
+}
+body[arco-theme='dark']{
+    .custom-layout-frame{
+        background: #d8dce6 url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9Ii43NSIgZmlsbD0iI0IwQjhDQSIvPjwvc3ZnPg==) repeat;
+    }
+    .logo-inner{
+        background-color: var(--color-bg-5)!important;
+    }
+}
+.arco-menu-light {
+    background-color:unset!important;
+    .arco-menu-item{
+        background-color:unset!important;
+        &.arco-menu-selected{
+            background-color: rgb(var(--primary-6))!important;
+            color: var(--color-white)!important;
+            .arco-icon{
+                color: var(--color-white)!important;
+            }
+        }
+    }
+    .arco-menu-inline-header{
+        background-color:unset!important;
+    }
+}
+.arco-card{
+    border-radius: var(--border-radius-small)!important;
+    transition: background-color 0.3s ease-in-out!important;
+    background-color: var(--color-bg-3)!important;
+    &.no-padding{
+       .arco-card-body{
+           padding: 0!important;
+       } 
+    }
+    &.flex-column{
+        .arco-card-body{
+            display: flex;
+            flex: 1;
+            // height: 0;
+            flex-direction: column;
+        } 
+    }
+    &.fill{
+        height: 100%;
+        width: 100%;
+    }
+}
+.arco-popover-content{
+    .arco-menu-item{
+        .arco-icon{
+            margin-right: 10px!important;
+        }
+    }
+}
+.arco-popover-popup-content{
+    border: unset!important;
+}
+.arco-form{
+    &.no-margin{
+        .arco-form-item{
+            margin-bottom: 0px!important;
+        }
+    }
+}
+.arco-popover-content{
+    margin-top: 0!important;
+}
