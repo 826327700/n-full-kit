@@ -1,7 +1,13 @@
 <template>
 	<a-card :bordered="false" class="no-padding aside flex-column">
 		<div class="logo" v-if="!menuCollapsed">
-			<div class="logo-inner"></div>
+			<div class="logo-inner">
+				<img src="@/assets/images/logo_rectangle_removebg.png" alt="">
+				<div>
+					<div style="font-size: 12px;font-weight: 400;color:rgb(0, 208, 182)">Vue3</div>
+					<div>Admin</div>
+				</div>
+			</div>
 		</div>
 		<div class="menus">
 			<a-menu :style="{ width: '220px', height: '100%' }" v-model:selectedKeys="state.selectedKeys"
@@ -113,7 +119,18 @@ const onClickMenuItem = (key: string) => {
 			height: 100%;
 			width: 100%;
 			background-color: #f5f5f5;
+			border-radius: 6px;
 			transition: background-color 0.3s ease-in-out;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+			font-weight: 600;
+			img{
+				width: auto;
+				height: 100%;
+				margin-right: 10px;
+			}
 		}
 	}
 

@@ -3,7 +3,7 @@
         <div class="center-box-outer">
             <div class="center-box-inner">
                 <div class="left">
-                    <img src="@/assets/images/login.png" alt="">
+                    <img src="@/assets/images/logo_login.png" alt="">
                 </div>
                 <div class="right">
                     <!-- <tiny-form label-position="top">
@@ -27,6 +27,27 @@
                             <p style="color: var(--tv-color-text-weaken);text-align: right;">忘记密码？点此<tiny-link type="primary">找回密码</tiny-link></p>
                         </tiny-form-item>
                     </tiny-form> -->
+                    <a-form>
+                        <a-form-item>
+                            <h2>欢迎登录,后台管理系统</h2>
+                            <p style="color:var(--tv-color-text-weaken);">xxx业务综合管理系统 ver 1.0.0</p>
+                        </a-form-item>
+                        <a-form-item label="账号" prop="username">
+                            <a-input  placeholder="请输入登录账号"></a-input>
+                        </a-form-item>
+                        <a-form-item label="密码" prop="">
+                            <a-input  placeholder="请输入登录密码" type="password" show-password></a-input>
+                        </a-form-item>
+                        <a-form-item>
+                            <a-checkbox name="remember" label="记住密码">保持登录</a-checkbox>
+                        </a-form-item>
+                        <a-form-item>
+                            <a-button type="primary" style="width: 100%;">登录</a-button>
+                        </a-form-item>
+                        <a-form-item>
+                            <p style="color: var(--tv-color-text-weaken);text-align: right;">忘记密码？点此<a-link type="primary">找回密码</a-link></p>
+                        </a-form-item>
+                    </a-form>
                 </div>
             </div>
         </div>
