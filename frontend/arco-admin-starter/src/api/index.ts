@@ -1,20 +1,19 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import {localStorage,sessionStorage} from '@/utils/storage';
 import { Api } from "./api";
 
 export const api = new Api({
     baseURL: 'http://localhost:3000',
-    securityWorker: (accessToken:string|null) =>
-        accessToken ? { headers: { Authorization: `Bearer ${accessToken}` } } : {},
 })
-api.setSecurityData('token')
 api.instance.interceptors.request.use((config:InternalAxiosRequestConfig) => {
-    console.log(config);
+	let token=sessionStorage.get('token')||localStorage.get('token')
+	if(token){
+		config.headers.Authorization = `Bearer ${token}`
+	}
     return config;
 })
 api.instance.interceptors.response.use((res:AxiosResponse) => {
     return Promise.resolve(res)
 }, (err:AxiosError) => {
-    console.log(err.response?.data);
-    console.log(err.status);
-    return Promise.reject(err.response?.data);
+    return Promise.reject(err.response);
 })

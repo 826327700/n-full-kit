@@ -875,3 +875,11 @@ body {
     font-family: Inter, "-apple-system", BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "noto sans", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.table-box {
+	/* flex: 1;
+	height: 0;
+	width: 100%;
+	flex-shrink: 0;
+	overflow: hidden; */
+	height: calc(100vh - 200px);
+}

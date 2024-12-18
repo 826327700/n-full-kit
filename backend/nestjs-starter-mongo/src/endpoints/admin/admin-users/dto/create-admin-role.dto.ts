@@ -16,3 +16,4 @@ export class CreateAdminRoleDto {
   @IsOptional()
   permissions?: string[];
 }
+

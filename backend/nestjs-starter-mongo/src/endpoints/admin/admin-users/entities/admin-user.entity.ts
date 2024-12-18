@@ -10,6 +10,9 @@ export type AdminUserDocument = HydratedDocument<AdminUser>;
 })
 
 export class AdminUser {
+	@Prop({ type: String,required: true, maxlength: 100 ,comment: '用户昵称' })
+	nickname: string;
+
 	@Prop({ type: String,required: true, unique: true, maxlength: 100 ,comment: '用户名' })
 	username: string;
 

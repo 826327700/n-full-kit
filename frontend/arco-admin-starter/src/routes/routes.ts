@@ -8,7 +8,19 @@ const routes:Array<RouteRecordRaw>= [
         meta:{
             title:"首页"
         },
+		redirect:{
+			name:"dashboard"
+		},
         children:[
+			{
+				path: 'dashboard',
+				name: 'dashboard',
+				meta: {
+					title: '欢迎页',
+					icon: 'icon-folder',
+				},
+				component: () => import('@/views/dashboard/index.vue')
+			},
             {
                 path: 'test',
                 name: 'test',
@@ -52,6 +64,32 @@ const routes:Array<RouteRecordRaw>= [
                             hideInMenu: false
                         },
                         component: () => import('@/views/page2/page2.vue')
+                    }
+                ]
+            },
+			{
+                path: 'system',
+                name: 'system',
+                meta: {
+                    title: '系统管理',
+                    icon: 'icon-settings',
+                },
+                children:[
+                    {
+                        path: 'account',
+                        name: 'system-account',
+                        meta: {
+                            title: '管理员账号',
+                        },
+                        component: () => import('@/views/system/account/index.vue')
+                    },
+                    {
+                        path: 'role',
+                        name: 'system-role',
+                        meta: {
+                            title: '角色管理',
+                        },
+                        component: () => import('@/views/system/role/index.vue')
                     }
                 ]
             }

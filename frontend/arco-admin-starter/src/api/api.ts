@@ -81,6 +81,17 @@ export interface LoginDto {
   password: string;
 }
 
+export interface PageQueryResUser {
+  /** 数据列表 */
+  list: User[];
+  /** 总数量 */
+  total: number;
+  /** 当前页码 */
+  page: number;
+  /** 每页数量 */
+  pageSize: number;
+}
+
 export interface UpdateUserDto {
   /**
    * 用户名
@@ -123,6 +134,153 @@ export interface SetValueDto {
   key: string;
   /** 值 */
   value: string;
+}
+
+export interface CreateAdminUserDto {
+  /**
+   * 用户昵称
+   * @example "小包子"
+   */
+  nickname: string;
+  /**
+   * 用户名
+   * @example "admin"
+   */
+  username: string;
+  /**
+   * 密码
+   * @example "admin123"
+   */
+  password: string;
+  /**
+   * 用户绑定角色id，可绑定多个
+   * @example []
+   */
+  roles: string[];
+  /**
+   * 用户状态
+   * @default "0"
+   * @example "0"
+   */
+  status: string;
+}
+
+export interface UserInfo {
+  /** 用户id */
+  id: string;
+  /** 用户名 */
+  username: string;
+  /** 用户角色 */
+  roles: string[];
+}
+
+export interface LoginAdminUserResDto {
+  /** token */
+  access_token: string;
+  /** 用户信息 */
+  user: UserInfo;
+}
+
+export interface LoginAdminUserDto {
+  /**
+   * 用户名
+   * @example "root"
+   */
+  username: string;
+  /**
+   * 密码
+   * @example "root123"
+   */
+  password: string;
+}
+
+export interface AdminUserRoleItem {
+  /** 角色名称 */
+  name: string;
+  /** 角色描述 */
+  description: string;
+}
+
+export interface AdminUserDto {
+  /** 用户ID */
+  _id: string;
+  /** 用户名 */
+  username: string;
+  /** 所属角色 */
+  roles: AdminUserRoleItem[];
+  /**
+   * 状态
+   * @example "0"
+   */
+  status: string;
+  /**
+   * 创建时间
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * 更新时间
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
+export interface PageQueryResAdminUserDto {
+  /** 数据列表 */
+  list: AdminUserDto[];
+  /** 总数量 */
+  total: number;
+  /** 当前页码 */
+  page: number;
+  /** 每页数量 */
+  pageSize: number;
+}
+
+export interface UpdateAdminUserDto {
+  /**
+   * 用户昵称
+   * @example "小包子"
+   */
+  nickname?: string;
+  /**
+   * 用户名
+   * @example "admin"
+   */
+  username?: string;
+  /**
+   * 密码
+   * @example "admin123"
+   */
+  password?: string;
+  /**
+   * 用户绑定角色id，可绑定多个
+   * @example []
+   */
+  roles?: string[];
+  /**
+   * 用户状态
+   * @default "0"
+   * @example "0"
+   */
+  status?: string;
+}
+
+export interface CreateAdminRoleDto {
+  /**
+   * 角色名称
+   * @example "测试人员"
+   */
+  name: string;
+  /**
+   * 角色描述
+   * @example "提供查看管理员用户列表和更新管理与用户权限"
+   */
+  description: string;
+  /**
+   * 权限列表
+   * @example ["admin-users.findAll","admin-users.update"]
+   */
+  permissions: string[];
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -296,7 +454,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags app端-用户相关(MySQL版)
+     * @tags app端-增删改查示例(MongoDB版)
      * @name UsersControllerCreate
      * @summary 创建用户
      * @request POST:/app/users
@@ -311,7 +469,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message?: string;
         },
-        any
+        void
       >({
         path: `/app/users`,
         method: "POST",
@@ -325,7 +483,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags app端-用户相关(MySQL版)
+     * @tags app端-增删改查示例(MongoDB版)
      * @name UsersControllerFindAll
      * @summary 分页获取用户列表
      * @request GET:/app/users
@@ -350,13 +508,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<
         {
-          data?: User[];
+          data?: PageQueryResUser;
           /** @example 0 */
           code?: number;
           /** @example "请求成功" */
           message?: string;
         },
-        any
+        void
       >({
         path: `/app/users`,
         method: "GET",
@@ -369,7 +527,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags app端-用户相关(MySQL版)
+     * @tags app端-增删改查示例(MongoDB版)
      * @name UsersControllerLogin
      * @summary 用户登录
      * @request POST:/app/users/login
@@ -384,7 +542,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message?: string;
         },
-        any
+        void
       >({
         path: `/app/users/login`,
         method: "POST",
@@ -398,13 +556,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags app端-用户相关(MySQL版)
+     * @tags app端-增删改查示例(MongoDB版)
      * @name UsersControllerFindOne
      * @summary 根据ID获取用户
      * @request GET:/app/users/{id}
      * @secure
      */
-    usersControllerFindOne: (id: number, params: RequestParams = {}) =>
+    usersControllerFindOne: (id: string, params: RequestParams = {}) =>
       this.request<
         {
           data?: User;
@@ -413,7 +571,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message?: string;
         },
-        any
+        void
       >({
         path: `/app/users/${id}`,
         method: "GET",
@@ -425,13 +583,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags app端-用户相关(MySQL版)
+     * @tags app端-增删改查示例(MongoDB版)
      * @name UsersControllerUpdate
      * @summary 根据ID更新用户
      * @request PATCH:/app/users/{id}
      * @secure
      */
-    usersControllerUpdate: (id: number, data: UpdateUserDto, params: RequestParams = {}) =>
+    usersControllerUpdate: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
       this.request<
         {
           data?: User;
@@ -440,7 +598,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message?: string;
         },
-        any
+        void
       >({
         path: `/app/users/${id}`,
         method: "PATCH",
@@ -454,13 +612,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags app端-用户相关(MySQL版)
+     * @tags app端-增删改查示例(MongoDB版)
      * @name UsersControllerRemove
      * @summary 根据ID删除用户
      * @request DELETE:/app/users/{id}
      * @secure
      */
-    usersControllerRemove: (id: number, params: RequestParams = {}) =>
+    usersControllerRemove: (id: string, params: RequestParams = {}) =>
       this.request<
         {
           data?: User;
@@ -469,194 +627,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message?: string;
         },
-        any
+        void
       >({
         path: `/app/users/${id}`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags app端-用户相关(MongoDB版)
-     * @name MongoUsersControllerCreate
-     * @summary 创建用户
-     * @request POST:/app/mongo-users
-     * @secure
-     */
-    mongoUsersControllerCreate: (data: CreateUserDto, params: RequestParams = {}) =>
-      this.request<
-        {
-          data?: User;
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        any
-      >({
-        path: `/app/mongo-users`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags app端-用户相关(MongoDB版)
-     * @name MongoUsersControllerFindAll
-     * @summary 分页获取用户列表
-     * @request GET:/app/mongo-users
-     * @secure
-     */
-    mongoUsersControllerFindAll: (
-      query?: {
-        /**
-         * 页码
-         * @min 1
-         * @default 1
-         */
-        page?: number;
-        /**
-         * 每页数量
-         * @min 1
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          data?: User[];
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        any
-      >({
-        path: `/app/mongo-users`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags app端-用户相关(MongoDB版)
-     * @name MongoUsersControllerLogin
-     * @summary 用户登录
-     * @request POST:/app/mongo-users/login
-     * @secure
-     */
-    mongoUsersControllerLogin: (data: LoginDto, params: RequestParams = {}) =>
-      this.request<
-        {
-          data?: User;
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        any
-      >({
-        path: `/app/mongo-users/login`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags app端-用户相关(MongoDB版)
-     * @name MongoUsersControllerFindOne
-     * @summary 根据ID获取用户
-     * @request GET:/app/mongo-users/{id}
-     * @secure
-     */
-    mongoUsersControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          data?: User;
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        any
-      >({
-        path: `/app/mongo-users/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags app端-用户相关(MongoDB版)
-     * @name MongoUsersControllerUpdate
-     * @summary 根据ID更新用户
-     * @request PATCH:/app/mongo-users/{id}
-     * @secure
-     */
-    mongoUsersControllerUpdate: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
-      this.request<
-        {
-          data?: User;
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        any
-      >({
-        path: `/app/mongo-users/${id}`,
-        method: "PATCH",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags app端-用户相关(MongoDB版)
-     * @name MongoUsersControllerRemove
-     * @summary 根据ID删除用户
-     * @request DELETE:/app/mongo-users/{id}
-     * @secure
-     */
-    mongoUsersControllerRemove: (id: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          data?: User;
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        any
-      >({
-        path: `/app/mongo-users/${id}`,
         method: "DELETE",
         secure: true,
         format: "json",
@@ -694,6 +667,66 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
   };
   redisExample = {
+    /**
+     * No description
+     *
+     * @tags Redis用法示例
+     * @name RedisExampleControllerTestCache
+     * @summary 缓存http请求，首次请求3秒才返回数据，之后缓存60秒
+     * @request GET:/redis-example/test-cache
+     */
+    redisExampleControllerTestCache: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/redis-example/test-cache`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Redis用法示例
+     * @name RedisExampleControllerTestCacheCustomKey
+     * @summary 自定义缓存key来缓存http请求，首次请求3秒才返回数据，之后缓存60秒（本例：缓存key为用户ID）
+     * @request GET:/redis-example/test-cache-custom-key
+     */
+    redisExampleControllerTestCacheCustomKey: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/redis-example/test-cache-custom-key`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Redis用法示例
+     * @name RedisExampleControllerRemoveCache
+     * @summary 清除所有http缓存
+     * @request POST:/redis-example/remove-cache
+     */
+    redisExampleControllerRemoveCache: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/redis-example/remove-cache`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Redis用法示例
+     * @name RedisExampleControllerRemoveCacheByKey
+     * @summary 清除指定http缓存
+     * @request POST:/redis-example/remove-cache-key/{key}
+     */
+    redisExampleControllerRemoveCacheByKey: (key: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/redis-example/remove-cache-key/${key}`,
+        method: "POST",
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -849,6 +882,296 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/redis-example/ttl/${key}`,
         method: "GET",
+        ...params,
+      }),
+  };
+  rateLimit = {
+    /**
+     * No description
+     *
+     * @tags 限流用法示例
+     * @name RateLimitControllerGetDefaultLimit
+     * @summary 全局默认限流配置，请连续请求10次测试
+     * @request GET:/rate-limit/default
+     */
+    rateLimitControllerGetDefaultLimit: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/rate-limit/default`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags 限流用法示例
+     * @name RateLimitControllerGetStrictLimit
+     * @summary 自定义限流配置，1分钟最多3次请求，请连续请求3次测试
+     * @request GET:/rate-limit/strict
+     */
+    rateLimitControllerGetStrictLimit: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/rate-limit/strict`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags 限流用法示例
+     * @name RateLimitControllerGetNoLimit
+     * @summary 不启用限流
+     * @request GET:/rate-limit/no-limit
+     */
+    rateLimitControllerGetNoLimit: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/rate-limit/no-limit`,
+        method: "GET",
+        ...params,
+      }),
+  };
+  admin = {
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerCreateRoot
+     * @summary 创建超级管理员
+     * @request POST:/admin/users/root
+     * @secure
+     */
+    adminUsersControllerCreateRoot: (params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users/root`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerCreate
+     * @summary 创建新管理员用户
+     * @request POST:/admin/users
+     * @secure
+     */
+    adminUsersControllerCreate: (data: CreateAdminUserDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerFindAll
+     * @summary 获取所有管理员用户
+     * @request GET:/admin/users
+     * @secure
+     */
+    adminUsersControllerFindAll: (
+      query?: {
+        /**
+         * 页码
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 每页数量
+         * @min 1
+         * @default 10
+         */
+        pageSize?: number;
+        /** 搜索关键词 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          data?: PageQueryResAdminUserDto;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerLogin
+     * @summary 管理员登录
+     * @request POST:/admin/users/login
+     * @secure
+     */
+    adminUsersControllerLogin: (data: LoginAdminUserDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: LoginAdminUserResDto;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users/login`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerFindOne
+     * @summary 根据ID获取管理员用户
+     * @request GET:/admin/users/{id}
+     * @secure
+     */
+    adminUsersControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: AdminUserDto;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerUpdate
+     * @summary 更新管理员用户信息
+     * @request PATCH:/admin/users/{id}
+     * @secure
+     */
+    adminUsersControllerUpdate: (id: string, data: UpdateAdminUserDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerRemove
+     * @summary 删除管理员用户
+     * @request DELETE:/admin/users/{id}
+     * @secure
+     */
+    adminUsersControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users/${id}`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerCreateRole
+     * @summary 创建管理员角色
+     * @request POST:/admin/users/roles
+     * @secure
+     */
+    adminUsersControllerCreateRole: (data: CreateAdminRoleDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/users/roles`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
   };

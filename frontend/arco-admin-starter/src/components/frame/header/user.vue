@@ -3,7 +3,7 @@
         <a-popover position="br" trigger="click" :content-style="{ padding: 0 }">
             <div class="user-row">
                 <a-avatar :size="32" :style="{ backgroundColor: '#00d0b6' }">
-                    小 
+                    小
                 </a-avatar>
                 <span style="margin-left:10px;color:var(--color-text-1)">小包子</span>
                 <icon-down />
@@ -30,10 +30,11 @@
 
 <script setup lang="ts">
 import { router } from '@/routes';
-
+import {localStorage,sessionStorage} from '@/utils/storage';
 
 const logout = () => {
-    localStorage.removeItem('token')
+	sessionStorage.remove('token')
+    localStorage.remove('token')
     router.push('/login')
 }
 </script>

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { UsersService } from './users.service';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { Auth, NoAuth } from '../../../common/decorators/auth.decorator';
-import { CustomApiResponse, CustomApiResponseList } from '../../../common/decorators/api-response.decorator';
+import { CustomApiResponse } from '../../../common/decorators/api-response.decorator';
 import { createPageQueryResClass, PageQueryDto } from '../../../common/dto/page-query.dto';
 import { User } from './entities/user.schema';
 import { LoginDto } from './dto/login.dto';

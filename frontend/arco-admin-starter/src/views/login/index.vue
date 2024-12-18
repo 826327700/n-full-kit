@@ -6,64 +6,72 @@
                     <img src="@/assets/images/logo_login.png" alt="">
                 </div>
                 <div class="right">
-                    <!-- <tiny-form label-position="top">
-                        <tiny-form-item>
-                            <h2>欢迎登录,后台管理系统</h2>
-                            <p style="color:var(--tv-color-text-weaken);">xxx业务综合管理系统 ver 1.0.0</p>
-                        </tiny-form-item>
-                        <tiny-form-item label="账号" prop="username">
-                            <tiny-input :prefix-icon="iconUser" placeholder="请输入登录账号"></tiny-input>
-                        </tiny-form-item>
-                        <tiny-form-item label="密码" prop="">
-                            <tiny-input :prefix-icon="iconLock" placeholder="请输入登录密码" type="password" show-password></tiny-input>
-                        </tiny-form-item>
-                        <tiny-form-item>
-                            <tiny-checkbox name="remember" label="记住密码">保持登录</tiny-checkbox>
-                        </tiny-form-item>
-                        <tiny-form-item>
-                            <tiny-button type="primary" style="width: 100%;">登录</tiny-button>
-                        </tiny-form-item>
-                        <tiny-form-item>
-                            <p style="color: var(--tv-color-text-weaken);text-align: right;">忘记密码？点此<tiny-link type="primary">找回密码</tiny-link></p>
-                        </tiny-form-item>
-                    </tiny-form> -->
-                    <a-form>
+                    <a-form :model="form" ref="formRef" layout="vertical" class="login-form">
                         <a-form-item>
                             <h2>欢迎登录,后台管理系统</h2>
-                            <p style="color:var(--tv-color-text-weaken);">xxx业务综合管理系统 ver 1.0.0</p>
+                            <p>xxx业务综合管理系统 ver 1.0.0</p>
                         </a-form-item>
-                        <a-form-item label="账号" prop="username">
-                            <a-input  placeholder="请输入登录账号"></a-input>
+                        <a-form-item label="账号" field="username" :rules="[{ required: true, message: '请输入登录账号' }]">
+                            <a-input v-model="form.username" placeholder="请输入登录账号"></a-input>
                         </a-form-item>
-                        <a-form-item label="密码" prop="">
-                            <a-input  placeholder="请输入登录密码" type="password" show-password></a-input>
-                        </a-form-item>
-                        <a-form-item>
-                            <a-checkbox name="remember" label="记住密码">保持登录</a-checkbox>
+                        <a-form-item label="密码" field="password" :rules="[{ required: true, message: '请输入登录密码' }]">
+                            <a-input v-model="form.password" placeholder="请输入登录密码" type="password" show-password></a-input>
                         </a-form-item>
                         <a-form-item>
-                            <a-button type="primary" style="width: 100%;">登录</a-button>
+                            <a-checkbox v-model="form.remember" name="remember" label="记住密码">保持登录</a-checkbox>
                         </a-form-item>
                         <a-form-item>
-                            <p style="color: var(--tv-color-text-weaken);text-align: right;">忘记密码？点此<a-link type="primary">找回密码</a-link></p>
+                            <a-button type="primary" style="width: 100%;" @click="login">登录</a-button>
+                        </a-form-item>
+                        <a-form-item>
+                            <p style="text-align: right;">忘记密码？点此<a-link type="primary">找回密码</a-link></p>
                         </a-form-item>
                     </a-form>
                 </div>
             </div>
         </div>
+
+		<p class="copyright">Copyright © 2024 N-Full-Kit Powered By Vue3+Arco Design</p>
     </div>
 </template>
 
 <script setup lang="ts">
 import { api } from '@/api';
-import { onMounted } from 'vue';
-onMounted(() => {
-    
-    api.app.usersControllerFindAll().then(res => {
-    console.log(res);
+import { onMounted, reactive,useTemplateRef } from 'vue';
+import { Form } from '@arco-design/web-vue';
+import {localStorage,sessionStorage} from '@/utils/storage';
+import { router } from '@/routes';
+
+const formRef = useTemplateRef<InstanceType<typeof Form>>("formRef")
+const form = reactive({
+	username: '',
+	password: '',
+	remember: false
 })
 
+onMounted(()=>{
+	api.admin.adminUsersControllerFindAll()
 })
+
+const login = async () => {
+	let err=await formRef.value?.validate()
+	if(!err){
+		api.admin.adminUsersControllerLogin({
+			username: form.username,
+			password: form.password
+		}).then(res => {
+			if(form.remember){
+				sessionStorage.remove('token')
+				localStorage.set('token',res.data.data!.access_token)
+			}else{
+				localStorage.remove('token')
+				sessionStorage.set('token',res.data.data!.access_token)
+			}
+			router.replace("/")
+		})
+	}
+
+}
 </script>
 <style scoped lang="scss">
 .login-bg {
@@ -94,11 +102,11 @@ onMounted(() => {
         .center-box-inner{
             width: 100%;
             height: 100%;
-            background: #fff;
+            background: var(--color-bg-2);
             border-radius: 8px;
             display: flex;
             overflow: hidden;
-            border: 1px solid #fff;
+            // border: 1px solid #fff;
             box-shadow: 0 0 10px rgba($color: #000, $alpha: 0.06);
             .left{
                 flex: 1;
@@ -116,9 +124,29 @@ onMounted(() => {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center
+                align-items: center;
+				h2{
+					color: var(--color-text-1);
+				}
             }
         }
     }
+	.copyright{
+		color: var(--color-text-2);
+		position: absolute;
+		bottom: 16px;
+		left: 50%;
+		transform: translateX(-50%)
+	}
+}
+</style>
+<style lang="scss">
+.login-form{
+	.arco-form-item-content-flex{
+		display: block
+	}
+	p{
+		color:var(--color-text-2)
+	}
 }
 </style>

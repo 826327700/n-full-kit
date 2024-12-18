@@ -1,13 +1,24 @@
 body{
-    --border-radius-small:6px!important;
+    --border-radius-small: 6px !important;
+    --border-radius-medium: 6px !important;
 }
 body[arco-theme='dark']{
     .custom-layout-frame{
-        background: #d8dce6 url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9Ii43NSIgZmlsbD0iI0IwQjhDQSIvPjwvc3ZnPg==) repeat;
+		&::before{
+			filter: brightness(0.3);
+		}
     }
     .logo-inner{
         background-color: var(--color-bg-5)!important;
     }
+	.login-bg{
+		&::before{
+			filter: brightness(0.3);
+		}
+		img{
+			filter: brightness(0.5);
+		}
+	}
 }
 .arco-menu-light {
     background-color:unset!important;
@@ -32,15 +43,17 @@ body[arco-theme='dark']{
     &.no-padding{
        .arco-card-body{
            padding: 0!important;
-       } 
+       }
     }
     &.flex-column{
+		display: flex;
+		flex-direction: column;
         .arco-card-body{
             display: flex;
             flex: 1;
             // height: 0;
             flex-direction: column;
-        } 
+        }
     }
     &.fill{
         height: 100%;
