@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext ,UnauthorizedException} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
@@ -38,12 +38,12 @@ export class RolesGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 		const authHeader = request.headers.authorization;
 		if (!authHeader) {
-			return false;
+			throw new UnauthorizedException('认证失败');
 		}
 
 		const [type, token] = authHeader.split(' ');
-		if (type !== 'Bearer') {
-			return false;
+		if (type !== 'Bearer'||!token) {
+			throw new UnauthorizedException('认证失败');
 		}
 
 		// 验证并解析token
@@ -56,7 +56,7 @@ export class RolesGuard implements CanActivate {
 			});
 
 			if (!foundUser || !foundUser.roles.length) {
-				return false;
+				throw new UnauthorizedException('认证失败');
 			}
 
 			// 获取用户的所有有效角色

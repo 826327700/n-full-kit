@@ -38,7 +38,6 @@ body[arco-theme='dark']{
 }
 .arco-card{
     border-radius: var(--border-radius-small)!important;
-    transition: background-color 0.3s ease-in-out!important;
     background-color: var(--color-bg-3)!important;
     &.no-padding{
        .arco-card-body{
@@ -79,4 +78,9 @@ body[arco-theme='dark']{
 }
 .arco-popover-content{
     margin-top: 0!important;
+}
+* {
+    transition: 
+        background-color 0.3s ease-in-out ,
+        border-color 0.3s ease-in-out !important;
 }

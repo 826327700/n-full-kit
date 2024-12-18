@@ -195,6 +195,8 @@ export interface LoginAdminUserDto {
 }
 
 export interface AdminUserRoleItem {
+  /** 角色ID */
+  _id: string;
   /** 角色名称 */
   name: string;
   /** 角色描述 */
@@ -204,6 +206,8 @@ export interface AdminUserRoleItem {
 export interface AdminUserDto {
   /** 用户ID */
   _id: string;
+  /** 用户昵称 */
+  nickname: string;
   /** 用户名 */
   username: string;
   /** 所属角色 */
@@ -241,46 +245,83 @@ export interface UpdateAdminUserDto {
    * 用户昵称
    * @example "小包子"
    */
-  nickname?: string;
+  nickname: string;
   /**
    * 用户名
    * @example "admin"
    */
-  username?: string;
+  username: string;
   /**
    * 密码
    * @example "admin123"
    */
-  password?: string;
+  password: string;
   /**
    * 用户绑定角色id，可绑定多个
    * @example []
    */
-  roles?: string[];
+  roles: string[];
   /**
    * 用户状态
    * @default "0"
    * @example "0"
    */
-  status?: string;
+  status: string;
 }
 
 export interface CreateAdminRoleDto {
-  /**
-   * 角色名称
-   * @example "测试人员"
-   */
+  /** 角色名称 */
   name: string;
-  /**
-   * 角色描述
-   * @example "提供查看管理员用户列表和更新管理与用户权限"
-   */
+  /** 角色描述 */
   description: string;
-  /**
-   * 权限列表
-   * @example ["admin-users.findAll","admin-users.update"]
-   */
+  /** 角色权限列表 */
   permissions: string[];
+}
+
+export interface AdminRoleDto {
+  /** 角色ID */
+  _id: string;
+  /** 角色名称 */
+  name: string;
+  /** 角色描述 */
+  description: string;
+  /** 角色权限列表 */
+  permissions: string[];
+  /**
+   * 状态
+   * @example "0"
+   */
+  status: string;
+  /**
+   * 创建时间
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * 更新时间
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
+export interface PageQueryResAdminRoleDto {
+  /** 数据列表 */
+  list: AdminRoleDto[];
+  /** 总数量 */
+  total: number;
+  /** 当前页码 */
+  page: number;
+  /** 每页数量 */
+  pageSize: number;
+}
+
+export interface UpdateAdminRoleDto {
+  /** 角色名称 */
+  name?: string;
+  /** 角色描述 */
+  description?: string;
+  /** 角色权限列表 */
+  permissions?: string[];
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -944,6 +985,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     adminUsersControllerCreateRoot: (params: RequestParams = {}) =>
       this.request<
         {
+          /** @example "ok" */
           data?: string;
           /** @example 0 */
           code?: number;
@@ -971,6 +1013,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     adminUsersControllerCreate: (data: CreateAdminUserDto, params: RequestParams = {}) =>
       this.request<
         {
+          /** @example "ok" */
           data?: string;
           /** @example 0 */
           code?: number;
@@ -1102,6 +1145,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     adminUsersControllerUpdate: (id: string, data: UpdateAdminUserDto, params: RequestParams = {}) =>
       this.request<
         {
+          /** @example "ok" */
           data?: string;
           /** @example 0 */
           code?: number;
@@ -1131,6 +1175,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     adminUsersControllerRemove: (id: string, params: RequestParams = {}) =>
       this.request<
         {
+          /** @example "ok" */
           data?: string;
           /** @example 0 */
           code?: number;
@@ -1149,15 +1194,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags admin端-管理员用户
-     * @name AdminUsersControllerCreateRole
-     * @summary 创建管理员角色
-     * @request POST:/admin/users/roles
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerCreate
+     * @summary 创建新管理员角色
+     * @request POST:/admin/roles
      * @secure
      */
-    adminUsersControllerCreateRole: (data: CreateAdminRoleDto, params: RequestParams = {}) =>
+    adminRolesControllerCreate: (data: CreateAdminRoleDto, params: RequestParams = {}) =>
       this.request<
         {
+          /** @example "ok" */
           data?: string;
           /** @example 0 */
           code?: number;
@@ -1166,11 +1212,142 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         },
         void
       >({
-        path: `/admin/users/roles`,
+        path: `/admin/roles`,
         method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerFindAll
+     * @summary 获取所有管理员角色
+     * @request GET:/admin/roles
+     * @secure
+     */
+    adminRolesControllerFindAll: (
+      query?: {
+        /**
+         * 页码
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 每页数量
+         * @min 1
+         * @default 10
+         */
+        pageSize?: number;
+        /** 搜索关键词 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          data?: PageQueryResAdminRoleDto;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/roles`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerFindOne
+     * @summary 根据ID获取管理员角色
+     * @request GET:/admin/roles/{id}
+     * @secure
+     */
+    adminRolesControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          data?: AdminRoleDto;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/roles/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerUpdate
+     * @summary 更新管理员角色信息
+     * @request PATCH:/admin/roles/{id}
+     * @secure
+     */
+    adminRolesControllerUpdate: (id: string, data: UpdateAdminRoleDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/roles/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerRemove
+     * @summary 删除管理员角色
+     * @request DELETE:/admin/roles/{id}
+     * @secure
+     */
+    adminRolesControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data?: string;
+          /** @example 0 */
+          code?: number;
+          /** @example "请求成功" */
+          message?: string;
+        },
+        void
+      >({
+        path: `/admin/roles/${id}`,
+        method: "DELETE",
+        secure: true,
         format: "json",
         ...params,
       }),

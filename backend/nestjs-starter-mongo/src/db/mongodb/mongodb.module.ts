@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
-import { AdminRoleSchema } from 'src/endpoints/admin/admin-users/entities/admin-role.entity';
+import { AdminRoleSchema } from 'src/endpoints/admin/admin-roles/entities/admin-role.entity';
 
 @Module({
     imports: [

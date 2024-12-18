@@ -5,7 +5,20 @@
 				<a-input v-model="queryFilter.keyword" placeholder="请输入关键词搜索" style="width: 300px;"/>
 			</a-form-item>
 			<a-form-item>
-				<a-button type="primary" @click="fetchData">搜索</a-button>
+				<a-space>
+					<a-button type="primary" @click="fetchData">
+						<template #icon>
+							<icon-search />
+						</template>
+						搜索
+					</a-button>
+					<a-button status="success" @click="form.visible=true">
+						<template #icon>
+							<icon-plus />
+						</template>
+						新增
+					</a-button>
+				</a-space>
 			</a-form-item>
 		</a-form>
 		<a-divider />
@@ -35,7 +48,7 @@
 					<a-table-column title="当前状态" data-index="status">
 						<template #cell="{ record }">
 							<a-tag v-if="record.status=='0'" color="green">启用</a-tag>
-							<a-tag v-else color="red">禁用</a-tag>
+							<a-tag v-if="record.status=='1'"  color="red">禁用</a-tag>
 						</template>
 					</a-table-column>
 					<a-table-column title="创建时间" data-index="createdAt">
@@ -43,23 +56,123 @@
 							{{ dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
 						</template>
 					</a-table-column>
+					<a-table-column title="操作">
+						<template #cell="{ record }">
+							<a-space>
+								<a-link type="primary" @click="openEdit(record)"><icon-edit></icon-edit></a-link>
+								<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)">
+									<a-link status="danger"><icon-delete></icon-delete></a-link>
+								</a-popconfirm>
+							</a-space>
+						</template>
+					</a-table-column>
 				</template>
 			</a-table>
 		</div>
 	</Wapper>
+
+	<a-modal v-model:visible="form.visible" :title="form.id?'编辑用户':'新增用户'" :on-before-ok="submit" @close="onFormModalClose">
+		<a-form :model="form.data" ref="formRef">
+			<a-form-item label="用户名" field="username" :rules="[{ required: true, message: '请输入用户名' }]">
+				<a-input :disabled="!!form.id" v-model="form.data.username" placeholder="请输入用户名"></a-input>
+			</a-form-item>
+			<a-form-item label="密码" field="password" :rules="[{ required: !form.id, message: '请输入密码' }]">
+				<a-input-password v-model="form.data.password" placeholder="请输入密码"></a-input-password>
+			</a-form-item>
+			<a-form-item label="昵称" field="nickname" :rules="[{ required: true, message: '请输入昵称' }]">
+				<a-input v-model="form.data.nickname" placeholder="请输入昵称"></a-input>
+			</a-form-item>
+			<a-form-item label="所属角色" field="roles" :rules="[{ required: true, message: '请选择所属角色' }]">
+				<a-select v-model="form.data.roles" placeholder="请选择所属角色" multiple>
+					<a-option v-for="item in roles" :key="item._id" :value="item._id" :label="item.name"></a-option>
+				</a-select>
+			</a-form-item>
+			<a-form-item label="是否启用" field="status" >
+				<a-switch checked-value="0" unchecked-value="1" v-model="form.data.status"></a-switch>
+			</a-form-item>
+		</a-form>
+	</a-modal>
 </template>
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { onMounted, reactive, ref, useTemplateRef } from 'vue';
 import { usePaginatedQuery } from '@/common/hooks/query-list';
 import {api} from '@/api';
-import { AdminUserDto } from '@/api/api';
+import { AdminRoleDto, AdminUserDto } from '@/api/api';
 import dayjs from 'dayjs';
+import { Form } from '@arco-design/web-vue';
 
 const queryFilter =reactive({
 	keyword:""
 })
-const {data,page,pageSize,total,loading,onPageChange,onPageSizeChange,fetchData}
-=usePaginatedQuery<AdminUserDto>(api.admin.adminUsersControllerFindAll,queryFilter)
+const {
+	data,
+	page,
+	pageSize,
+	total,
+	loading,
+	onPageChange,
+	onPageSizeChange,
+	fetchData
+}=usePaginatedQuery<AdminUserDto>(api.admin.adminUsersControllerFindAll,queryFilter)
+
+const roles=ref<AdminRoleDto[]>([])
+onMounted(()=>{
+	api.admin.adminRolesControllerFindAll({pageSize:9999}).then(res=>{
+		roles.value=res.data.data!.list
+	})
+})
+
+const formRef=useTemplateRef<InstanceType<typeof Form>>("formRef")
+const form=reactive<any>({
+	visible:false,
+	id:"",
+	data:{
+		nickname:"",
+		username:"",
+		password:"",
+		roles:[],
+		status:"0"
+	}
+})
+const submit=async ()=>{
+	let err=await formRef.value?.validate()
+	if(err){
+		return false
+	}
+	if(form.id){
+		api.admin.adminUsersControllerUpdate(form.id,form.data).then(res=>{
+			form.id=""
+			form.visible=false
+			fetchData()
+		})
+	}else{
+		api.admin.adminUsersControllerCreate(form.data).then(res=>{
+			form.visible=false
+			fetchData()
+		})
+	}
+}
+
+const onFormModalClose=()=>{
+	formRef.value?.resetFields()
+	form.id=""
+}
+
+const openEdit=(item:AdminUserDto)=>{
+	form.id=item._id
+	form.data.nickname=item.nickname
+	form.data.username=item.username
+	form.data.password=""
+	form.data.roles=item.roles.map(item=>item._id)
+	form.data.status=item.status
+	form.visible=true
+}
+
+const deleteRow=(id:string)=>{
+	api.admin.adminUsersControllerRemove(id).then(res=>{
+		fetchData()
+	})
+}
 </script>
 <style lang="scss" scoped>
 

@@ -3,7 +3,7 @@ import { DiscoveryService, Reflector } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PERMISSION_DESC, PERMISSION_GROUP_DESC, PERMISSION_GROUP_KEY, PERMISSION_KEY } from 'src/common/decorators/permission.decorator';
-import { AdminPermissionDocument, AdminPermissionSchema } from 'src/endpoints/admin/admin-users/entities/admin-permission.entity';
+import { AdminPermissionDocument, AdminPermissionSchema } from 'src/endpoints/admin/admin-roles/entities/admin-permission.entity';
 
 @Injectable()
 export class PermissionCollectService {

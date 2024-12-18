@@ -5,7 +5,7 @@
 				<a-input placeholder="请输入关键词搜索" style="width: 300px;"/>
 			</a-form-item>
 			<a-form-item>
-				<a-button type="primary">搜索</a-button>
+				<a-button type="primary" @click="test">搜索</a-button>
 			</a-form-item>
 		</a-form>
 		<a-divider />
@@ -18,7 +18,11 @@
 
 <script setup lang="ts">
 import Wapper from '@/components/frame/wapper.vue';
+import { Message } from '@arco-design/web-vue';
 import { reactive, ref } from 'vue'
+const test=()=>{
+	Message.error({content:'未登录或登录已过期，请重新登录'})
+}
 const columns = [
 	{
 		title: 'Name',

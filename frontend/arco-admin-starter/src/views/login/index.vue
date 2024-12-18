@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { api } from '@/api';
-import { onMounted, reactive,useTemplateRef } from 'vue';
+import { reactive,useTemplateRef } from 'vue';
 import { Form } from '@arco-design/web-vue';
 import {localStorage,sessionStorage} from '@/utils/storage';
 import { router } from '@/routes';
@@ -47,10 +47,6 @@ const form = reactive({
 	username: '',
 	password: '',
 	remember: false
-})
-
-onMounted(()=>{
-	api.admin.adminUsersControllerFindAll()
 })
 
 const login = async () => {

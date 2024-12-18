@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { NO_CHECK_ROLES_KEY } from '../decorators/roles.decorator';
 import { InjectModel } from '@nestjs/mongoose';
@@ -34,17 +34,20 @@ export class RolesGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 		const authHeader = request.headers.authorization;
 		if (!authHeader) {
-			return false;
+			throw new UnauthorizedException('认证失败');
 		}
 
 		const [type, token] = authHeader.split(' ');
-		if (type !== 'Bearer') {
-			return false;
+		if (type !== 'Bearer'||!token) {
+			throw new UnauthorizedException('认证失败');
 		}
 
 		// 验证并解析token
 		try {
 			const user = await this.authService.verifyAsync(token, 'admin');
+			if(!user){
+				throw new UnauthorizedException('认证失败');
+			}
 			// 使用聚合查询获取用户的所有有效角色权限
 			const userWithRoles = await this.adminUserModel.aggregate([
 				{
