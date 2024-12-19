@@ -17,20 +17,10 @@ const routes:Array<RouteRecordRaw>= [
 				name: 'dashboard',
 				meta: {
 					title: '欢迎页',
-					icon: 'icon-folder',
+					icon: 'icon-home',
 				},
 				component: () => import('@/views/dashboard/index.vue')
 			},
-            {
-                path: 'test',
-                name: 'test',
-                meta: {
-                    title: '测试',
-                    icon: 'icon-folder',
-                    hideInMenu: false
-                },
-                component: () => import('@/views/login/test.vue')
-            },
             {
                 path: 'page1',
                 name: 'page1',
@@ -80,8 +70,14 @@ const routes:Array<RouteRecordRaw>= [
                         name: 'system-account',
                         meta: {
                             title: '管理员账号',
+                            //前端声明该页面所用到的接口(权限),以便后端知道每一个页面默认有哪些权限 
+                            //权限名称为该页面所用到的api接口 格式为：api.aaa.bbbb()=>aaa.bbbb
 							permissions:[
-								'admin-users.create'
+								'admin.adminUsersControllerFindAll',
+                                'admin.adminRolesControllerFindAll',
+                                'admin.adminUsersControllerUpdate',
+                                'admin.adminUsersControllerCreate',
+                                'admin.adminUsersControllerRemove'
 							]
                         },
                         component: () => import('@/views/system/account/index.vue')
@@ -91,6 +87,17 @@ const routes:Array<RouteRecordRaw>= [
                         name: 'system-role',
                         meta: {
                             title: '角色管理',
+                            //前端声明该页面所用到的接口(权限),以便后端知道每一个页面默认有哪些权限
+                            //权限名称为该页面所用到的api接口 格式为：api.aaa.bbbb()=>aaa.bbbb
+                            permissions:[
+                                'admin.adminRolesControllerFindAllPermissions',
+                                'admin.adminRolesControllerFindAllMenus',
+                                'admin.adminRolesControllerFindAll',
+                                'admin.adminRolesControllerUpdate',
+                                'admin.adminRolesControllerCreate',
+                                'admin.adminRolesControllerRemove',
+                                'admin.adminRolesControllerUpdateAllMenus'
+                            ]
                         },
                         component: () => import('@/views/system/role/index.vue')
                     }

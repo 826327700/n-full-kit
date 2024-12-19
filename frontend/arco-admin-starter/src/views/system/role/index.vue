@@ -8,19 +8,19 @@
 					</a-form-item>
 					<a-form-item>
 						<a-space>
-							<a-button type="primary" @click="fetchData">
+							<a-button type="primary" @click="fetchData" v-permissions="['admin.adminRolesControllerFindAll']">
 								<template #icon>
 									<icon-search />
 								</template>
 								搜索
 							</a-button>
-							<a-button status="success" @click="form.visible = true">
+							<a-button status="success" @click="form.visible = true" v-permissions="['admin.adminRolesControllerCreate']">
 								<template #icon>
 									<icon-plus />
 								</template>
 								新增
 							</a-button>
-							<a-button status="warning" @click="updateMenu">
+							<a-button status="warning" @click="updateMenu" v-permissions="['admin.adminRolesControllerUpdateAllMenus']">
 								<template #icon>
 									<icon-sync />
 								</template>
@@ -51,9 +51,9 @@
 				<a-table-column title="操作" align="center">
 					<template #cell="{ record }">
 						<a-space>
-							<a-link type="primary" @click="openEdit(record)"><icon-edit></icon-edit></a-link>
+							<a-link type="primary" @click="openEdit(record)" v-permissions="['admin.adminRolesControllerUpdate']"><icon-edit></icon-edit></a-link>
 							<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)">
-								<a-link status="danger"><icon-delete></icon-delete></a-link>
+								<a-link status="danger" v-permissions="['admin.adminRolesControllerRemove']"><icon-delete></icon-delete></a-link>
 							</a-popconfirm>
 						</a-space>
 					</template>
@@ -68,8 +68,8 @@
 			<a-form-item label="角色名称" field="name" :rules="[{ required: true, message: '请输入角色名称' }]">
 				<a-input v-model="form.data.name" placeholder="请输入角色名称"></a-input>
 			</a-form-item>
-			<a-form-item label="角色描述" field="description" :rules="[{ required: true, message: '请输入角色描述' }]">
-				<a-input v-model="form.data.description" placeholder="请输入角色描述"></a-input>
+			<a-form-item label="角色描述" field="description" >
+				<a-input v-model="form.data.description" placeholder="请输入角色描述，可选"></a-input>
 			</a-form-item>
 
 			<a-form-item label="是否启用" field="status">
@@ -136,10 +136,7 @@ onMounted(() => {
 		permissionsFlat=res.data.data
 		permissionsTree.value = buildPermissionsTree(res.data.data)
 	})
-	api.admin.adminRolesControllerFindAllMenus().then(res => {
-		menusFlat=res.data.data
-		menusTree.value=buildMenusTree(res.data.data as unknown as Route[])
-	})
+	refreshMenus()
 })
 
 type TreeItem = {
@@ -243,11 +240,13 @@ const openEdit=(item:AdminRoleDto)=>{
 	form.data.permissions=item.permissions
 	form.data.status=item.status
 	form.visible=true
+
+	onMenusCheck(form.data.menus)
 }
 
 const deleteRow=(id:string)=>{
-	api.admin.adminUsersControllerRemove(id).then(res=>{
-		// fetchData()
+	api.admin.adminRolesControllerRemove(id).then(res=>{
+		toolbarRef.value?.fetchData()
 	})
 }
 
@@ -279,6 +278,13 @@ const updateMenu = () => {
 	flat(rootRoutes, '')
 	api.admin.adminRolesControllerUpdateAllMenus({menus:flatMenus}).then(res=>{
 		Message.success('更新成功')
+		refreshMenus()
+	})
+}
+const refreshMenus = () => {
+	api.admin.adminRolesControllerFindAllMenus().then(res => {
+		menusFlat=res.data.data
+		menusTree.value=buildMenusTree(res.data.data as unknown as Route[])
 	})
 }
 
@@ -291,30 +297,5 @@ type Route = {
 	children?: Route[];
 };
 
-const buildTree = (routes: Route[]): Route[] => {
-	const map: { [key: string]: Route } = {};
-	const tree: Route[] = [];
-
-	// 将所有路由项加入到 map 中
-	routes.forEach(route => {
-		map[route.name] = { ...route, children: [] };
-	});
-
-	// 将每个路由项根据 parentName 组织成树结构
-	routes.forEach(route => {
-		if (route.parentName === '') {
-			// 如果 parentName 为空，则是根节点，直接加入 tree
-			tree.push(map[route.name]);
-		} else {
-			// 如果 parentName 不为空，找到父节点并加入 children
-			const parent = map[route.parentName];
-			if (parent) {
-				parent.children?.push(map[route.name]);
-			}
-		}
-	});
-
-	return tree;
-}
 </script>
 <style lang="scss" scoped></style>

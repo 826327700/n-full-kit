@@ -13,8 +13,18 @@ export class UpdateAdminRoleDto {
     @IsString()
     description?: string;
 
-    @ApiProperty({ description: '角色权限列表' ,type: [String] ,required: false })
-    @IsOptional()
+    @ApiProperty({ description: '角色菜单列表' ,type: [String] ,required: true })
+    @IsNotEmpty()
     @IsArray()
-    permissions?: string[];
+    menus: string[];
+
+	@ApiProperty({ description: '角色权限列表' ,type: [String] ,required: true })
+    @IsNotEmpty()
+    @IsArray()
+    permissions: string[];
+
+	@ApiProperty({ description: '角色状态' ,required: false })
+	@IsOptional()
+	@IsString()
+	status?: string='0';
 }

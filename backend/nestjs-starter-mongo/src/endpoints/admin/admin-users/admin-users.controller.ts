@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AdminUsersService } from './admin-users.service';
 import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
-import { LoginAdminUserDto, LoginAdminUserResDto } from './dto/login-admin-user.dto';
+import { LoginAdminUserDto, LoginAdminUserResDto, UserInfo } from './dto/login-admin-user.dto';
 import { Auth, NoAuth } from 'src/common/decorators/auth.decorator';
 import { PermissionGroup, PermissionKey } from 'src/common/decorators/permission.decorator';
 import { CheckRoles, NoCheckRoles } from 'src/common/decorators/roles.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
 import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
 import { AdminUserDto, QueryAdminUserDto } from './dto/query-admin-user.dto';
+import { IRequest } from 'src/common/interfaces/request';
 
 @ApiTags('admin端-管理员用户')
 @Controller('admin/users')
@@ -42,6 +43,17 @@ export class AdminUsersController {
 	})
 	login(@Body() loginAdminUserDto: LoginAdminUserDto) {
 		return this.adminUsersService.login(loginAdminUserDto);
+	}
+
+  @Get('login-info')
+	@NoCheckRoles()
+	@ApiOperation({ summary: '获取管理员登录信息' })
+	@CustomApiResponse({
+		type: UserInfo,
+		description: "获取管理员登录信息成功",
+	})
+	getLoginInfo(@Req() req: IRequest) {
+		return this.adminUsersService.getLoginInfo(req);
 	}
 
 	@Post()

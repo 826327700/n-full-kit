@@ -51,7 +51,6 @@ export class AdminRolesService {
 	// 获取所有角色
 	async findAll(query: QueryAdminRoleDto) {
 		let filter = {
-			status:{$ne:'99'},
 			name:{$ne:'超级管理员'}
 		};
 		if (query.keyword) {
@@ -89,7 +88,7 @@ export class AdminRolesService {
 
 	// 删除角色
 	async remove(id: string){
-		await this.adminRoleModel.findByIdAndUpdate(id, {$set:{status:'99'}});
+		await this.adminRoleModel.findByIdAndDelete(id);
 		return 'ok'
 	}
 

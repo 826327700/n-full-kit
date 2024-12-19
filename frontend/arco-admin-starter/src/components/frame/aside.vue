@@ -13,7 +13,7 @@
 			<a-menu :style="{ width: '220px', height: '100%' }" v-model:selectedKeys="state.selectedKeys"
 				v-model:openKeys="state.openKeys" show-collapse-button breakpoint="xl" v-model:collapsed="menuCollapsed"
 				@menuItemClick="onClickMenuItem">
-				<template v-for="item in menus">
+				<template v-for="item in userStore.menus">
 					<template v-if="!item.meta?.hideInMenu">
 						<a-sub-menu v-if="item.children && item.children.length > 0" :key="(item.name as string)">
 							<template #title>
@@ -51,6 +51,9 @@ import { router } from '@/routes';
 import { computed, reactive, watch } from 'vue';
 import { RouteRecordName } from 'vue-router';
 import { menuCollapsed } from './frame';
+import { useUserStore } from '@/store/user';
+
+const userStore = useUserStore()
 
 interface MenuItem {
 	label: string;
@@ -79,8 +82,24 @@ const menus = computed(() => {
 	let rootRoutes = router.getRoutes().find((item: any) => item.name === 'root')?.children
 	let arr: (MenuItem | undefined)[] = []
 	let res: MenuItem[] = []
+	const getAllNames = (item: any): string[] => {
+		let names: string[] = [item.name]; // 首先将当前项的 name 加入数组
+
+		if (item.children && item.children.length > 0) {
+			// 如果有 children，递归处理每个子项
+			item.children.forEach((child: any) => {
+				names = names.concat(getAllNames(child)); // 合并递归结果
+			});
+		}
+
+		return names;
+	}
 	const createMenu = (item: any) => {
 		if (item.meta?.hideInMenu) {
+			return
+		}
+		let childNames = getAllNames(item)
+		if (!childNames.some((item: any) => userStore.userInfo.menus.includes(item))) {
 			return
 		}
 		return {
@@ -96,6 +115,14 @@ const menus = computed(() => {
 		arr.push(createMenu(route))
 	}
 	res = arr.filter((item: any) => item) as MenuItem[]
+	
+	if(res.length>0){
+		if(res[0].children.length>0){
+			router.replace({ name: res[0].children[0].name })
+		}else{
+			router.replace({ name: res[0].name })
+		}
+	}
 	return res
 })
 
@@ -126,7 +153,8 @@ const onClickMenuItem = (key: string) => {
 			justify-content: center;
 			font-size: 16px;
 			font-weight: 600;
-			img{
+
+			img {
 				width: auto;
 				height: 100%;
 				margin-right: 10px;

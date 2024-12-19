@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
+
 import Aside from './aside.vue';
 import Header from './header/header.vue';
-
 
 </script>
 <style scoped lang="scss">

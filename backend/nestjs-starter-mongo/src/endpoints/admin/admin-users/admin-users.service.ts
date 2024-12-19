@@ -11,6 +11,7 @@ import { AdminPermission, AdminPermissionDocument } from '../admin-roles/entitie
 import { AuthService } from 'src/common/modules/auth/auth.service';
 import { QueryAdminUserDto } from './dto/query-admin-user.dto';
 import { AdminMenu, AdminMenuDocument } from '../admin-roles/entities/admin-menu.entity';
+import { IRequest } from 'src/common/interfaces/request';
 
 @Injectable()
 export class AdminUsersService {
@@ -105,8 +106,10 @@ export class AdminUsersService {
 			{
 				$lookup: {
 					from: 'admin_roles', // MongoDB 中的实际集合名
-					localField: 'roles',
-					foreignField: '_id',
+					let: { roles: '$roles' },
+					pipeline: [
+						{ $match: { $expr: { $and: [ { $in: [ '$_id', '$$roles' ] }, { $eq: ['$status', '0'] } ] } } } ,
+					],
 					as: 'roles'
 				}
 			},
@@ -140,6 +143,8 @@ export class AdminUsersService {
 	async update(id: string, updateAdminUserDto: UpdateAdminUserDto): Promise<string> {
 		if (updateAdminUserDto.password) {
 			updateAdminUserDto.password = await bcrypt.hash(updateAdminUserDto.password, 10);
+		}else{
+			delete updateAdminUserDto.password
 		}
 
 		const updatedUser = await this.adminUserModel
@@ -200,6 +205,11 @@ export class AdminUsersService {
 			acc.push(...role.permissions);
 			return acc;
 		}, []);
+		if(permissions.includes('root')){
+			let rootMenusAndPermissions=await this.getRootMenusAndPermissions()
+			menus=rootMenusAndPermissions.menus
+			permissions=rootMenusAndPermissions.permissions
+		}
 		// let menuDocs = await this.adminMenuModel.find({ name: { $in: menuNames }, status: '0' });
 		// let menus=menuDocs.map(item=>item.name)
 		console.log(menus)
@@ -209,10 +219,50 @@ export class AdminUsersService {
 			access_token,
 			user: {
 				id: user._id,
-				username: user.username,
+				nickname: user.nickname,
 				menus,
 				permissions
 			}
 		};
+	}
+
+	async getLoginInfo(req:IRequest) {
+		let user=await this.adminUserModel.findById(req.user.userId).select('-password').exec()
+		let roles=await this.adminRoleModel.find({
+			_id: { $in: user.roles },
+			status: '0'
+		})
+		let menus =roles.reduce((acc, role) => {
+			acc.push(...role.menus);
+			return acc;
+		}, []);
+		let permissions =roles.reduce((acc, role) => {
+			acc.push(...role.permissions);
+			return acc;
+		}, []);
+		if(permissions.includes('root')){
+			let rootMenusAndPermissions=await this.getRootMenusAndPermissions()
+			menus=rootMenusAndPermissions.menus
+			permissions=rootMenusAndPermissions.permissions
+		}
+		return {
+			id: user._id,
+			nickname: user.nickname,
+			menus,
+			permissions
+		}
+	}
+
+	private async getRootMenusAndPermissions() {
+		let menus=[]
+		let permissions=[]
+		let allMenuDocs=await this.adminMenuModel.find({status:'0'})
+		menus=allMenuDocs.map(item=>item.name)
+		let allPermissions=await this.adminPermissionModel.find({status:'0'})
+		permissions=allPermissions.map(item=>item.key)
+		return {
+			menus,
+			permissions
+		}
 	}
 }

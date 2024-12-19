@@ -6,22 +6,22 @@
                     <img src="@/assets/images/logo_login.png" alt="">
                 </div>
                 <div class="right">
-                    <a-form :model="form" ref="formRef" layout="vertical" class="login-form">
+                    <a-form :model="form" ref="formRef" layout="vertical" class="login-form" @submit="login">
                         <a-form-item>
                             <h2>欢迎登录,后台管理系统</h2>
                             <p>xxx业务综合管理系统 ver 1.0.0</p>
                         </a-form-item>
                         <a-form-item label="账号" field="username" :rules="[{ required: true, message: '请输入登录账号' }]">
-                            <a-input v-model="form.username" placeholder="请输入登录账号"></a-input>
+                            <a-input v-model="form.username" placeholder="请输入登录账号" @press-enter="login"></a-input>
                         </a-form-item>
                         <a-form-item label="密码" field="password" :rules="[{ required: true, message: '请输入登录密码' }]">
-                            <a-input-password v-model="form.password" placeholder="请输入登录密码"></a-input-password>
+                            <a-input-password v-model="form.password" placeholder="请输入登录密码" @press-enter="login"></a-input-password>
                         </a-form-item>
                         <a-form-item>
                             <a-checkbox v-model="form.remember" name="remember" label="记住密码">保持登录</a-checkbox>
                         </a-form-item>
                         <a-form-item>
-                            <a-button type="primary" style="width: 100%;" @click="login">登录</a-button>
+                            <a-button type="primary" style="width: 100%;" @click="login" :loading="loading">登录</a-button>
                         </a-form-item>
                         <a-form-item>
                             <p style="text-align: right;">忘记密码？点此<a-link type="primary">找回密码</a-link></p>
@@ -36,13 +36,15 @@
 </template>
 
 <script setup lang="ts">
-import { api } from '@/api';
-import { reactive,useTemplateRef } from 'vue';
-import { Form } from '@arco-design/web-vue';
-import {localStorage,sessionStorage} from '@/utils/storage';
-import { router } from '@/routes';
+import { reactive,ref,useTemplateRef } from 'vue';
+import { Form, Message } from '@arco-design/web-vue';
+
+import { useUserStore } from '@/store/user';
+
+const userStore=useUserStore()
 
 const formRef = useTemplateRef<InstanceType<typeof Form>>("formRef")
+const loading = ref(false)
 const form = reactive({
 	username: '',
 	password: '',
@@ -52,19 +54,14 @@ const form = reactive({
 const login = async () => {
 	let err=await formRef.value?.validate()
 	if(!err){
-		api.admin.adminUsersControllerLogin({
-			username: form.username,
-			password: form.password
-		}).then(res => {
-			if(form.remember){
-				sessionStorage.remove('token')
-				localStorage.set('token',res.data.data!.access_token)
-			}else{
-				localStorage.remove('token')
-				sessionStorage.set('token',res.data.data!.access_token)
-			}
-			router.replace("/")
-		})
+        loading.value=true
+        userStore.login({
+            username: form.username,
+            password: form.password,
+            remember: form.remember
+        }).finally(()=>{
+            loading.value=false
+        })
 	}
 
 }

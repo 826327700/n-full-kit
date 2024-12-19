@@ -1,42 +1,31 @@
 <template>
 	<Wapper>
-		<a-form :model="queryFilter" layout="inline" class="no-margin">
-			<a-form-item field="keyword" label="关键词">
-				<a-input v-model="queryFilter.keyword" placeholder="请输入关键词搜索" style="width: 300px;"/>
-			</a-form-item>
-			<a-form-item>
-				<a-space>
-					<a-button type="primary" @click="fetchData">
-						<template #icon>
-							<icon-search />
-						</template>
-						搜索
-					</a-button>
-					<a-button status="success" @click="form.visible=true">
-						<template #icon>
-							<icon-plus />
-						</template>
-						新增
-					</a-button>
-				</a-space>
-			</a-form-item>
-		</a-form>
-		<a-divider />
-		<div class="table-box">
-			<a-table
-			:data="data"
-			:loading="loading"
-			:scroll="{ x: '100%', y: '100%', minWidth: '800px' }" stripe table-layout-fixed
-			:pagination="{
-				current: page,
-				pageSize: pageSize,
-				total: total
-			}"
-			@page-change="onPageChange"
-			@page-size-change="onPageSizeChange"
-			>
-				<template #columns>
-					<a-table-column title="用户名" data-index="username"></a-table-column>
+		<TableView :request-fn="api.admin.adminUsersControllerFindAll" :query-filter="queryFilter" ref="toolbarRef">
+			<template #toolbar="{ fetchData }">
+				<a-form :model="queryFilter" layout="inline" class="no-margin">
+					<a-form-item field="keyword" label="关键词">
+						<a-input v-model="queryFilter.keyword" placeholder="请输入关键词搜索" style="width: 300px;"/>
+					</a-form-item>
+					<a-form-item>
+						<a-space>
+							<a-button type="primary" @click="fetchData" v-permissions="['admin.adminUsersControllerFindAll']">
+								<template #icon>
+									<icon-search />
+								</template>
+								搜索
+							</a-button>
+							<a-button status="success" @click="form.visible=true" v-permissions="['admin.adminUsersControllerCreate']">
+								<template #icon>
+									<icon-plus />
+								</template>
+								新增
+							</a-button>
+						</a-space>
+					</a-form-item>
+				</a-form>
+			</template>
+			<template #columns>
+				<a-table-column title="用户名" data-index="username"></a-table-column>
 					<a-table-column title="昵称" data-index="nickname"></a-table-column>
 					<a-table-column title="所属角色" data-index="roles">
 						<template #cell="{ record }">
@@ -56,19 +45,19 @@
 							{{ dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
 						</template>
 					</a-table-column>
-					<a-table-column title="操作">
+					<a-table-column title="操作" align="center">
 						<template #cell="{ record }">
 							<a-space>
-								<a-link type="primary" @click="openEdit(record)"><icon-edit></icon-edit></a-link>
-								<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)">
-									<a-link status="danger"><icon-delete></icon-delete></a-link>
+								<a-link type="primary" @click="openEdit(record)" v-permissions="['admin.adminUsersControllerUpdate']"><icon-edit></icon-edit></a-link>
+								<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)" >
+									<a-link status="danger" v-permissions="['admin.adminUsersControllerRemove']"><icon-delete></icon-delete></a-link>
 								</a-popconfirm>
 							</a-space>
 						</template>
 					</a-table-column>
-				</template>
-			</a-table>
-		</div>
+			</template>
+		</TableView>
+		
 	</Wapper>
 
 	<a-modal v-model:visible="form.visible" :title="form.id?'编辑用户':'新增用户'" :on-before-ok="submit" @close="onFormModalClose">
@@ -95,26 +84,15 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref, useTemplateRef } from 'vue';
-import { usePaginatedQuery } from '@/common/hooks/query-list';
 import {api} from '@/api';
 import { AdminRoleDto, AdminUserDto } from '@/api/api';
+import TableView from '@/components/table-view/index.vue';
 import dayjs from 'dayjs';
 import { Form } from '@arco-design/web-vue';
 
 const queryFilter =reactive({
 	keyword:""
 })
-const {
-	data,
-	page,
-	pageSize,
-	total,
-	loading,
-	onPageChange,
-	onPageSizeChange,
-	fetchData
-}=usePaginatedQuery<AdminUserDto>(api.admin.adminUsersControllerFindAll,queryFilter)
-
 const roles=ref<AdminRoleDto[]>([])
 onMounted(()=>{
 	api.admin.adminRolesControllerFindAll({pageSize:9999}).then(res=>{
@@ -122,6 +100,7 @@ onMounted(()=>{
 	})
 })
 
+const toolbarRef = useTemplateRef<InstanceType<typeof TableView>>("toolbarRef")
 const formRef=useTemplateRef<InstanceType<typeof Form>>("formRef")
 const form=reactive<any>({
 	visible:false,
@@ -143,12 +122,12 @@ const submit=async ()=>{
 		api.admin.adminUsersControllerUpdate(form.id,form.data).then(res=>{
 			form.id=""
 			form.visible=false
-			fetchData()
+			toolbarRef.value?.fetchData()
 		})
 	}else{
 		api.admin.adminUsersControllerCreate(form.data).then(res=>{
 			form.visible=false
-			fetchData()
+			toolbarRef.value?.fetchData()
 		})
 	}
 }
@@ -170,7 +149,7 @@ const openEdit=(item:AdminUserDto)=>{
 
 const deleteRow=(id:string)=>{
 	api.admin.adminUsersControllerRemove(id).then(res=>{
-		fetchData()
+		toolbarRef.value?.fetchData()
 	})
 }
 </script>

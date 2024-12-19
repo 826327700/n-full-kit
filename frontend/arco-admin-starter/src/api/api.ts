@@ -9,24 +9,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface TokenPayloadDto {
-  /**
-   * 用户ID
-   * @example "123"
-   */
-  userId: object;
-  /**
-   * 用户角色列表
-   * @example ["admin","user"]
-   */
-  roles?: string[];
-  /**
-   * 自定义数据
-   * @example {"department":"IT"}
-   */
-  customData?: object;
-}
-
 export interface User {
   /** 用户名 */
   username: string;
@@ -139,8 +121,8 @@ export interface SetValueDto {
 export interface UserInfo {
   /** 用户id */
   id: string;
-  /** 用户名 */
-  username: string;
+  /** 用户昵称 */
+  nickname: string;
   /** 用户菜单name */
   menus: string[];
   /** 用户权限key */
@@ -328,8 +310,12 @@ export interface UpdateAdminRoleDto {
   name?: string;
   /** 角色描述 */
   description?: string;
+  /** 角色菜单列表 */
+  menus: string[];
   /** 角色权限列表 */
-  permissions?: string[];
+  permissions: string[];
+  /** 角色状态 */
+  status?: string;
 }
 
 export interface AdminPermissionItemDto {
@@ -505,31 +491,6 @@ export class HttpClient<SecurityDataType = unknown> {
  * 我的 NestJS API 文档
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  auth = {
-    /**
-     * No description
-     *
-     * @tags 认证
-     * @name AuthControllerGenerateToken
-     * @summary 生成JWT令牌
-     * @request POST:/auth/token
-     */
-    authControllerGenerateToken: (data: TokenPayloadDto, params: RequestParams = {}) =>
-      this.request<
-        {
-          /** JWT令牌 */
-          access_token?: string;
-        },
-        any
-      >({
-        path: `/auth/token`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-  };
   app = {
     /**
      * No description
@@ -1065,6 +1026,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerGetLoginInfo
+     * @summary 获取管理员登录信息
+     * @request GET:/admin/users/login-info
+     * @secure
+     */
+    adminUsersControllerGetLoginInfo: (params: RequestParams = {}) =>
+      this.request<
+        {
+          data: UserInfo;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        void
+      >({
+        path: `/admin/users/login-info`,
+        method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),

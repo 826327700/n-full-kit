@@ -7,10 +7,10 @@ export class CreateAdminRoleDto {
     @IsString()
     name: string;
 
-    @ApiProperty({ description: '角色描述' ,required: true })
-    @IsNotEmpty()
+    @ApiProperty({ description: '角色描述' ,required: false })
+    @IsOptional()
     @IsString()
-    description: string;
+    description?: string;
 
     @ApiProperty({ description: '角色菜单列表' ,type: [String] ,required: true })
     @IsNotEmpty()

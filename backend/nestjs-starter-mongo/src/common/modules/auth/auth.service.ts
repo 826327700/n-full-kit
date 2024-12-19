@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenPayloadDto } from './dto/token-payload.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategys } from './strategies/jwt.strategy';
+import { JWTUser } from 'src/common/interfaces/request';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
 		private configService: ConfigService
 	) { }
 
-	generateToken(payload: TokenPayloadDto, strategyName: keyof typeof JwtStrategys = 'app') {
+	generateToken(payload: JWTUser, strategyName: keyof typeof JwtStrategys = 'app') {
 		// 转换为纯对象
 		const tokenPayload = {
 			userId: payload.userId,

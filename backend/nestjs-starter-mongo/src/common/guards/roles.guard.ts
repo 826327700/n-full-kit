@@ -6,6 +6,7 @@ import mongoose, { Model } from 'mongoose';
 import { AdminUser, AdminUserDocument } from 'src/endpoints/admin/admin-users/entities/admin-user.entity';
 import { PERMISSION_GROUP_KEY, PERMISSION_KEY } from '../decorators/permission.decorator';
 import { AuthService } from '../modules/auth/auth.service';
+import { getPermissionKey } from '../modules/permission-collect/permission-collect.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -101,11 +102,9 @@ export class RolesGuard implements CanActivate {
 			const userPermissions = userWithRoles[0].permissions;
 
 			// 获取当前方法的权限key
-			let permissionKey = Reflect.getMetadata(PERMISSION_KEY, context.getHandler());
-			if (!permissionKey) {
-				permissionKey = context.getHandler().name
-			}
-			const needPermission = `${permissionGroup}.${permissionKey}`;
+			//@ts-ignore
+			let needPermission=getPermissionKey(context.getRequest().url,context.getClass().name,context.getHandler().name)
+
 			// 检查是否包含所需的角色权限
 			if(userPermissions.includes('root')||userPermissions.includes(needPermission)){
 				return true

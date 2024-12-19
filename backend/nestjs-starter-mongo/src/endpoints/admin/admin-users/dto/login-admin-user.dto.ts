@@ -16,8 +16,8 @@ export class LoginAdminUserDto {
 export class UserInfo {
 	@ApiProperty({ description: '用户id' })
 	id: string
-	@ApiProperty({ description: '用户名' })
-	username: string
+	@ApiProperty({ description: '用户昵称' })
+	nickname: string
 	@ApiProperty({ description: '用户菜单name' ,type: [String]})
 	menus: string[]
 	@ApiProperty({ description: '用户权限key' ,type: [String]})

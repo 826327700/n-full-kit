@@ -18,7 +18,7 @@
                         <icon-settings />
                         <span>设置</span>
                     </a-menu-item>
-                    <a-menu-item @click="logout">
+                    <a-menu-item @click="userStore.logout()">
                         <icon-send />
                         <span>退出登录</span>
                     </a-menu-item>
@@ -29,14 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { router } from '@/routes';
-import {localStorage,sessionStorage} from '@/utils/storage';
+import { useUserStore } from '@/store/user';
 
-const logout = () => {
-	sessionStorage.remove('token')
-    localStorage.remove('token')
-    router.push('/login')
-}
+const userStore = useUserStore()
 </script>
 <style scoped lang="scss">
 .user-block{

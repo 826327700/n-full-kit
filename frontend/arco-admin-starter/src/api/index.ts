@@ -1,14 +1,14 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import {localStorage,sessionStorage} from '@/utils/storage';
 import { Api } from "./api";
 import { router } from "@/routes";
 import { Message } from "@arco-design/web-vue";
+import { getToken, removeToken } from "@/utils/token";
 
 export const api = new Api({
     baseURL: 'http://localhost:3000',
 })
 api.instance.interceptors.request.use((config:InternalAxiosRequestConfig) => {
-	let token=sessionStorage.get('token')||localStorage.get('token')
+	let token=getToken()
 	if(token){
 		config.headers.Authorization = `Bearer ${token}`
 	}
@@ -19,8 +19,7 @@ api.instance.interceptors.response.use((res:AxiosResponse) => {
 }, (err:AxiosError) => {
     if(err.response?.status===401){
         Message.error('未登录或登录已过期，请重新登录')
-        localStorage.remove('token')
-        sessionStorage.remove('token')
+        removeToken()
         router.replace('/login')
     }else{
 		//@ts-ignore
