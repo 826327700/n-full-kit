@@ -5,7 +5,6 @@ function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
     const { value } = binding;
     const userStore = useUserStore();
     const { permissions } = userStore.userInfo;
-    console.log("value",value)
     if (Array.isArray(value)) {
         if (value.length > 0) {
             const permissionValues = value;

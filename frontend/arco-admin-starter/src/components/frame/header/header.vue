@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { onBeforeMount, reactive } from 'vue';
 import Breadcrumb from './breadcrumb.vue';
 import User from './user.vue';
 
@@ -27,14 +27,22 @@ const state = reactive({
     isDark: false
 })
 
+onBeforeMount(() => {
+    state.isDark = localStorage.getItem('isDark') === 'true'
+    if (state.isDark) {
+        document.body.setAttribute('arco-theme', 'dark')
+    }
+})
 
 const switchTheme = () => {
     if (state.isDark) {
         document.body.removeAttribute('arco-theme');
         state.isDark = false;
+        localStorage.setItem('isDark', 'false')
     } else {
         document.body.setAttribute('arco-theme', 'dark')
         state.isDark = true;
+        localStorage.setItem('isDark', 'true')
     }
 }
 </script>

@@ -3,9 +3,9 @@
         <a-popover position="br" trigger="click" :content-style="{ padding: 0 }">
             <div class="user-row">
                 <a-avatar :size="32" :style="{ backgroundColor: '#00d0b6' }">
-                    小
+                    {{userStore.userInfo.nickname.slice(0,1)}}
                 </a-avatar>
-                <span style="margin-left:10px;color:var(--color-text-1)">小包子</span>
+                <span style="margin-left:10px;color:var(--color-text-1)">{{ userStore.userInfo.nickname }}</span>
                 <icon-down />
             </div>
             <template #content>
