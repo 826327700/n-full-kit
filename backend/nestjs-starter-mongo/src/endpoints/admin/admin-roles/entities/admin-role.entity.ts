@@ -15,6 +15,9 @@ export class AdminRole {
     @Prop({ type: String,required: true, comment: '角色描述' })
 	description: string;
 
+	@Prop({ type: [String], default: [] ,comment: '角色菜单'})
+	menus: string[];
+
 	@Prop({ type: [String], default: [] ,comment: '角色权限'})
 	permissions: string[];
 

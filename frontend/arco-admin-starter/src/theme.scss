@@ -79,8 +79,13 @@ body[arco-theme='dark']{
 .arco-popover-content{
     margin-top: 0!important;
 }
+.arco-table{
+	.arco-table-td{
+		font-size: 13px;
+	}
+}
 * {
-    transition: 
+    transition:
         background-color 0.3s ease-in-out ,
         border-color 0.3s ease-in-out !important;
 }

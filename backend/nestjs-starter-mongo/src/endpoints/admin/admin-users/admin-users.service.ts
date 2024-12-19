@@ -10,12 +10,15 @@ import { AdminRole, AdminRoleDocument } from '../admin-roles/entities/admin-role
 import { AdminPermission, AdminPermissionDocument } from '../admin-roles/entities/admin-permission.entity';
 import { AuthService } from 'src/common/modules/auth/auth.service';
 import { QueryAdminUserDto } from './dto/query-admin-user.dto';
+import { AdminMenu, AdminMenuDocument } from '../admin-roles/entities/admin-menu.entity';
 
 @Injectable()
 export class AdminUsersService {
 	constructor(
 		@InjectModel(AdminUser.name) private adminUserModel: Model<AdminUserDocument>,
 		@InjectModel(AdminRole.name) private adminRoleModel: Model<AdminRoleDocument>,
+		@InjectModel(AdminPermission.name) private adminPermissionModel: Model<AdminPermissionDocument>,
+		@InjectModel(AdminMenu.name) private adminMenuModel: Model<AdminMenuDocument>,
 		private readonly authService: AuthService,
 	) { }
 
@@ -152,7 +155,7 @@ export class AdminUsersService {
 
 	async remove(id: string): Promise<string> {
 		await this.adminUserModel.findByIdAndUpdate(id, {$set:{status:'99'}});
-		return 'ok'	
+		return 'ok'
 	}
 
 	async login(loginAdminUserDto: LoginAdminUserDto) {
@@ -162,7 +165,7 @@ export class AdminUsersService {
 		}).exec();
 
 		if (!user) {
-			throw new UnauthorizedException('用户名不存在');
+			throw new NotFoundException('用户名不存在');
 		}
 
 		if(user.status === '1'){
@@ -172,7 +175,7 @@ export class AdminUsersService {
 		const isPasswordValid = await bcrypt.compare(loginAdminUserDto.password, user.password);
 
 		if (!isPasswordValid) {
-			throw new UnauthorizedException('用户名或密码错误');
+			throw new ForbiddenException('用户名或密码错误');
 		}
 
 		// 使用 AuthService 生成 token
@@ -184,12 +187,31 @@ export class AdminUsersService {
 			}
 		}, 'admin');
 
+		// 获取菜单
+		let roles=await this.adminRoleModel.find({
+			_id: { $in: user.roles },
+			status: '0'
+		})
+		let menus =roles.reduce((acc, role) => {
+			acc.push(...role.menus);
+			return acc;
+		}, []);
+		let permissions =roles.reduce((acc, role) => {
+			acc.push(...role.permissions);
+			return acc;
+		}, []);
+		// let menuDocs = await this.adminMenuModel.find({ name: { $in: menuNames }, status: '0' });
+		// let menus=menuDocs.map(item=>item.name)
+		console.log(menus)
+		console.log(permissions)
+
 		return {
 			access_token,
 			user: {
 				id: user._id,
 				username: user.username,
-				roles: user.roles
+				menus,
+				permissions
 			}
 		};
 	}

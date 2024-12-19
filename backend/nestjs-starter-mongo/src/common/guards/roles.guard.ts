@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { NO_CHECK_ROLES_KEY } from '../decorators/roles.decorator';
 import { InjectModel } from '@nestjs/mongoose';
@@ -95,7 +95,7 @@ export class RolesGuard implements CanActivate {
 			]).exec();
 
 			if (!userWithRoles || userWithRoles.length === 0 || !userWithRoles[0].permissions.length) {
-				return false; // 如果找不到有效角色或权限，拒绝访问
+				throw new ForbiddenException('无权访问'); // 如果找不到有效角色或权限，拒绝访问
 			}
 
 			const userPermissions = userWithRoles[0].permissions;
@@ -107,9 +107,14 @@ export class RolesGuard implements CanActivate {
 			}
 			const needPermission = `${permissionGroup}.${permissionKey}`;
 			// 检查是否包含所需的角色权限
-			return userPermissions.includes('root')||userPermissions.includes(needPermission);
+			if(userPermissions.includes('root')||userPermissions.includes(needPermission)){
+				return true
+			}else{
+				throw new ForbiddenException('无权访问');
+			}
 		} catch (error) {
-			return false;
+			console.log("error",error);
+			throw new ForbiddenException('无权访问');
 		}
 
 	}

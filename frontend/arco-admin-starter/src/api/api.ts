@@ -136,6 +136,37 @@ export interface SetValueDto {
   value: string;
 }
 
+export interface UserInfo {
+  /** 用户id */
+  id: string;
+  /** 用户名 */
+  username: string;
+  /** 用户菜单name */
+  menus: string[];
+  /** 用户权限key */
+  permissions: string[];
+}
+
+export interface LoginAdminUserResDto {
+  /** token */
+  access_token: string;
+  /** 用户信息 */
+  user: UserInfo;
+}
+
+export interface LoginAdminUserDto {
+  /**
+   * 用户名
+   * @example "root"
+   */
+  username: string;
+  /**
+   * 密码
+   * @example "root123"
+   */
+  password: string;
+}
+
 export interface CreateAdminUserDto {
   /**
    * 用户昵称
@@ -163,35 +194,6 @@ export interface CreateAdminUserDto {
    * @example "0"
    */
   status: string;
-}
-
-export interface UserInfo {
-  /** 用户id */
-  id: string;
-  /** 用户名 */
-  username: string;
-  /** 用户角色 */
-  roles: string[];
-}
-
-export interface LoginAdminUserResDto {
-  /** token */
-  access_token: string;
-  /** 用户信息 */
-  user: UserInfo;
-}
-
-export interface LoginAdminUserDto {
-  /**
-   * 用户名
-   * @example "root"
-   */
-  username: string;
-  /**
-   * 密码
-   * @example "root123"
-   */
-  password: string;
 }
 
 export interface AdminUserRoleItem {
@@ -274,8 +276,12 @@ export interface CreateAdminRoleDto {
   name: string;
   /** 角色描述 */
   description: string;
+  /** 角色菜单列表 */
+  menus: string[];
   /** 角色权限列表 */
   permissions: string[];
+  /** 角色状态 */
+  status?: string;
 }
 
 export interface AdminRoleDto {
@@ -285,6 +291,8 @@ export interface AdminRoleDto {
   name: string;
   /** 角色描述 */
   description: string;
+  /** 角色菜单列表 */
+  menus: string[];
   /** 角色权限列表 */
   permissions: string[];
   /**
@@ -322,6 +330,37 @@ export interface UpdateAdminRoleDto {
   description?: string;
   /** 角色权限列表 */
   permissions?: string[];
+}
+
+export interface AdminPermissionItemDto {
+  /** 权限名 */
+  key: string;
+  /** 权限描述 */
+  description: string;
+  /** 所属分组key */
+  group: string;
+  /** 所属分组描述 */
+  groupDescription: string;
+  /** 权限状态 */
+  status: string;
+}
+
+export interface AdminMenuItem {
+  /** 菜单路径 */
+  path: string;
+  /** 菜单key */
+  name: string;
+  /** 菜单标题 */
+  title: string;
+  /** 菜单关联权限 */
+  permissions: string[];
+  /** 父级菜单key */
+  parentName?: string;
+}
+
+export interface UpdateAdminMenusDto {
+  /** 菜单列表 */
+  menus: AdminMenuItem[];
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -504,11 +543,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     usersControllerCreate: (data: CreateUserDto, params: RequestParams = {}) =>
       this.request<
         {
-          data?: User;
+          data: User;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -549,11 +588,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<
         {
-          data?: PageQueryResUser;
+          data: PageQueryResUser;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -577,11 +616,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     usersControllerLogin: (data: LoginDto, params: RequestParams = {}) =>
       this.request<
         {
-          data?: User;
+          data: User;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -606,11 +645,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     usersControllerFindOne: (id: string, params: RequestParams = {}) =>
       this.request<
         {
-          data?: User;
+          data: User;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -633,11 +672,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     usersControllerUpdate: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
       this.request<
         {
-          data?: User;
+          data: User;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -662,11 +701,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     usersControllerRemove: (id: string, params: RequestParams = {}) =>
       this.request<
         {
-          data?: User;
+          data: User;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -986,17 +1025,46 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
         path: `/admin/users/root`,
         method: "POST",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员用户
+     * @name AdminUsersControllerLogin
+     * @summary 管理员登录
+     * @request POST:/admin/users/login
+     * @secure
+     */
+    adminUsersControllerLogin: (data: LoginAdminUserDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          data: LoginAdminUserResDto;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        void
+      >({
+        path: `/admin/users/login`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -1014,11 +1082,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1061,11 +1129,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<
         {
-          data?: PageQueryResAdminUserDto;
+          data: PageQueryResAdminUserDto;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1073,35 +1141,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "GET",
         query: query,
         secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags admin端-管理员用户
-     * @name AdminUsersControllerLogin
-     * @summary 管理员登录
-     * @request POST:/admin/users/login
-     * @secure
-     */
-    adminUsersControllerLogin: (data: LoginAdminUserDto, params: RequestParams = {}) =>
-      this.request<
-        {
-          data?: LoginAdminUserResDto;
-          /** @example 0 */
-          code?: number;
-          /** @example "请求成功" */
-          message?: string;
-        },
-        void
-      >({
-        path: `/admin/users/login`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -1118,11 +1157,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     adminUsersControllerFindOne: (id: string, params: RequestParams = {}) =>
       this.request<
         {
-          data?: AdminUserDto;
+          data: AdminUserDto;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1146,11 +1185,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1176,11 +1215,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1204,11 +1243,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1251,11 +1290,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<
         {
-          data?: PageQueryResAdminRoleDto;
+          data: PageQueryResAdminRoleDto;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
@@ -1273,21 +1312,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags admin端-管理员角色
      * @name AdminRolesControllerFindOne
      * @summary 根据ID获取管理员角色
-     * @request GET:/admin/roles/{id}
+     * @request GET:/admin/roles/role/{id}
      * @secure
      */
     adminRolesControllerFindOne: (id: string, params: RequestParams = {}) =>
       this.request<
         {
-          data?: AdminRoleDto;
+          data: AdminRoleDto;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
-        path: `/admin/roles/${id}`,
+        path: `/admin/roles/role/${id}`,
         method: "GET",
         secure: true,
         format: "json",
@@ -1300,22 +1339,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags admin端-管理员角色
      * @name AdminRolesControllerUpdate
      * @summary 更新管理员角色信息
-     * @request PATCH:/admin/roles/{id}
+     * @request PATCH:/admin/roles/role/{id}
      * @secure
      */
     adminRolesControllerUpdate: (id: string, data: UpdateAdminRoleDto, params: RequestParams = {}) =>
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
-        path: `/admin/roles/${id}`,
+        path: `/admin/roles/role/${id}`,
         method: "PATCH",
         body: data,
         secure: true,
@@ -1330,23 +1369,107 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags admin端-管理员角色
      * @name AdminRolesControllerRemove
      * @summary 删除管理员角色
-     * @request DELETE:/admin/roles/{id}
+     * @request DELETE:/admin/roles/role/{id}
      * @secure
      */
     adminRolesControllerRemove: (id: string, params: RequestParams = {}) =>
       this.request<
         {
           /** @example "ok" */
-          data?: string;
+          data: string;
           /** @example 0 */
-          code?: number;
+          code: number;
           /** @example "请求成功" */
-          message?: string;
+          message: string;
         },
         void
       >({
-        path: `/admin/roles/${id}`,
+        path: `/admin/roles/role/${id}`,
         method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerFindAllPermissions
+     * @summary 获取所有可选权限
+     * @request GET:/admin/roles/permissions
+     * @secure
+     */
+    adminRolesControllerFindAllPermissions: (params: RequestParams = {}) =>
+      this.request<
+        {
+          data: AdminPermissionItemDto[];
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        void
+      >({
+        path: `/admin/roles/permissions`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerUpdateAllMenus
+     * @summary 更新所有菜单
+     * @request POST:/admin/roles/menus
+     * @secure
+     */
+    adminRolesControllerUpdateAllMenus: (data: UpdateAdminMenusDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        void
+      >({
+        path: `/admin/roles/menus`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-管理员角色
+     * @name AdminRolesControllerFindAllMenus
+     * @summary 获取所有菜单
+     * @request GET:/admin/roles/menus
+     * @secure
+     */
+    adminRolesControllerFindAllMenus: (params: RequestParams = {}) =>
+      this.request<
+        {
+          data: AdminMenuItem[];
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        void
+      >({
+        path: `/admin/roles/menus`,
+        method: "GET",
         secure: true,
         format: "json",
         ...params,

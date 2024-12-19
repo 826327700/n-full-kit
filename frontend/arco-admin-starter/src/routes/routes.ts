@@ -80,6 +80,9 @@ const routes:Array<RouteRecordRaw>= [
                         name: 'system-account',
                         meta: {
                             title: '管理员账号',
+							permissions:[
+								'admin-users.create'
+							]
                         },
                         component: () => import('@/views/system/account/index.vue')
                     },

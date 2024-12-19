@@ -22,6 +22,9 @@ api.instance.interceptors.response.use((res:AxiosResponse) => {
         localStorage.remove('token')
         sessionStorage.remove('token')
         router.replace('/login')
-    }
+    }else{
+		//@ts-ignore
+		Message.error(err.response?.data.message)
+	}
     return Promise.reject(err.response);
 })

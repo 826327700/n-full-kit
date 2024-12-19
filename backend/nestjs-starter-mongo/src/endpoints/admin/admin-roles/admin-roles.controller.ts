@@ -8,7 +8,8 @@ import { Auth } from 'src/common/decorators/auth.decorator';
 import { CheckRoles } from 'src/common/decorators/roles.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
 import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
-import { AdminRoleDto, QueryAdminRoleDto } from './dto/query-admin-role.dto';
+import { AdminPermissionItemDto, AdminRoleDto, QueryAdminRoleDto } from './dto/query-admin-role.dto';
+import { AdminMenuItem, UpdateAdminMenusDto } from './dto/update-admin-menu.dto';
 
 @ApiTags('admin端-管理员角色')
 @Controller('admin/roles')
@@ -42,7 +43,7 @@ export class AdminRolesController {
 	}
 
 	// 根据 ID 获取角色
-	@Get(':id')
+	@Get('role/:id')
 	@ApiOperation({ summary: '根据ID获取管理员角色' })
 	@CustomApiResponse({
 		type:AdminRoleDto,
@@ -53,7 +54,7 @@ export class AdminRolesController {
 	}
 
 	// 更新角色
-	@Patch(':id')
+	@Patch('role/:id')
 	@ApiOperation({ summary: '更新管理员角色信息' })
 	@CustomApiResponse({
 		type:String,
@@ -65,7 +66,7 @@ export class AdminRolesController {
 	}
 
 	// 删除角色
-	@Delete(':id')
+	@Delete('role/:id')
 	@ApiOperation({ summary: '删除管理员角色' })
 	@CustomApiResponse({
 		type:String,
@@ -74,5 +75,41 @@ export class AdminRolesController {
 	})
 	async remove(@Param('id') id: string) {
 		return this.adminRolesService.remove(id);
+	}
+
+	//获取所有可选权限
+	@Get('permissions')
+	@ApiOperation({ summary: '获取所有可选权限' })
+	@CustomApiResponse({
+		type:AdminPermissionItemDto,
+		description:"返回所有可选权限",
+		isList:true
+	})
+	async findAllPermissions(){
+		return this.adminRolesService.findAllPermissions();
+	}
+
+	//更新所有菜单
+	@Post('menus')
+	@ApiOperation({ summary: '更新所有菜单' })
+	@CustomApiResponse({
+		type:String,
+		example:"ok",
+		description:"菜单更新成功",
+	})
+	async updateAllMenus(@Body() updateAdminMenusDto: UpdateAdminMenusDto) {
+		return this.adminRolesService.updateAllMenus(updateAdminMenusDto);
+	}
+
+	//获取所有菜单
+	@Get('menus')
+	@ApiOperation({ summary: '获取所有菜单' })
+	@CustomApiResponse({
+		type:AdminMenuItem,
+		description:"返回所有菜单",
+		isList:true
+	})
+	async findAllMenus(){
+		return this.adminRolesService.findAllMenus();
 	}
 }

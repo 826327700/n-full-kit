@@ -5,11 +5,13 @@ import { AdminUsersController } from './admin-users.controller';
 import { AdminUserSchema } from './entities/admin-user.entity';
 import { AuthModule } from 'src/common/modules/auth/auth.module';
 import { AdminRoleSchema } from '../admin-roles/entities/admin-role.entity';
+import { AdminPermissionSchema } from '../admin-roles/entities/admin-permission.entity';
+import { AdminMenuSchema } from '../admin-roles/entities/admin-menu.entity';
 
 @Global()
 @Module({
   imports: [
-    MongooseModule.forFeature([AdminUserSchema, AdminRoleSchema]),
+    MongooseModule.forFeature([AdminUserSchema, AdminRoleSchema,AdminPermissionSchema,AdminMenuSchema]),
     AuthModule
   ],
   controllers: [AdminUsersController],

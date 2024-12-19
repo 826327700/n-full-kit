@@ -19,6 +19,9 @@ export class AdminRoleDto{
     @ApiProperty({ description: '角色描述' })
     description: string;
 
+	@ApiProperty({ description: '角色菜单列表' ,type: [String]})
+    menus: string[];
+
     @ApiProperty({ description: '角色权限列表' ,type: [String]})
     permissions: string[];
 
@@ -30,4 +33,22 @@ export class AdminRoleDto{
 
     @ApiProperty({ description: '更新时间' })
     updatedAt: Date;
+}
+
+export class AdminPermissionItemDto {
+
+	@ApiProperty({ type: String,description: '权限名' })
+	key: string;
+
+    @ApiProperty({ type: String,description: '权限描述' })
+	description: string;
+
+	@ApiProperty({ type: String,description: '所属分组key' })
+	group:string;
+
+	@ApiProperty({ type: String,description: '所属分组描述' })
+	groupDescription:string;
+
+	@ApiProperty({ type: String,description: '权限状态'})
+	status:string;
 }
