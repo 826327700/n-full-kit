@@ -82,6 +82,11 @@ export class AdminRolesService {
 				throw new ConflictException('角色名已存在');
 			}
 		}
+		Object.keys(updateAdminRoleDto).forEach(key => {
+			if (!updateAdminRoleDto[key]) {
+				delete updateAdminRoleDto[key];
+			}
+		});
 		await this.adminRoleModel.findByIdAndUpdate(id, {$set:updateAdminRoleDto});
 		return 'ok'
 	}

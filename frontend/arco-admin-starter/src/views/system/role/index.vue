@@ -8,19 +8,22 @@
 					</a-form-item>
 					<a-form-item>
 						<a-space>
-							<a-button type="primary" @click="fetchData" v-permissions="['admin.adminRolesControllerFindAll']">
+							<a-button type="primary" @click="fetchData"
+								v-permissions="['admin.adminRolesControllerFindAll']">
 								<template #icon>
 									<icon-search />
 								</template>
 								搜索
 							</a-button>
-							<a-button status="success" @click="form.visible = true" v-permissions="['admin.adminRolesControllerCreate']">
+							<a-button status="success" @click="form.visible = true"
+								v-permissions="['admin.adminRolesControllerCreate']">
 								<template #icon>
 									<icon-plus />
 								</template>
 								新增
 							</a-button>
-							<a-button status="warning" @click="updateMenu" v-permissions="['admin.adminRolesControllerUpdateAllMenus']">
+							<a-button status="warning" @click="updateMenu"
+								v-permissions="['admin.adminRolesControllerUpdateAllMenus']">
 								<template #icon>
 									<icon-sync />
 								</template>
@@ -35,12 +38,12 @@
 				<a-table-column title="角色描述" data-index="description" align="center"></a-table-column>
 				<a-table-column title="可见菜单" data-index="menus" align="center">
 					<template #cell="{ record }">
-						<a-link>{{ record.menus.length }}</a-link>
+						<a-link @click="showRoleMenus(record)">{{ record.menus.length }}</a-link>
 					</template>
 				</a-table-column>
 				<a-table-column title="绑定权限" data-index="permissions">
 					<template #cell="{ record }">
-						<a-link>{{ record.permissions.length }}</a-link>
+						<a-link @click="showRolePermissions(record)">{{ record.permissions.length }}</a-link>
 					</template>
 				</a-table-column>
 				<a-table-column title="创建时间" data-index="createdAt">
@@ -51,9 +54,11 @@
 				<a-table-column title="操作" align="center">
 					<template #cell="{ record }">
 						<a-space>
-							<a-link type="primary" @click="openEdit(record)" v-permissions="['admin.adminRolesControllerUpdate']"><icon-edit></icon-edit></a-link>
+							<a-link type="primary" @click="openEdit(record)"
+								v-permissions="['admin.adminRolesControllerUpdate']"><icon-edit></icon-edit></a-link>
 							<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)">
-								<a-link status="danger" v-permissions="['admin.adminRolesControllerRemove']"><icon-delete></icon-delete></a-link>
+								<a-link status="danger"
+									v-permissions="['admin.adminRolesControllerRemove']"><icon-delete></icon-delete></a-link>
 							</a-popconfirm>
 						</a-space>
 					</template>
@@ -62,16 +67,21 @@
 		</TableView>
 	</Wapper>
 
-	<a-modal width="800px" v-model:visible="form.visible" :title="form.id ? '编辑角色' : '新增角色'" :on-before-ok="submit"
+	<a-modal width="1000px" v-model:visible="form.visible" :title="form.id ? '编辑角色' : '新增角色'" :on-before-ok="submit"
 		@close="onFormModalClose">
 		<a-form :model="form.data" ref="formRef" auto-label-width>
-			<a-form-item label="角色名称" field="name" :rules="[{ required: true, message: '请输入角色名称' }]">
-				<a-input v-model="form.data.name" placeholder="请输入角色名称"></a-input>
-			</a-form-item>
-			<a-form-item label="角色描述" field="description" >
-				<a-input v-model="form.data.description" placeholder="请输入角色描述，可选"></a-input>
-			</a-form-item>
-
+			<a-row :gutter="16">
+				<a-col :span="12">
+					<a-form-item label="角色名称" field="name" :rules="[{ required: true, message: '请输入角色名称' }]">
+						<a-input v-model="form.data.name" placeholder="请输入角色名称"></a-input>
+					</a-form-item>
+				</a-col>
+				<a-col :span="12">
+					<a-form-item label="角色描述" field="description">
+						<a-input v-model="form.data.description" placeholder="请输入角色描述，可选"></a-input>
+					</a-form-item>
+				</a-col>
+			</a-row>
 			<a-form-item label="是否启用" field="status">
 				<a-switch checked-value="0" unchecked-value="1" v-model="form.data.status"></a-switch>
 			</a-form-item>
@@ -80,8 +90,9 @@
 					<a-form-item label="可见菜单">
 						<div style="width:100%;max-height: 600px;overflow-y: auto;">
 							<a-tree :checkable="true" v-model:checked-keys="form.data.menus"
-							@check="onMenusCheck"
-								:check-strictly="false" :default-expand-all="true" checked-strategy="all" :data="menusTree" />
+							v-model:expanded-keys="menusDefaultExpandedKeys" @check="onMenusCheck"
+								:check-strictly="false" :default-expand-all="true" checked-strategy="all"
+								:data="menusTree" />
 						</div>
 					</a-form-item>
 				</a-col>
@@ -89,12 +100,36 @@
 					<a-form-item label="拥有权限">
 						<div style="width:100%;max-height: 600px;overflow-y: auto;">
 							<a-tree :checkable="true" v-model:checked-keys="form.data.permissions"
-								:check-strictly="false" :default-expand-all="true" checked-strategy="all" :data="permissionsTree" />
+							v-model:expanded-keys="permissionsGroups" :check-strictly="false"
+								:default-expand-all="true" checked-strategy="all" :data="permissionsTree">
+								<template #extra="nodeData">
+									<span v-if="nodeData.menuNeed" style="font-size: 12px;color: #999;">当前菜单需要</span>
+								</template>
+							</a-tree>
 						</div>
 					</a-form-item>
 				</a-col>
 			</a-row>
 		</a-form>
+	</a-modal>
+
+	<a-modal title="可见菜单" v-model:visible="state.showRoleMenus" ok-text="更新" :on-before-ok="update">
+		<div style="width:100%;max-height: 600px;overflow-y: auto;">
+			<a-tree :checkable="true" v-model:checked-keys="form.data.menus"
+			v-model:expanded-keys="menusDefaultExpandedKeys" @check="onMenusCheck" :check-strictly="false"
+				:default-expand-all="true" checked-strategy="all" :data="menusTree" />
+		</div>
+	</a-modal>
+	<a-modal title="拥有权限" v-model:visible="state.showRolePermissions" ok-text="更新" :on-before-ok="update">
+		<div style="width:100%;max-height: 600px;overflow-y: auto;">
+			<a-tree :checkable="true" v-model:checked-keys="form.data.permissions"
+			v-model:expanded-keys="permissionsGroups" :check-strictly="false" :default-expand-all="true"
+				checked-strategy="all" :data="permissionsTree">
+				<template #extra="nodeData">
+					<span v-if="nodeData.menuNeed" style="font-size: 12px;color: #999;">当前菜单需要</span>
+				</template>
+			</a-tree>
+		</div>
 	</a-modal>
 </template>
 <script setup lang="ts">
@@ -104,7 +139,7 @@ import TableView from '@/components/table-view/index.vue';
 import { router } from '@/routes';
 import { Form, Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
-import { onMounted, reactive, ref, useTemplateRef } from 'vue';
+import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 
 const queryFilter = reactive({
@@ -127,26 +162,40 @@ const form = reactive<{
 		status: "0"
 	}
 })
-let menusFlat:AdminMenuItem[] = []
+const state = reactive({
+	showRoleMenus: false,
+	showRolePermissions: false,
+})
+let menusFlat = ref<AdminMenuItem[]>([])
 let menusTree = ref<TreeItem[]>([])
-let permissionsFlat:AdminPermissionItemDto[] = []
+let menusDefaultExpandedKeys = ref<string[]>([])
+let permissionsFlat = ref<AdminPermissionItemDto[]>([])
+let permissionsGroups = ref<string[]>([])
 let permissionsTree = ref<TreeItem[]>([])
 onMounted(() => {
 	api.admin.adminRolesControllerFindAllPermissions().then(res => {
-		permissionsFlat=res.data.data
+		permissionsFlat.value = res.data.data
+		permissionsGroups.value = res.data.data.map(item => item.group)
 		permissionsTree.value = buildPermissionsTree(res.data.data)
 	})
 	refreshMenus()
 })
 
+watch(() => form.data.menus, () => {
+	onMenusCheck(form.data.menus)
+})
+
 type TreeItem = {
 	title: string;
 	key: string;
-	children: Array<{
+	menuNeed: boolean,
+	children?: Array<{
 		title: string;
 		key: string;
+		menuNeed: boolean,
+		children?: TreeItem[];
 	}>;
-	[x:string]:any
+	[x: string]: any
 };
 const buildPermissionsTree = (data: AdminPermissionItemDto[]) => {
 	const groupedMap = new Map<string, TreeItem>();
@@ -158,14 +207,16 @@ const buildPermissionsTree = (data: AdminPermissionItemDto[]) => {
 			groupedMap.set(groupDescription, {
 				title: groupDescription,
 				key: groupKey,
+				menuNeed: false,
 				children: []
 			});
 		}
 		const groupItem = groupedMap.get(groupDescription);
 		if (groupItem) {
-			groupItem.children.push({
+			groupItem.children!.push({
 				title: item.description,
-				key: item.key
+				key: item.key,
+				menuNeed: false,
 			});
 		}
 	});
@@ -178,7 +229,7 @@ const buildMenusTree = (routes: Route[]): TreeItem[] => {
 
 	// 将所有路由项加入到 map 中
 	routes.forEach(route => {
-		map[route.name] = { title:route.title,key:route.name,permissions:route.permissions, children: [] };
+		map[route.name] = { title: route.title, key: route.name, permissions: route.permissions, children: [] };
 	});
 
 	// 将每个路由项根据 parentName 组织成树结构
@@ -198,13 +249,25 @@ const buildMenusTree = (routes: Route[]): TreeItem[] => {
 	return tree;
 }
 
-const onMenusCheck=(keys:any[])=>{
-	let permissions:string[]=[]
-	keys.forEach(key=>{
-		let menu=menusFlat.find(item=>item.name==key)
-		permissions.push(...menu?.permissions||[])
+const onMenusCheck = (keys: any[]) => {
+	let permissions: string[] = []
+	keys.forEach(key => {
+		let menu = menusFlat.value.find(item => item.name == key)
+		permissions.push(...menu?.permissions || [])
 	})
-	form.data.permissions=permissions
+	//递归遍历 permissionsTree.value
+	const traverse = (arr: TreeItem[]) => {
+		if (arr && arr.length > 0) {
+			arr.forEach(node => {
+				if (node.children && node.children.length > 0) {
+					traverse(node.children)
+				} else {
+					node.menuNeed = permissions.includes(node.key)
+				}
+			})
+		}
+	}
+	traverse(permissionsTree.value)
 }
 
 const submit = async () => {
@@ -226,26 +289,35 @@ const submit = async () => {
 	}
 	return true
 }
+const update = async () => {
+	await api.admin.adminRolesControllerUpdate(form.id, form.data).then(res => {
+		form.id = ""
+		form.visible = false
+		toolbarRef.value?.fetchData()
+	})
+}
 
 const onFormModalClose = () => {
 	formRef.value?.resetFields()
 	form.id = ""
+	form.data.menus = []
+	form.data.permissions = []
 }
 
-const openEdit=(item:AdminRoleDto)=>{
-	form.id=item._id
-	form.data.name=item.name
-	form.data.description=item.description
-	form.data.menus=item.menus
-	form.data.permissions=item.permissions
-	form.data.status=item.status
-	form.visible=true
+const openEdit = (item: AdminRoleDto) => {
+	form.id = item._id
+	form.data.name = item.name
+	form.data.description = item.description
+	form.data.menus = item.menus
+	form.data.permissions = item.permissions
+	form.data.status = item.status
+	form.visible = true
 
 	onMenusCheck(form.data.menus)
 }
 
-const deleteRow=(id:string)=>{
-	api.admin.adminRolesControllerRemove(id).then(res=>{
+const deleteRow = (id: string) => {
+	api.admin.adminRolesControllerRemove(id).then(res => {
 		toolbarRef.value?.fetchData()
 	})
 }
@@ -276,15 +348,16 @@ const updateMenu = () => {
 		}
 	}
 	flat(rootRoutes, '')
-	api.admin.adminRolesControllerUpdateAllMenus({menus:flatMenus}).then(res=>{
+	api.admin.adminRolesControllerUpdateAllMenus({ menus: flatMenus }).then(res => {
 		Message.success('更新成功')
 		refreshMenus()
 	})
 }
 const refreshMenus = () => {
 	api.admin.adminRolesControllerFindAllMenus().then(res => {
-		menusFlat=res.data.data
-		menusTree.value=buildMenusTree(res.data.data as unknown as Route[])
+		menusFlat.value = res.data.data
+		menusTree.value = buildMenusTree(res.data.data as unknown as Route[])
+		menusDefaultExpandedKeys.value = res.data.data.map(item => item.name)
 	})
 }
 
@@ -296,6 +369,19 @@ type Route = {
 	parentName: string;
 	children?: Route[];
 };
+
+const showRoleMenus = (item: AdminRoleDto) => {
+	form.id = item._id
+	form.data.menus = item.menus
+	form.data.permissions = item.permissions
+	state.showRoleMenus = true
+}
+const showRolePermissions = (item: AdminRoleDto) => {
+	form.id = item._id
+	form.data.menus = item.menus
+	form.data.permissions = item.permissions
+	state.showRolePermissions = true
+}
 
 </script>
 <style lang="scss" scoped></style>
