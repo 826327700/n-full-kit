@@ -58,7 +58,41 @@ export class AdminRolesService {
 			filter.name['$regex']=regex
 		}
 		const total = await this.adminRoleModel.countDocuments(filter);
-		const list = await this.adminRoleModel.find(filter).skip((query.page - 1) * query.pageSize).limit(query.pageSize).exec();
+		const list = await this.adminRoleModel.aggregate([
+			{ $match: filter },
+			{ $skip: (query.page - 1) * query.pageSize },
+			{ $limit: query.pageSize },
+			{
+				$lookup: {
+					from: 'admin_permissions',
+					let: { permissionKeys: '$permissions' },
+					pipeline: [
+						{
+							$match: {
+								$expr: {
+									$and: [
+										{ $in: ['$key', '$$permissionKeys'] },
+										{ $ne: ['$status', '99'] }  // 排除已删除的权限
+									]
+								}
+							}
+						}
+					],
+					as: 'validPermissions'
+				}
+			},
+			{
+				$addFields: {
+					permissions: '$validPermissions.key'  // 只保留存在的权限的key
+				}
+			},
+			{
+				$project: {
+					validPermissions: 0  // 移除临时字段
+				}
+			}
+		]);
+
 		return {
 			list,
 			total,

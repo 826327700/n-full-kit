@@ -50,6 +50,7 @@ export class AdminUsersService {
 		if (!rootRole) {
 			rootRole = new this.adminRoleModel({
 				name: '超级管理员',
+				nickname: '超级管理员',
 				description: '超级管理员',
 				permissions: ['root'],
 				status: '0'
@@ -210,10 +211,6 @@ export class AdminUsersService {
 			menus=rootMenusAndPermissions.menus
 			permissions=rootMenusAndPermissions.permissions
 		}
-		// let menuDocs = await this.adminMenuModel.find({ name: { $in: menuNames }, status: '0' });
-		// let menus=menuDocs.map(item=>item.name)
-		console.log(menus)
-		console.log(permissions)
 
 		return {
 			access_token,
