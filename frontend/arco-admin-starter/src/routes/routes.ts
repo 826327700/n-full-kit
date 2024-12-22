@@ -100,6 +100,22 @@ const routes:Array<RouteRecordRaw>= [
                             ]
                         },
                         component: () => import('@/views/system/role/index.vue')
+                    },
+                    {
+                        path: 'dict',
+                        name: 'system-dict',
+                        meta: {
+                            title: '字典管理',
+                            //前端声明该页面所用到的接口(权限),以便后端知道每一个页面默认有哪些权限
+                            //权限名称为该页面所用到的api接口 格式为：api.aaa.bbbb()=>aaa.bbbb
+                            permissions:[
+                                'admin.adminDictControllerFindAll',
+                                'admin.adminDictControllerUpdate',
+                                'admin.adminDictControllerCreate',
+                                'admin.adminDictControllerRemove'
+                            ]
+                        },
+                        component: () => import('@/views/system/dict/index.vue')
                     }
                 ]
             }

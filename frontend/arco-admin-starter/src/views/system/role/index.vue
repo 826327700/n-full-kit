@@ -229,7 +229,7 @@ const buildMenusTree = (routes: Route[]): TreeItem[] => {
 
 	// 将所有路由项加入到 map 中
 	routes.forEach(route => {
-		map[route.name] = { title: route.title, key: route.name, permissions: route.permissions, children: [] };
+		map[route.name] = { title: route.title, key: route.name, permissions: route.permissions,menuNeed:false, children: [] };
 	});
 
 	// 将每个路由项根据 parentName 组织成树结构

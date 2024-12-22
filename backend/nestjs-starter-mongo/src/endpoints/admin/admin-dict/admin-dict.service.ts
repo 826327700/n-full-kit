@@ -9,6 +9,8 @@ import { AdminDictType } from './entities/admin-dict-type.entity';
 import { CreateAdminDictTypeDto } from './dto/create-admin-dict-type.dto';
 import { UpdateAdminDictTypeDto } from './dto/update-admin-dict-type.dto';
 import { QueryAdminDictTypeDto } from './dto/query-admin-dict-type.dto';
+import fs from 'fs';
+import path from 'path';
 
 @Injectable()
 export class AdminDictService {
@@ -17,7 +19,37 @@ export class AdminDictService {
         private adminDictModel: Model<AdminDict>,
         @InjectModel(AdminDictType.name)
         private adminDictTypeModel: Model<AdminDictType>,
-    ) {}
+    ) {
+        this.importEnumDict()
+    }
+
+    async importEnumDict(){
+        let enums=fs.readFileSync(path.resolve(__dirname, '../../../enum.json'), 'utf-8')
+        let enumsJson=JSON.parse(enums) as Record<string,any>[]
+        for (const item of enumsJson) {
+            await this.adminDictTypeModel.findOneAndUpdate({
+                type:item.labelKey
+            },{
+                $set:{
+                    type:item.labelKey,
+                    typeName:item.labelName,
+                }
+            },{
+                upsert:true
+            })
+            await this.adminDictModel.deleteMany({type:item.labelKey})
+            let optionDocs=item.options.map((option,index)=>{
+                return {
+                    type:item.labelKey,
+                    code:option.value,
+                    label:option.label,
+                    sort:index
+                }
+            })
+            await this.adminDictModel.insertMany(optionDocs)
+        }
+        console.log(enums)
+    }
 
     // 字典类型相关方法
     async createType(createAdminDictTypeDto: CreateAdminDictTypeDto) {

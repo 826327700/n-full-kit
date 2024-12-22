@@ -257,7 +257,7 @@ export interface CreateAdminRoleDto {
   /** 角色名称 */
   name: string;
   /** 角色描述 */
-  description: string;
+  description?: string;
   /** 角色菜单列表 */
   menus: string[];
   /** 角色权限列表 */
@@ -347,6 +347,144 @@ export interface AdminMenuItem {
 export interface UpdateAdminMenusDto {
   /** 菜单列表 */
   menus: AdminMenuItem[];
+}
+
+export interface CreateAdminDictTypeDto {
+  /** 字典类型标识符 */
+  type: string;
+  /** 字典类型显示名称 */
+  typeName: string;
+  /**
+   * 状态：0-启用，1-禁用
+   * @default "0"
+   */
+  status: string;
+  /** 备注说明 */
+  remark: string;
+}
+
+export interface AdminDictTypeDto {
+  /** 字典类型标识符 */
+  type: string;
+  /** 字典类型显示名称 */
+  typeName: string;
+  /** 状态：0-启用，1-禁用 */
+  status: string;
+  /** 备注说明 */
+  remark: string;
+  /**
+   * 创建时间
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * 更新时间
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
+export interface PageQueryResAdminDictTypeDto {
+  /** 数据列表 */
+  list: AdminDictTypeDto[];
+  /** 总数量 */
+  total: number;
+  /** 当前页码 */
+  page: number;
+  /** 每页数量 */
+  pageSize: number;
+}
+
+export interface UpdateAdminDictTypeDto {
+  /** 字典类型标识符 */
+  type?: string;
+  /** 字典类型显示名称 */
+  typeName?: string;
+  /**
+   * 状态：0-启用，1-禁用
+   * @default "0"
+   */
+  status?: string;
+  /** 备注说明 */
+  remark?: string;
+}
+
+export interface CreateAdminDictDto {
+  /** 字典类型标识符 */
+  type: string;
+  /** 字典类型显示名称 */
+  typeName: string;
+  /** 字典编码 */
+  code: string;
+  /** 显示标签 */
+  label: string;
+  /** 排序号 */
+  sort: number;
+  /**
+   * 状态：0-启用，1-禁用
+   * @default "0"
+   */
+  status: string;
+  /** 备注说明 */
+  remark: string;
+}
+
+export interface AdminDictDto {
+  /** 字典类型标识符 */
+  type: string;
+  /** 字典类型显示名称 */
+  typeName: string;
+  /** 字典编码 */
+  code: string;
+  /** 显示标签 */
+  label: string;
+  /** 排序号 */
+  sort: number;
+  /** 状态：0-启用，1-禁用 */
+  status: string;
+  /** 备注说明 */
+  remark: string;
+  /**
+   * 创建时间
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * 更新时间
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
+export interface PageQueryResAdminDictDto {
+  /** 数据列表 */
+  list: AdminDictDto[];
+  /** 总数量 */
+  total: number;
+  /** 当前页码 */
+  page: number;
+  /** 每页数量 */
+  pageSize: number;
+}
+
+export interface UpdateAdminDictDto {
+  /** 字典类型标识符 */
+  type?: string;
+  /** 字典类型显示名称 */
+  typeName?: string;
+  /** 字典编码 */
+  code?: string;
+  /** 显示标签 */
+  label?: string;
+  /** 排序号 */
+  sort?: number;
+  /**
+   * 状态：0-启用，1-禁用
+   * @default "0"
+   */
+  status?: string;
+  /** 备注说明 */
+  remark?: string;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -1459,6 +1597,343 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/admin/roles/menus`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerCreateType
+     * @summary 创建字典类型
+     * @request POST:/admin/dict/type
+     */
+    adminDictControllerCreateType: (data: CreateAdminDictTypeDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/type`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerFindAllTypes
+     * @summary 查询字典类型列表
+     * @request GET:/admin/dict/type
+     */
+    adminDictControllerFindAllTypes: (
+      query?: {
+        /**
+         * 页码
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 每页数量
+         * @min 1
+         * @default 10
+         */
+        pageSize?: number;
+        /** 字典类型标识符 */
+        type?: string;
+        /** 字典类型显示名称 */
+        typeName?: string;
+        /** 状态：0-启用，1-禁用 */
+        status?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          data: PageQueryResAdminDictTypeDto;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/type`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerFindOneType
+     * @summary 获取单个字典类型
+     * @request GET:/admin/dict/type/{type}
+     */
+    adminDictControllerFindOneType: (type: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          data: AdminDictTypeDto;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/type/${type}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerUpdateType
+     * @summary 更新字典类型
+     * @request PATCH:/admin/dict/type/{type}
+     */
+    adminDictControllerUpdateType: (type: string, data: UpdateAdminDictTypeDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/type/${type}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerRemoveType
+     * @summary 删除字典类型
+     * @request DELETE:/admin/dict/type/{type}
+     */
+    adminDictControllerRemoveType: (type: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/type/${type}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerCreate
+     * @summary 创建字典项
+     * @request POST:/admin/dict
+     */
+    adminDictControllerCreate: (data: CreateAdminDictDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerFindAll
+     * @summary 查询字典列表
+     * @request GET:/admin/dict
+     */
+    adminDictControllerFindAll: (
+      query?: {
+        /**
+         * 页码
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 每页数量
+         * @min 1
+         * @default 10
+         */
+        pageSize?: number;
+        /** 字典类型标识符 */
+        type?: string;
+        /** 字典编码 */
+        code?: string;
+        /** 显示标签 */
+        label?: string;
+        /** 状态：0-启用，1-禁用 */
+        status?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          data: PageQueryResAdminDictDto;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerFindByType
+     * @summary 根据类型获取字典项
+     * @request GET:/admin/dict/items/{type}
+     */
+    adminDictControllerFindByType: (type: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          data: AdminDictDto[];
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/items/${type}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerFindOne
+     * @summary 获取单个字典项
+     * @request GET:/admin/dict/{type}/{code}
+     */
+    adminDictControllerFindOne: (type: string, code: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          data: AdminDictDto;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/${type}/${code}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerUpdate
+     * @summary 更新字典项
+     * @request PATCH:/admin/dict/{type}/{code}
+     */
+    adminDictControllerUpdate: (type: string, code: string, data: UpdateAdminDictDto, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/${type}/${code}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags admin端-字典管理
+     * @name AdminDictControllerRemove
+     * @summary 删除字典项
+     * @request DELETE:/admin/dict/{type}/{code}
+     */
+    adminDictControllerRemove: (type: string, code: string, params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          data: string;
+          /** @example 0 */
+          code: number;
+          /** @example "请求成功" */
+          message: string;
+        },
+        any
+      >({
+        path: `/admin/dict/${type}/${code}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),
