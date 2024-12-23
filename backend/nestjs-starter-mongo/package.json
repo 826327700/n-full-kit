@@ -9,7 +9,7 @@
     "build": "nest build && npm run collect",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch -b swc",
+    "start:dev": "npm run collect && nest start --watch -b swc",
     "start:dev-prod": "NODE_ENV=production nest start --watch -b swc",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

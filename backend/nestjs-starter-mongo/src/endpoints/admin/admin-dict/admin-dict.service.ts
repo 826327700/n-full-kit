@@ -24,7 +24,12 @@ export class AdminDictService {
     }
 
     async importEnumDict(){
-        let enums=fs.readFileSync(path.resolve(__dirname, '../../../enum.json'), 'utf-8')
+        let enumFile=path.resolve(__dirname, '../../../../static/enum.json')
+        
+        if(!fs.existsSync(enumFile)){
+            return
+        }
+        let enums=fs.readFileSync(path.resolve(__dirname, '../../../../static/enum.json'), 'utf-8')
         let enumsJson=JSON.parse(enums) as Record<string,any>[]
         for (const item of enumsJson) {
             await this.adminDictTypeModel.findOneAndUpdate({
@@ -33,6 +38,7 @@ export class AdminDictService {
                 $set:{
                     type:item.labelKey,
                     typeName:item.labelName,
+                    from:"system"
                 }
             },{
                 upsert:true
@@ -48,7 +54,6 @@ export class AdminDictService {
             })
             await this.adminDictModel.insertMany(optionDocs)
         }
-        console.log(enums)
     }
 
     // 字典类型相关方法
@@ -66,14 +71,14 @@ export class AdminDictService {
     }
 
     async findAllTypes(query: QueryAdminDictTypeDto) {
-        const { page = 1, pageSize = 10, type, typeName, status } = query;
+        const { page = 1, pageSize = 10, keyword, status } = query;
         const filter: any = {};
 
-        if (type) {
-            filter.type = { $regex: new RegExp(type, 'i') };
-        }
-        if (typeName) {
-            filter.typeName = { $regex: new RegExp(typeName, 'i') };
+        if (keyword) {
+            filter.$or=[
+                {type: { $regex: new RegExp(keyword, 'i') }},
+                {typeName: { $regex: new RegExp(keyword, 'i') }},
+            ]
         }
         if (status) {
             filter.status = status;
@@ -93,14 +98,6 @@ export class AdminDictService {
             page,
             pageSize,
         };
-    }
-
-    async findOneType(type: string) {
-        const dictType = await this.adminDictTypeModel.findOne({ type });
-        if (!dictType) {
-            throw new NotFoundException(`字典类型 ${type} 不存在`);
-        }
-        return dictType;
     }
 
     async updateType(type: string, updateAdminDictTypeDto: UpdateAdminDictTypeDto) {
@@ -133,18 +130,10 @@ export class AdminDictService {
             throw new NotFoundException(`字典类型 ${type} 不存在`);
         }
 
-        // 使用事务确保原子性
-        const session = await this.adminDictTypeModel.db.startSession();
-        try {
-            await session.withTransaction(async () => {
-                // 删除所有相关的字典项
-                await this.adminDictModel.deleteMany({ type }).session(session);
-                // 删除字典类型
-                await this.adminDictTypeModel.findOneAndDelete({ type }).session(session);
-            });
-        } finally {
-            await session.endSession();
-        }
+        // 删除所有相关的字典项
+        await this.adminDictModel.deleteMany({ type });
+        // 删除字典类型
+        await this.adminDictTypeModel.findOneAndDelete({ type });
 
         return 'ok';
     }
@@ -174,43 +163,6 @@ export class AdminDictService {
         return 'ok';
     }
 
-    async findAll(query: QueryAdminDictDto) {
-        const { page = 1, pageSize = 10, type, code, label, status } = query;
-        const filter: any = {};
-
-        if (type) {
-            filter.type = type;
-        }
-        if (code) {
-            filter.code = { $regex: new RegExp(code, 'i') };
-        }
-        if (label) {
-            filter.label = { $regex: new RegExp(label, 'i') };
-        }
-        if (status) {
-            filter.status = status;
-        }
-
-        const [total, list, dictType] = await Promise.all([
-            this.adminDictModel.countDocuments(filter),
-            this.adminDictModel
-                .find(filter)
-                .sort({ type: 1, sort: 1 })
-                .skip((page - 1) * pageSize)
-                .limit(pageSize)
-                .exec(),
-            type ? this.adminDictTypeModel.findOne({ type }) : null,
-        ]);
-
-        return {
-            list,
-            total,
-            page,
-            pageSize,
-            typeName: dictType?.typeName,
-        };
-    }
-
     async findByType(type: string) {
         // 检查字典类型是否存在且启用
         const dictType = await this.adminDictTypeModel.findOne({ type, status: '0' });
@@ -222,22 +174,6 @@ export class AdminDictService {
             .find({ type, status: '0' })
             .sort({ sort: 1 })
             .exec();
-    }
-
-    async findOne(type: string, code: string) {
-        const [dict, dictType] = await Promise.all([
-            this.adminDictModel.findOne({ type, code }),
-            this.adminDictTypeModel.findOne({ type }),
-        ]);
-
-        if (!dict || !dictType) {
-            throw new NotFoundException(`字典项不存在`);
-        }
-
-        return {
-            ...dict.toObject(),
-            typeName: dictType.typeName,
-        };
     }
 
     async update(type: string, code: string, updateAdminDictDto: UpdateAdminDictDto) {

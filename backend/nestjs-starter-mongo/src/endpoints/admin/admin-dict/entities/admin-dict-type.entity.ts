@@ -19,9 +19,21 @@ export class AdminDictType {
 
     @Prop({ type: String, required: false, maxlength: 500, comment: '备注说明' })
     remark: string;
+
+    @Prop({ type: String, required: true, default: "custom", comment: '来源，custom-手动添加，system-代码内置' })
+    from: string;
 }
 
 export const AdminDictTypeSchema = {
     name: AdminDictType.name,
     schema: SchemaFactory.createForClass(AdminDictType)
 };
+
+AdminDictTypeSchema.schema.set('toJSON', {
+    virtuals: true, // 允许虚拟字段
+    transform: (doc, ret) => {
+      ret.id = ret._id; // 将 _id 映射到 id 为了前端兼容MySQL和MongoDB两种格式
+      delete ret._id;   // 删除 _id
+      delete ret.__v;   // 删除 __v（可选）
+    },
+});

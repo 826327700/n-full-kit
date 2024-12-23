@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminDictTypeDto {
+    @ApiProperty({ description: '字典类型id' })
+    id: string;
+
     @ApiProperty({ description: '字典类型标识符' })
     type: string;
 
@@ -12,6 +15,9 @@ export class AdminDictTypeDto {
 
     @ApiProperty({ description: '备注说明' })
     remark: string;
+
+    @ApiProperty({ description: '来源，custom-手动添加，system-代码内置 ' })
+    from: string;
 
     @ApiProperty({ description: '创建时间' })
     createdAt: Date;

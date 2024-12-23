@@ -4,9 +4,6 @@ export class AdminDictDto {
     @ApiProperty({ description: '字典类型标识符' })
     type: string;
 
-    @ApiProperty({ description: '字典类型显示名称' })
-    typeName: string;
-
     @ApiProperty({ description: '字典编码' })
     code: string;
 

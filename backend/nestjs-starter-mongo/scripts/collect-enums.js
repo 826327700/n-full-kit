@@ -103,7 +103,7 @@ var EnumCollector = /*#__PURE__*/ function() {
                         }
                     });
                 });
-                _fs.default.writeFileSync(_path.default.resolve(__dirname, '../dist/enum.json'), JSON.stringify(json, null, 2));
+                _fs.default.writeFileSync(_path.default.resolve(__dirname, '../static/enum.json'), JSON.stringify(json, null, 2));
                 console.log("字典数据收集完成");
             }
         }

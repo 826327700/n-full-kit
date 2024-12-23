@@ -364,6 +364,8 @@ export interface CreateAdminDictTypeDto {
 }
 
 export interface AdminDictTypeDto {
+  /** 字典类型id */
+  id: string;
   /** 字典类型标识符 */
   type: string;
   /** 字典类型显示名称 */
@@ -372,6 +374,8 @@ export interface AdminDictTypeDto {
   status: string;
   /** 备注说明 */
   remark: string;
+  /** 来源，custom-手动添加，system-代码内置  */
+  from: string;
   /**
    * 创建时间
    * @format date-time
@@ -412,8 +416,6 @@ export interface UpdateAdminDictTypeDto {
 export interface CreateAdminDictDto {
   /** 字典类型标识符 */
   type: string;
-  /** 字典类型显示名称 */
-  typeName: string;
   /** 字典编码 */
   code: string;
   /** 显示标签 */
@@ -432,8 +434,6 @@ export interface CreateAdminDictDto {
 export interface AdminDictDto {
   /** 字典类型标识符 */
   type: string;
-  /** 字典类型显示名称 */
-  typeName: string;
   /** 字典编码 */
   code: string;
   /** 显示标签 */
@@ -456,22 +456,9 @@ export interface AdminDictDto {
   updatedAt: string;
 }
 
-export interface PageQueryResAdminDictDto {
-  /** 数据列表 */
-  list: AdminDictDto[];
-  /** 总数量 */
-  total: number;
-  /** 当前页码 */
-  page: number;
-  /** 每页数量 */
-  pageSize: number;
-}
-
 export interface UpdateAdminDictDto {
   /** 字典类型标识符 */
   type?: string;
-  /** 字典类型显示名称 */
-  typeName?: string;
   /** 字典编码 */
   code?: string;
   /** 显示标签 */
@@ -1608,6 +1595,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerCreateType
      * @summary 创建字典类型
      * @request POST:/admin/dict/type
+     * @secure
      */
     adminDictControllerCreateType: (data: CreateAdminDictTypeDto, params: RequestParams = {}) =>
       this.request<
@@ -1619,11 +1607,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/type`,
         method: "POST",
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: "json",
         ...params,
@@ -1636,6 +1625,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerFindAllTypes
      * @summary 查询字典类型列表
      * @request GET:/admin/dict/type
+     * @secure
      */
     adminDictControllerFindAllTypes: (
       query?: {
@@ -1651,10 +1641,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @default 10
          */
         pageSize?: number;
-        /** 字典类型标识符 */
-        type?: string;
-        /** 字典类型显示名称 */
-        typeName?: string;
+        /** 搜索关键词 */
+        keyword?: string;
         /** 状态：0-启用，1-禁用 */
         status?: string;
       },
@@ -1668,36 +1656,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/type`,
         method: "GET",
         query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags admin端-字典管理
-     * @name AdminDictControllerFindOneType
-     * @summary 获取单个字典类型
-     * @request GET:/admin/dict/type/{type}
-     */
-    adminDictControllerFindOneType: (type: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          data: AdminDictTypeDto;
-          /** @example 0 */
-          code: number;
-          /** @example "请求成功" */
-          message: string;
-        },
-        any
-      >({
-        path: `/admin/dict/type/${type}`,
-        method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -1709,6 +1673,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerUpdateType
      * @summary 更新字典类型
      * @request PATCH:/admin/dict/type/{type}
+     * @secure
      */
     adminDictControllerUpdateType: (type: string, data: UpdateAdminDictTypeDto, params: RequestParams = {}) =>
       this.request<
@@ -1720,11 +1685,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/type/${type}`,
         method: "PATCH",
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: "json",
         ...params,
@@ -1737,6 +1703,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerRemoveType
      * @summary 删除字典类型
      * @request DELETE:/admin/dict/type/{type}
+     * @secure
      */
     adminDictControllerRemoveType: (type: string, params: RequestParams = {}) =>
       this.request<
@@ -1748,10 +1715,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/type/${type}`,
         method: "DELETE",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -1763,6 +1731,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerCreate
      * @summary 创建字典项
      * @request POST:/admin/dict
+     * @secure
      */
     adminDictControllerCreate: (data: CreateAdminDictDto, params: RequestParams = {}) =>
       this.request<
@@ -1774,62 +1743,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict`,
         method: "POST",
         body: data,
+        secure: true,
         type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags admin端-字典管理
-     * @name AdminDictControllerFindAll
-     * @summary 查询字典列表
-     * @request GET:/admin/dict
-     */
-    adminDictControllerFindAll: (
-      query?: {
-        /**
-         * 页码
-         * @min 1
-         * @default 1
-         */
-        page?: number;
-        /**
-         * 每页数量
-         * @min 1
-         * @default 10
-         */
-        pageSize?: number;
-        /** 字典类型标识符 */
-        type?: string;
-        /** 字典编码 */
-        code?: string;
-        /** 显示标签 */
-        label?: string;
-        /** 状态：0-启用，1-禁用 */
-        status?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          data: PageQueryResAdminDictDto;
-          /** @example 0 */
-          code: number;
-          /** @example "请求成功" */
-          message: string;
-        },
-        any
-      >({
-        path: `/admin/dict`,
-        method: "GET",
-        query: query,
         format: "json",
         ...params,
       }),
@@ -1841,6 +1761,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerFindByType
      * @summary 根据类型获取字典项
      * @request GET:/admin/dict/items/{type}
+     * @secure
      */
     adminDictControllerFindByType: (type: string, params: RequestParams = {}) =>
       this.request<
@@ -1851,35 +1772,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/items/${type}`,
         method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags admin端-字典管理
-     * @name AdminDictControllerFindOne
-     * @summary 获取单个字典项
-     * @request GET:/admin/dict/{type}/{code}
-     */
-    adminDictControllerFindOne: (type: string, code: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          data: AdminDictDto;
-          /** @example 0 */
-          code: number;
-          /** @example "请求成功" */
-          message: string;
-        },
-        any
-      >({
-        path: `/admin/dict/${type}/${code}`,
-        method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -1891,6 +1788,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerUpdate
      * @summary 更新字典项
      * @request PATCH:/admin/dict/{type}/{code}
+     * @secure
      */
     adminDictControllerUpdate: (type: string, code: string, data: UpdateAdminDictDto, params: RequestParams = {}) =>
       this.request<
@@ -1902,11 +1800,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/${type}/${code}`,
         method: "PATCH",
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: "json",
         ...params,
@@ -1919,6 +1818,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AdminDictControllerRemove
      * @summary 删除字典项
      * @request DELETE:/admin/dict/{type}/{code}
+     * @secure
      */
     adminDictControllerRemove: (type: string, code: string, params: RequestParams = {}) =>
       this.request<
@@ -1930,10 +1830,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @example "请求成功" */
           message: string;
         },
-        any
+        void
       >({
         path: `/admin/dict/${type}/${code}`,
         method: "DELETE",
+        secure: true,
         format: "json",
         ...params,
       }),

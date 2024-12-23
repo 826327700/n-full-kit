@@ -11,9 +11,15 @@ import { CreateAdminDictTypeDto } from './dto/create-admin-dict-type.dto';
 import { UpdateAdminDictTypeDto } from './dto/update-admin-dict-type.dto';
 import { QueryAdminDictTypeDto } from './dto/query-admin-dict-type.dto';
 import { AdminDictTypeDto } from './dto/admin-dict-type.dto';
+import { PermissionGroup } from 'src/common/decorators/permission.decorator';
+import { Auth } from 'src/common/decorators/auth.decorator';
+import { CheckRoles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('admin端-字典管理')
 @Controller('admin/dict')
+@PermissionGroup('admin-dict', '字典管理')
+@Auth('admin')
+@CheckRoles()
 export class AdminDictController {
     constructor(private readonly adminDictService: AdminDictService) {}
 
@@ -37,16 +43,6 @@ export class AdminDictController {
     })
     findAllTypes(@Query() query: QueryAdminDictTypeDto) {
         return this.adminDictService.findAllTypes(query);
-    }
-
-    @Get('type/:type')
-    @ApiOperation({ summary: '获取单个字典类型' })
-    @CustomApiResponse({
-        type: AdminDictTypeDto,
-        description: "返回指定的字典类型信息",
-    })
-    findOneType(@Param('type') type: string) {
-        return this.adminDictService.findOneType(type);
     }
 
     @Patch('type/:type')
@@ -86,16 +82,6 @@ export class AdminDictController {
         return this.adminDictService.create(createAdminDictDto);
     }
 
-    @Get()
-    @ApiOperation({ summary: '查询字典列表' })
-    @CustomApiResponse({
-        type: createPageQueryResClass(AdminDictDto),
-        description: "返回字典列表",
-    })
-    findAll(@Query() query: QueryAdminDictDto) {
-        return this.adminDictService.findAll(query);
-    }
-
     @Get('items/:type')
     @ApiOperation({ summary: '根据类型获取字典项' })
     @CustomApiResponse({
@@ -105,16 +91,6 @@ export class AdminDictController {
     })
     findByType(@Param('type') type: string) {
         return this.adminDictService.findByType(type);
-    }
-
-    @Get(':type/:code')
-    @ApiOperation({ summary: '获取单个字典项' })
-    @CustomApiResponse({
-        type: AdminDictDto,
-        description: "返回指定的字典项信息",
-    })
-    findOne(@Param('type') type: string, @Param('code') code: string) {
-        return this.adminDictService.findOne(type, code);
     }
 
     @Patch(':type/:code')

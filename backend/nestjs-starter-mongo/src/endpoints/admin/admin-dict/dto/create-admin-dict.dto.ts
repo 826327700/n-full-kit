@@ -8,12 +8,6 @@ export class CreateAdminDictDto {
     @MaxLength(100)
     type: string;
 
-    @ApiProperty({ description: '字典类型显示名称' })
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(100)
-    typeName: string;
-
     @ApiProperty({ description: '字典编码' })
     @IsString()
     @IsNotEmpty()

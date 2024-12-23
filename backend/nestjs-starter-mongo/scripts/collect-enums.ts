@@ -58,7 +58,7 @@ class EnumCollector {
                 }
             })
         })
-        fs.writeFileSync(path.resolve(__dirname,'../dist/enum.json'), JSON.stringify(json,null,2))
+        fs.writeFileSync(path.resolve(__dirname,'../static/enum.json'), JSON.stringify(json,null,2))
         console.log("字典数据收集完成")
     }
 }

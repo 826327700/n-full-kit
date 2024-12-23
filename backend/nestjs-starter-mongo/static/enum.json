@@ -1,0 +1,16 @@
+[
+  {
+    "labelName": "测试枚举",
+    "labelKey": "TestEnum",
+    "options": [
+      {
+        "value": "foo",
+        "label": "测试1"
+      },
+      {
+        "value": "bar",
+        "label": "测试2"
+      }
+    ]
+  }
+]
