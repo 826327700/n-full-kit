@@ -50,9 +50,9 @@ export const useUserStore = defineStore('user',{
                     return
                 }
                 let childNames = getAllNames(item)
-                if (!childNames.some((item: any) => state.userInfo.menus.includes(item))) {
-                    return
-                }
+                // if (!childNames.some((item: any) => state.userInfo.menus.includes(item))) {
+                //     return
+                // }
                 return {
                     name: item.name,
                     label: item.meta?.title,

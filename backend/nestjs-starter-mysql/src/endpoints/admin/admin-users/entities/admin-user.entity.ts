@@ -9,11 +9,18 @@ export class AdminUser {
     @Column({
         type: 'varchar',
         length: 100,
-        unique: true,
         nullable: false,
         comment: '用户名'
     })
     username: string;
+
+    @Column({
+        type: 'varchar',
+        length: 100,
+        nullable: false,
+        comment: '用户昵称'
+    })
+    nickname: string;
 
     @Exclude()
     @Column({

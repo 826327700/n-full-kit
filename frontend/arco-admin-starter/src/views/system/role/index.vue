@@ -101,7 +101,7 @@
 						<div style="width:100%;max-height: 600px;overflow-y: auto;">
 							<a-tree :checkable="true" v-model:checked-keys="form.data.permissions"
 							v-model:expanded-keys="permissionsGroups" :check-strictly="false"
-								:default-expand-all="true" checked-strategy="all" :data="permissionsTree">
+								:default-expand-all="true" checked-strategy="child" :data="permissionsTree">
 								<template #extra="nodeData">
 									<span v-if="nodeData.menuNeed" style="font-size: 12px;color: #999;">当前菜单需要</span>
 								</template>
@@ -124,7 +124,8 @@
 		<div style="width:100%;max-height: 600px;overflow-y: auto;">
 			<a-tree :checkable="true" v-model:checked-keys="form.data.permissions"
 			v-model:expanded-keys="permissionsGroups" :check-strictly="false" :default-expand-all="true"
-				checked-strategy="all" :data="permissionsTree">
+				checked-strategy="child" :data="permissionsTree"
+				>
 				<template #extra="nodeData">
 					<span v-if="nodeData.menuNeed" style="font-size: 12px;color: #999;">当前菜单需要</span>
 				</template>

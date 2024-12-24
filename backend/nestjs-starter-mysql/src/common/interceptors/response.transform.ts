@@ -1,3 +1,5 @@
+import { ENDPOINTS } from "../constants/endpoints";
+
 // 基础响应接口
 export interface BaseResponse<T> {
 	[key: string]: any;
@@ -39,8 +41,8 @@ export class AdminResponseTransformer<T> implements ResponseTransformer<T> {
 // 响应转换器工厂
 export class ResponseTransformerFactory {
 	private static transformers = new Map<string, ResponseTransformer<any>>([
-		['app', new AppResponseTransformer()],
-		['admin', new AdminResponseTransformer()]
+		[ENDPOINTS.APP, new AppResponseTransformer()],
+		[ENDPOINTS.ADMIN, new AdminResponseTransformer()]
 	]);
 
 	static getTransformer(path: string): ResponseTransformer<any> | null {

@@ -5,17 +5,17 @@ import { UpdateAdminRoleDto } from './dto/update-admin-role.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PermissionGroup } from 'src/common/decorators/permission.decorator';
 import { Auth } from 'src/common/decorators/auth.decorator';
-import { CheckRoles } from 'src/common/decorators/roles.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
 import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
 import { AdminPermissionItemDto, AdminRoleDto, QueryAdminRoleDto } from './dto/query-admin-role.dto';
 import { AdminMenuItem, UpdateAdminMenusDto } from './dto/update-admin-menu.dto';
+import { JwtStrategys } from 'src/common/modules/auth/strategies/jwt.strategy';
+import { ENDPOINTS } from 'src/common/constants/endpoints';
 
 @ApiTags('admin端-管理员角色')
-@Controller('admin/roles')
+@Controller(`${ENDPOINTS.ADMIN}/roles`)
 @PermissionGroup('admin-roles', '管理员角色管理')
-@Auth('admin')
-@CheckRoles()
+@Auth(JwtStrategys.admin.name,true)
 export class AdminRolesController {
 	constructor(private readonly adminRolesService: AdminRolesService) { }
 

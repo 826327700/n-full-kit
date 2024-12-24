@@ -145,7 +145,7 @@ const form = reactive<any>({
     }
 })
 const editDict = (item: AdminDictTypeDto) => {
-    form.id = item.id
+    form.id = item.type
     form.data.type = item.type
     form.data.typeName = item.typeName
     form.data.status = item.status

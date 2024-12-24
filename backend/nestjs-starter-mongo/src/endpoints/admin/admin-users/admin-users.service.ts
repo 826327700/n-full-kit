@@ -50,7 +50,6 @@ export class AdminUsersService {
 		if (!rootRole) {
 			rootRole = new this.adminRoleModel({
 				name: '超级管理员',
-				nickname: '超级管理员',
 				description: '超级管理员',
 				permissions: ['root'],
 				status: '0'

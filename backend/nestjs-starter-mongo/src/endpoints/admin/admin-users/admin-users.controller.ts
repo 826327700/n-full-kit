@@ -5,18 +5,19 @@ import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { LoginAdminUserDto, LoginAdminUserResDto, UserInfo } from './dto/login-admin-user.dto';
 import { Auth, NoAuth } from 'src/common/decorators/auth.decorator';
-import { PermissionGroup, PermissionKey } from 'src/common/decorators/permission.decorator';
-import { CheckRoles, NoCheckRoles } from 'src/common/decorators/roles.decorator';
+import { PermissionGroup } from 'src/common/decorators/permission.decorator';
+import { NoCheckRoles } from 'src/common/decorators/roles.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
 import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
 import { AdminUserDto, QueryAdminUserDto } from './dto/query-admin-user.dto';
 import { IRequest } from 'src/common/interfaces/request';
+import { ENDPOINTS } from 'src/common/constants/endpoints';
+import { JwtStrategys } from 'src/common/modules/auth/strategies/jwt.strategy';
 
 @ApiTags('admin端-管理员用户')
-@Controller('admin/users')
+@Controller(`${ENDPOINTS.ADMIN}/users`)
 @PermissionGroup('admin-users', '管理员用户管理')
-@Auth('admin')
-@CheckRoles()
+@Auth(JwtStrategys.admin.name, true)
 export class AdminUsersController {
 	constructor(private readonly adminUsersService: AdminUsersService) { }
 
@@ -45,7 +46,7 @@ export class AdminUsersController {
 		return this.adminUsersService.login(loginAdminUserDto);
 	}
 
-  @Get('login-info')
+	@Get('login-info')
 	@NoCheckRoles()
 	@ApiOperation({ summary: '获取管理员登录信息' })
 	@CustomApiResponse({

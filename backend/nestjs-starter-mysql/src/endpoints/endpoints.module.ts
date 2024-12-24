@@ -14,10 +14,11 @@ import { APP_GUARD } from '@nestjs/core';
 		AdminModule,
 	],
 	providers: [
-		{
-			provide: APP_GUARD,
-			useClass: ThrottlerGuard,
-		},
+		// 如果想开启全局限流 请取消此注释
+		// {
+		// 	provide: APP_GUARD,
+		// 	useClass: ThrottlerGuard,
+		// },
 	],
 })
 export class EndpointsModule { }

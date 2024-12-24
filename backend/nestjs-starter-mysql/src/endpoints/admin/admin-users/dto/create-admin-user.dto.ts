@@ -1,7 +1,14 @@
+import { OmitType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsArray, IsOptional, Length, IsNotEmpty } from 'class-validator';
 
 export class CreateAdminUserDto {
+	@ApiProperty({ description: '用户昵称', example: '小包子' })
+    @IsString()
+    @IsNotEmpty()
+    @Length(1, 10)
+	nickname: string;
+
     @ApiProperty({ description: '用户名', example: 'admin' })
     @IsString()
     @IsNotEmpty()
@@ -23,3 +30,4 @@ export class CreateAdminUserDto {
     @IsOptional()
     status?: string;
 }
+

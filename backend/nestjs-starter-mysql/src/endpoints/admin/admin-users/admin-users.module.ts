@@ -4,12 +4,13 @@ import { AdminUsersService } from './admin-users.service';
 import { AdminUsersController } from './admin-users.controller';
 import { AdminUser } from './entities/admin-user.entity';
 import { AuthModule } from 'src/common/modules/auth/auth.module';
-import { AdminRole } from './entities/admin-role.entity';
-import { AdminPermission } from './entities/admin-permission.entity';
+import { AdminRole } from '../admin-roles/entities/admin-role.entity';
+import { AdminPermission } from '../admin-roles/entities/admin-permission.entity';
+import { AdminMenu } from '../admin-roles/entities/admin-menu.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AdminUser, AdminRole, AdminPermission]),
+    TypeOrmModule.forFeature([AdminUser, AdminRole, AdminPermission,AdminMenu]),
     AuthModule
   ],
   controllers: [AdminUsersController],
