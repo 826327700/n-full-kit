@@ -180,7 +180,7 @@ export interface CreateAdminUserDto {
 
 export interface AdminUserRoleItem {
   /** 角色ID */
-  _id: string;
+  id: string;
   /** 角色名称 */
   name: string;
   /** 角色描述 */
@@ -189,7 +189,7 @@ export interface AdminUserRoleItem {
 
 export interface AdminUserDto {
   /** 用户ID */
-  _id: string;
+  id: string;
   /** 用户昵称 */
   nickname: string;
   /** 用户名 */
@@ -268,7 +268,7 @@ export interface CreateAdminRoleDto {
 
 export interface AdminRoleDto {
   /** 角色ID */
-  _id: string;
+  id: string;
   /** 角色名称 */
   name: string;
   /** 角色描述 */

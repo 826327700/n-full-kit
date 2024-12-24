@@ -55,16 +55,7 @@ import { useUserStore } from '@/store/user';
 
 const userStore = useUserStore()
 
-interface MenuItem {
-	label: string;
-	path: string;
-	name: string;
-	meta?: {
-		icon?: string;
-		hideInMenu?: boolean;
-	};
-	children: MenuItem[];
-}
+
 const state: {
 	selectedKeys: RouteRecordName[],
 	openKeys: RouteRecordName[],
@@ -77,54 +68,6 @@ watch(() => router.currentRoute.value, (newVal) => {
 	state.selectedKeys = [newVal.name as RouteRecordName]
 	state.openKeys = newVal.matched.map((item) => item.name!);
 }, { immediate: true })
-
-const menus = computed(() => {
-	let rootRoutes = router.getRoutes().find((item: any) => item.name === 'root')?.children
-	let arr: (MenuItem | undefined)[] = []
-	let res: MenuItem[] = []
-	const getAllNames = (item: any): string[] => {
-		let names: string[] = [item.name]; // 首先将当前项的 name 加入数组
-
-		if (item.children && item.children.length > 0) {
-			// 如果有 children，递归处理每个子项
-			item.children.forEach((child: any) => {
-				names = names.concat(getAllNames(child)); // 合并递归结果
-			});
-		}
-
-		return names;
-	}
-	const createMenu = (item: any) => {
-		if (item.meta?.hideInMenu) {
-			return
-		}
-		let childNames = getAllNames(item)
-		if (!childNames.some((item: any) => userStore.userInfo.menus.includes(item))) {
-			return
-		}
-		return {
-			name: item.name,
-			label: item.meta?.title,
-			meta: item.meta,
-			path: item.path,
-			children: item.children ? item.children.map((child: any) => createMenu(child)).filter((item: any) => item) : []
-		} as MenuItem
-	}
-	if (!rootRoutes) return res
-	for (const route of rootRoutes) {
-		arr.push(createMenu(route))
-	}
-	res = arr.filter((item: any) => item) as MenuItem[]
-	
-	if(res.length>0){
-		if(res[0].children.length>0){
-			router.replace({ name: res[0].children[0].name })
-		}else{
-			router.replace({ name: res[0].name })
-		}
-	}
-	return res
-})
 
 const onClickMenuItem = (key: string) => {
 	router.push({ name: key })

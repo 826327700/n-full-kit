@@ -83,7 +83,8 @@ export class AdminRolesService {
 			},
 			{
 				$addFields: {
-					permissions: '$validPermissions.key'  // 只保留存在的权限的key
+					permissions: '$validPermissions.key',  // 只保留存在的权限的key
+					id: '$_id'
 				}
 			},
 			{

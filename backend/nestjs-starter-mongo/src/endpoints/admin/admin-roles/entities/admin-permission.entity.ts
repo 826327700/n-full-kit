@@ -29,3 +29,11 @@ export const AdminPermissionSchema = {
     name:AdminPermission.name,
     schema:SchemaFactory.createForClass(AdminPermission)
 };
+AdminPermissionSchema.schema.set('toJSON', {
+    virtuals: true, // 允许虚拟字段
+    transform: (doc, ret) => {
+      ret.id = ret._id; // 将 _id 映射到 id 为了前端兼容MySQL和MongoDB两种格式
+      delete ret._id;   // 删除 _id
+      delete ret.__v;   // 删除 __v（可选）
+    },
+});

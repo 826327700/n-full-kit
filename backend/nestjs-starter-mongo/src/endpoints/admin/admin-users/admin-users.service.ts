@@ -110,6 +110,7 @@ export class AdminUsersService {
 					let: { roles: '$roles' },
 					pipeline: [
 						{ $match: { $expr: { $and: [ { $in: [ '$_id', '$$roles' ] }, { $eq: ['$status', '0'] } ] } } } ,
+						{ $addFields:{id:'$_id'}},
 					],
 					as: 'roles'
 				}
@@ -121,6 +122,11 @@ export class AdminUsersService {
 					'roles.createdAt': 0,
 					'roles.updatedAt': 0,
 					'roles.__v': 0
+				}
+			},
+			{
+				$addFields:{
+					id:'$_id',
 				}
 			}
 		]);

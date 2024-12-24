@@ -35,14 +35,14 @@ export const useUserStore = defineStore('user',{
             let res: MenuItem[] = []
             const getAllNames = (item: any): string[] => {
                 let names: string[] = [item.name]; // 首先将当前项的 name 加入数组
-        
+
                 if (item.children && item.children.length > 0) {
                     // 如果有 children，递归处理每个子项
                     item.children.forEach((child: any) => {
                         names = names.concat(getAllNames(child)); // 合并递归结果
                     });
                 }
-        
+
                 return names;
             }
             const createMenu = (item: any) => {
@@ -66,7 +66,7 @@ export const useUserStore = defineStore('user',{
                 arr.push(createMenu(route))
             }
             res = arr.filter((item: any) => item) as MenuItem[]
-            
+            console.log(res)
             return res
         },
     },
@@ -94,7 +94,7 @@ export const useUserStore = defineStore('user',{
         refreshLoginInfo(){
             let token=getToken()
             if(!token){
-                return 
+                return
             }
             return api.admin.adminUsersControllerGetLoginInfo().then(res => {
                 this.userInfo=res.data.data!

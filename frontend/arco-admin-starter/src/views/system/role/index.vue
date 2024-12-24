@@ -56,7 +56,7 @@
 						<a-space>
 							<a-link type="primary" @click="openEdit(record)"
 								v-permissions="['admin.adminRolesControllerUpdate']"><icon-edit></icon-edit></a-link>
-							<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)">
+							<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record.id)">
 								<a-link status="danger"
 									v-permissions="['admin.adminRolesControllerRemove']"><icon-delete></icon-delete></a-link>
 							</a-popconfirm>
@@ -141,6 +141,9 @@ import { Form, Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
 import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
+import { useUserStore } from '@/store/user';
+
+const userStore = useUserStore()
 
 const queryFilter = reactive({
 	keyword: ''
@@ -305,7 +308,7 @@ const onFormModalClose = () => {
 }
 
 const openEdit = (item: AdminRoleDto) => {
-	form.id = item._id
+	form.id = item.id
 	form.data.name = item.name
 	form.data.description = item.description
 	form.data.menus = item.menus
@@ -350,6 +353,11 @@ const updateMenu = () => {
 	flat(rootRoutes, '')
 	api.admin.adminRolesControllerUpdateAllMenus({ menus: flatMenus }).then(res => {
 		Message.success('更新成功')
+		let oldUserMenus=userStore.userInfo.menus
+		userStore.userInfo.menus=[]
+		setTimeout(() => {
+			userStore.userInfo.menus=oldUserMenus
+		}, 0);
 		refreshMenus()
 	})
 }
@@ -371,13 +379,13 @@ type Route = {
 };
 
 const showRoleMenus = (item: AdminRoleDto) => {
-	form.id = item._id
+	form.id = item.id
 	form.data.menus = item.menus
 	form.data.permissions = item.permissions
 	state.showRoleMenus = true
 }
 const showRolePermissions = (item: AdminRoleDto) => {
-	form.id = item._id
+	form.id = item.id
 	form.data.menus = item.menus
 	form.data.permissions = item.permissions
 	state.showRolePermissions = true

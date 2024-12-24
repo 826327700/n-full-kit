@@ -11,7 +11,7 @@ export class QueryAdminRoleDto extends PageQueryDto {
 
 export class AdminRoleDto{
     @ApiProperty({ description: '角色ID' })
-    _id: string;
+    id: string;
 
     @ApiProperty({ description: '角色名称' })
     name: string;

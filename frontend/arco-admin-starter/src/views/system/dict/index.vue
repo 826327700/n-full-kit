@@ -24,13 +24,14 @@
         </a-form>
         <a-divider />
         <div class="table-box">
-            <a-row :gutter="16">
-                <a-col flex="200px" v-for="item in data" :key="item._id">
+			<a-result status="404" subtitle="暂无数据" v-if="data.length==0"></a-result>
+            <a-row :gutter="16" v-else>
+                <a-col flex="200px" v-for="item in data" :key="item.id">
                     <a-card hoverable class="dict-card">
                         <a-typography-text>{{ item.type }}</a-typography-text>
                         <a-typography-text type="secondary" style="font-size: 12px;color: var(--color-text-3);">
                            <a-space>
-                            {{ item.typeName }} 
+                            {{ item.typeName }}
                             <icon-edit v-if="item.from=='custom'" style="cursor: pointer" @click="editDict(item)" v-permissions="['admin.adminDictControllerUpdateType']"></icon-edit>
                             <a-popconfirm content="此操作不可恢复，是否确认删除该记录?" type="warning" @ok="deleteDict(item)">
                                 <icon-delete v-if="item.from=='custom'" style="cursor: pointer" v-permissions="['admin.adminDictControllerRemoveType']"></icon-delete>
@@ -108,7 +109,8 @@ import { Form } from '@arco-design/web-vue';
 import { reactive, ref, useTemplateRef } from 'vue';
 
 const queryFilter = reactive({
-    keyword:""
+    keyword:"",
+	pageSize:9999
 })
 
 const {
@@ -216,7 +218,7 @@ const valueSubmit = async () => {
             valueForm.type = ""
             valueForm.code = ""
             valueForm.visible = false
-            
+
         })
     } else {
         await api.admin.adminDictControllerCreate(valueForm.data).then(res => {
@@ -242,6 +244,10 @@ const deleteDictValue = (item: AdminDictDto) => {
 }
 </script>
 <style scoped lang="scss">
+.table-box{
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 .show-child {
     position: absolute;
     right: 2px;
@@ -253,6 +259,7 @@ const deleteDictValue = (item: AdminDictDto) => {
 .dict-card{
     position: relative;
     overflow: hidden;
+	margin-bottom: 16px;
 }
 .dict-card-badge{
     position: absolute;

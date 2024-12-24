@@ -49,7 +49,7 @@
 						<template #cell="{ record }">
 							<a-space>
 								<a-link type="primary" @click="openEdit(record)" v-permissions="['admin.adminUsersControllerUpdate']"><icon-edit></icon-edit></a-link>
-								<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record._id)" >
+								<a-popconfirm content="该操作不可恢复，确认删除?" type="error" @ok="deleteRow(record.id)" >
 									<a-link status="danger" v-permissions="['admin.adminUsersControllerRemove']"><icon-delete></icon-delete></a-link>
 								</a-popconfirm>
 							</a-space>
@@ -57,7 +57,7 @@
 					</a-table-column>
 			</template>
 		</TableView>
-		
+
 	</Wapper>
 
 	<a-modal v-model:visible="form.visible" :title="form.id?'编辑用户':'新增用户'" :on-before-ok="submit" @close="onFormModalClose">
@@ -73,7 +73,7 @@
 			</a-form-item>
 			<a-form-item label="所属角色" field="roles" :rules="[{ required: true, message: '请选择所属角色' }]">
 				<a-select v-model="form.data.roles" placeholder="请选择所属角色" multiple>
-					<a-option v-for="item in roles" :key="item._id" :value="item._id" :label="item.name"></a-option>
+					<a-option v-for="item in roles" :key="item.id" :value="item.id" :label="item.name"></a-option>
 				</a-select>
 			</a-form-item>
 			<a-form-item label="是否启用" field="status" >
@@ -138,11 +138,11 @@ const onFormModalClose=()=>{
 }
 
 const openEdit=(item:AdminUserDto)=>{
-	form.id=item._id
+	form.id=item.id
 	form.data.nickname=item.nickname
 	form.data.username=item.username
 	form.data.password=""
-	form.data.roles=item.roles.map(item=>item._id)
+	form.data.roles=item.roles.map(item=>item.id)
 	form.data.status=item.status
 	form.visible=true
 }

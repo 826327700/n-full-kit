@@ -11,7 +11,7 @@ export class QueryAdminUserDto extends PageQueryDto {
 
 export class AdminUserRoleItem{
     @ApiProperty({ description: '角色ID' })
-    _id: string;
+    id: string;
 
 	@ApiProperty({ description: '角色名称' })
 	name: string;
@@ -22,7 +22,7 @@ export class AdminUserRoleItem{
 
 export class AdminUserDto{
     @ApiProperty({ description: '用户ID' })
-    _id: string;
+    id: string;
 
     @ApiProperty({ description: '用户昵称' })
     nickname: string;
