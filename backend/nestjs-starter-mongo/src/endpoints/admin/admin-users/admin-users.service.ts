@@ -138,14 +138,6 @@ export class AdminUsersService {
 		}
 	}
 
-	async findOne(id: string): Promise<AdminUser> {
-		const user = await this.adminUserModel.findById(id).select('-password').exec();
-		if (!user) {
-			throw new NotFoundException(`Admin user with ID ${id} not found`);
-		}
-		return user;
-	}
-
 	async update(id: string, updateAdminUserDto: UpdateAdminUserDto): Promise<string> {
 		if (updateAdminUserDto.password) {
 			updateAdminUserDto.password = await bcrypt.hash(updateAdminUserDto.password, 10);

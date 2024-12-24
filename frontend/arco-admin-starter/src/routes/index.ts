@@ -33,9 +33,9 @@ router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
     if(to.matched.length>0&&to.matched[0].name=='root'){
         await userStore.refreshLoginInfo()
-        // if (!userStore.userInfo.menus.includes(to.name as string)){
-        //     next({name:'404',replace:true})
-        // }
+        if (!userStore.userInfo.menus.includes('all')&&!userStore.userInfo.menus.includes(to.name as string)){
+            next({name:'404',replace:true})
+        }
     }
     next()
 })

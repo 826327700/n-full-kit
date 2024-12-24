@@ -75,12 +75,7 @@ export class AdminRolesService {
 			pageSize: Number(query.pageSize),
 		};
 	}
-
-	// 根据 ID 获取角色
-	async findOne(id: number) {
-		return this.adminRoleRepository.findOne({ where: { id } });
-	}
-
+	
 	// 更新角色
 	async update(id: number, updateAdminRoleDto: UpdateAdminRoleDto) {
 		let oldDoc = await this.adminRoleRepository.findOne({ where: { id } });

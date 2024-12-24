@@ -78,16 +78,6 @@ export class AdminUsersController {
 		return this.adminUsersService.findAll(query);
 	}
 
-	@Get(':id')
-	@ApiOperation({ summary: '根据ID获取管理员用户' })
-	@CustomApiResponse({
-		type: AdminUserDto,
-		description: "管理员登录成功",
-	})
-	findOne(@Param('id') id: string) {
-		return this.adminUsersService.findOne(id);
-	}
-
 	@Patch(':id')
 	@ApiOperation({ summary: '更新管理员用户信息' })
 	@CustomApiResponse({

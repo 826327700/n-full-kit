@@ -102,11 +102,6 @@ export class AdminRolesService {
 		};
 	}
 
-	// 根据 ID 获取角色
-	async findOne(id: string) {
-		return this.adminRoleModel.findById(id).exec();
-	}
-
 	// 更新角色
 	async update(id: string, updateAdminRoleDto: UpdateAdminRoleDto){
 		let oldDoc=await this.adminRoleModel.findById(id).exec();

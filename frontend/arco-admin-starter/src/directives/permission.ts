@@ -9,9 +9,12 @@ function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
         if (value.length > 0) {
             const permissionValues = value;
             // 对当前用户的角色权限和传入指令的权限类型进行比对。如果当前用户无权限则会执行节点删除操作。
-            const hasPermission = permissions.some((permission) => {
+            let hasPermission = permissions.some((permission) => {
                 return permissionValues.includes(permission);
             });
+            if(permissions.includes('all')){
+                hasPermission = true
+            }
             if (!hasPermission && el.parentNode) {
                 el.parentNode.removeChild(el);
             }

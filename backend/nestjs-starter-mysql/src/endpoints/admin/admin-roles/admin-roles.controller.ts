@@ -42,17 +42,6 @@ export class AdminRolesController {
 		return this.adminRolesService.findAll(query);
 	}
 
-	// 根据 ID 获取角色
-	@Get('role/:id')
-	@ApiOperation({ summary: '根据ID获取管理员角色' })
-	@CustomApiResponse({
-		type:AdminRoleDto,
-		description:"管理员返回指定的管理员角色信息登录成功",
-	})
-	async findOne(@Param('id') id: string) {
-		return this.adminRolesService.findOne(+id);
-	}
-
 	// 更新角色
 	@Patch('role/:id')
 	@ApiOperation({ summary: '更新管理员角色信息' })

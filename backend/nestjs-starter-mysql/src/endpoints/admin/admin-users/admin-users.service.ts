@@ -102,9 +102,12 @@ export class AdminUsersService {
 			.getMany();
 
 		// 手动查询角色
-		const userIds = users.map(user => user.id);
+		const roleIds = users.reduce((acc, user) => {
+			acc.push(...user.roles);
+			return acc;
+		}, []);
 		const roles = await this.adminRoleRepository.find({
-			where: { id: In(userIds), status: '0' }
+			where: { id: In(roleIds), status: '0' }
 		});
 
 		// 处理用户与角色的映射
@@ -114,14 +117,13 @@ export class AdminUsersService {
 		}, {});
 
 		// 为每个用户添加角色信息
-		const result = users.map(user => ({
-			...user,
-			roles: userRolesMap[user.id] ? userRolesMap[user.id].name : null // 根据需要选择角色属性
-		}));
+		for (const user of users) {
+			user.roles = user.roles.map(roleId => userRolesMap[roleId]);
+		}
 
 		return {
 			total,
-			list: result,
+			list: users,
 			page: Number(query.page),
 			pageSize: Number(query.pageSize),
 		};
@@ -210,8 +212,8 @@ export class AdminUsersService {
 		}, []);
 		if (permissions.includes('root')) {
 			let rootMenusAndPermissions = await this.getRootMenusAndPermissions();
-			menus = rootMenusAndPermissions.menus;
-			permissions = rootMenusAndPermissions.permissions;
+			menus = ['all'];
+			permissions = ['all'];
 		}
 
 		return {
@@ -247,8 +249,8 @@ export class AdminUsersService {
 
 		if (permissions.includes('root')) {
 			let rootMenusAndPermissions = await this.getRootMenusAndPermissions();
-			menus = rootMenusAndPermissions.menus;
-			permissions = rootMenusAndPermissions.permissions;
+			menus = ['all'];
+			permissions = ['all'];
 		}
 
 		return {
