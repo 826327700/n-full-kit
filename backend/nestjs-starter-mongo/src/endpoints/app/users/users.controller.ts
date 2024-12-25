@@ -74,8 +74,8 @@ export class UsersController {
     @ApiOperation({ summary: '根据ID删除用户' })
     @ApiParam({ name: 'id', description: '用户ID' })
     @CustomApiResponse({
-        type: User,
-        description: '删除的用户'
+        type: Boolean,
+        description: '删除成功'
     })
     remove(@Param('id') id: string) {
         return this.usersService.remove(id);

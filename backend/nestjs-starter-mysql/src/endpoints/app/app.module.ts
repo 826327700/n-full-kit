@@ -6,7 +6,7 @@ import { RateLimitModule } from './rate-limit/rate-limit.module';
 
 @Module({
 	imports: [
-		// UsersModule,
+		UsersModule,
 		// RedisExampleModule,
 		// ErrorExampleModule,
 		// RateLimitModule,

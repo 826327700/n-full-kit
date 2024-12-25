@@ -14,7 +14,7 @@ export const NoAuth = () => SetMetadata(NO_AUTH_KEY, true);
  * @param strategyName 认证策略名称
  * @param checkRoles 是否检查角色权限
  */
-export const Auth = (strategyName:string = 'app',checkRoles:boolean=false) => {
+export const Auth = (strategyName:string = 'app-jwt',checkRoles:boolean=false) => {
 
 	const JwtGuard=createJwtAuthGuard(strategyName);
     const guards:(CanActivate | Function)[]=[JwtGuard]

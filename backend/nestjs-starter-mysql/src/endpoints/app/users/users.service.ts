@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { PageQueryDto } from '../../../common/dto/page-query.dto';
-import { PageResponse } from '../../../common/interfaces/page-response.interface';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from '../../../common/modules/auth/auth.service';
 
@@ -54,7 +53,7 @@ export class UsersService {
 
         // 使用 AuthService 生成 token
         const { access_token } = this.authService.generateToken({
-            userId: user.id,
+            userId: user.id.toString(),
             roles: [user.role],
             customData: {
                 username: user.username
@@ -71,7 +70,7 @@ export class UsersService {
         };
     }
 
-    async findAll(query: PageQueryDto): Promise<PageResponse<User>> {
+    async findAll(query: PageQueryDto) {
         const [list, total] = await this.usersRepository.findAndCount({
             skip: (query.page - 1) * query.pageSize,
             take: query.pageSize,
