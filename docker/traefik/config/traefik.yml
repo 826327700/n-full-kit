@@ -1,0 +1,46 @@
+api:
+  dashboard: true
+  insecure: false
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+  traefik:
+    address: ":8080"
+  metrics:
+    address: ":8082"
+    
+
+providers:
+  file:
+    filename: /etc/traefik/config.yml
+    watch: true
+  consulCatalog:
+    endpoint:
+      address: "26.26.26.1:8500"
+      token: "admin"
+    exposedByDefault: true
+    refreshInterval: "5s"
+    connectAware: true
+    connectByDefault: false
+  consul:
+    endpoints:
+      - "26.26.26.1:8500"
+    token: "admin"
+    rootKey: "traefik"
+      
+log:
+  level: "DEBUG"
+  format: "json"
+  filePath: "/var/log/traefik/traefik.log"
+
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: "json"
+  bufferingSize: 100
+
+metrics:
+  prometheus:
+    entryPoint: metrics

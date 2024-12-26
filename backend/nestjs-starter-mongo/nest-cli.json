@@ -5,5 +5,16 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "builder": "swc"
+  },
+  "projects": {
+    "consul": {
+      "type": "library",
+      "root": "libs/consul",
+      "entryFile": "index",
+      "sourceRoot": "libs/consul/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/consul/tsconfig.lib.json"
+      }
+    }
   }
 }

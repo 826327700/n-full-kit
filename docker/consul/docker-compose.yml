@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  consul:
+    image: hashicorp/consul:1.20
+    container_name: consul
+    restart: unless-stopped
+    ports:
+      - "8500:8500"  # Consul UI and API
+      - "8600:8600/tcp"  # DNS
+      - "8600:8600/udp"  # DNS
+    environment:
+      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"allow","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
+    volumes:
+      - ./data:/consul/data
+    networks:
+      - consul_network
+
+networks:
+  consul_network:
+    name: consul_network
+    driver: bridge

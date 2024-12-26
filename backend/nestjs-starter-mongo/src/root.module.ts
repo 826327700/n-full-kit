@@ -14,6 +14,9 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { ConfigService } from '@nestjs/config';
 import { CustomCacheInterceptor } from './common/interceptors/custom-cache.interceptor';
 import { PermissionCollectModule } from './common/modules/permission-collect/permission-collect.module';
+import { ConsulModule } from './common/modules/consul/consul.module';
+import { ConsulService } from './common/modules/consul/consul.service';
+
 
 @Module({
 	imports: [
@@ -30,19 +33,26 @@ import { PermissionCollectModule } from './common/modules/permission-collect/per
 			isGlobal: true,
 			inject: [ConfigService],
 			useFactory: async (configService: ConfigService) => {
-			  const store = await redisStore({
-				password: configService.get('REDIS_PASSWORD', ''),
-				socket: {
-				  host: configService.get('REDIS_HOST', 'localhost'),
-				  port: configService.get('REDIS_PORT', 6379),
-				  passphrase: configService.get('REDIS_PASSWORD', ''),
-				},
-			  });
+				const store = await redisStore({
+					password: configService.get('REDIS_PASSWORD', ''),
+					socket: {
+						host: configService.get('REDIS_HOST', 'localhost'),
+						port: configService.get('REDIS_PORT', 6379),
+						passphrase: configService.get('REDIS_PASSWORD', ''),
+					},
+				});
 
-			  return {
-				store: store as unknown as CacheStore,
-				ttl: 3 * 60000, // 3 minutes (milliseconds)
-			  };
+				return {
+					store: store as unknown as CacheStore,
+					ttl: 3 * 60000, // 3 minutes (milliseconds)
+				};
+			},
+		}),
+		ConsulModule.forRoot({
+			host: '192.168.31.32',
+			port: 8500,
+			defaults: {
+				token: 'admin', // 如果需要的话
 			},
 		}),
 		/**Redis客户端模块 */
@@ -72,4 +82,33 @@ import { PermissionCollectModule } from './common/modules/permission-collect/per
 		},
 	],
 })
-export class RootModule { }
+export class RootModule {
+	constructor(private readonly consulService: ConsulService) { }
+
+	async onModuleInit() {
+		console.log('RootModule onModuleInit');
+		this.consulService.register({
+			name: 'server-nest',
+			address: 'host.docker.internal',//这里没有填写具体的ip
+			port: 3000,
+			tags: [
+				"traefik.enable=true",
+				"traefik.http.routers.nest-service.rule=Host(`nest.localhost`) && PathPrefix(`/nest-service`)",
+				"traefik.http.routers.nest-service.entrypoints=web",
+				// // 定义路径前缀中间件
+				"traefik.http.middlewares.strip-test-prefixes.stripprefix.prefixes=/nest-service",
+				"traefik.http.routers.nest-service.middlewares=strip-test-prefixes@consulcatalog",
+				// 服务配置
+				"traefik.http.services.nest-service.loadbalancer.server.scheme=http",
+				`traefik.http.services.nest-service.loadbalancer.server.port=3000`,
+				"traefik.http.services.nest-service.loadbalancer.passhostheader=true",
+			],
+			check: {
+				http: 'http://192.168.31.32:3000/rate-limit/no-limit',
+				interval: '5s',
+				timeout: '5s',
+				deregistercriticalserviceafter: '30s',
+			},
+		});
+	}
+}

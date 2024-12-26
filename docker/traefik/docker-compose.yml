@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"     # HTTP
+      - "443:443"   # HTTPS
+      - "8080:8080" # Dashboard
+      - "8082:8082" # metrics
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "20"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/traefik.yml:/etc/traefik/traefik.yml
+      - ./config/config.yml:/etc/traefik/config.yml
+      - ./certs:/etc/certs
+      - ./logs:/var/log/traefik
+    networks:
+      - traefik_network
+      - consul_network
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  traefik_network:
+    name: traefik_network
+    driver: bridge
+  consul_network:
+    external: true

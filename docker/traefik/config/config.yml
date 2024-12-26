@@ -1,0 +1,29 @@
+http:
+  middlewares:
+    secure-headers:
+      headers:
+        sslRedirect: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+    auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$lrta7Zzl$.GiLJOz0/gSKS.Tl/tY1a/"
+        removeHeader: true
+    add-trailing-slash:
+      redirectRegex:
+        regex: "^(https?://[^/]+/[a-z0-9_]+)$"
+        replacement: "${1}/"
+        permanent: true
+
+  routers:
+    dashboard:
+      entryPoints:
+        - "traefik"
+      rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`) || PathPrefix(`/dashboard/`)"
+      service: api@internal
+      middlewares:
+        - auth
+        - add-trailing-slash
