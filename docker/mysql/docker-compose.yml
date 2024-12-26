@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=testdb
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin123
+      - MYSQL_USER_PRIVILEGES=ALL
+      - TZ=Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - mysql-network
+
+networks:
+  mysql-network:
+    driver: bridge
