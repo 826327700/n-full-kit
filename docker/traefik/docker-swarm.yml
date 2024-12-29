@@ -3,6 +3,11 @@ version: '3.9'
 services:
   traefik:
     image: traefik:v3.0
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     container_name: traefik
     restart: unless-stopped
     security_opt:
@@ -11,7 +16,7 @@ services:
       - "80:80"     # HTTP
       - "443:443"   # HTTPS
       - "8080:8080" # Dashboard
-      - "8082:8082" # Metrics
+      - "8082:8082" # metrics
     logging:
       driver: "json-file"
       options:
@@ -31,7 +36,8 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    deploy:
+      replicas: 1
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
@@ -39,9 +45,10 @@ services:
     networks:
       - traefik_net
 
-  prometheus:
+  prometheus: #推荐grafana面板导入id=17035/4475
     image: prom/prometheus:latest
-    container_name: prometheus
+    deploy:
+      replicas: 1
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -50,8 +57,9 @@ services:
       - traefik_net
 
   consul:
-    image: hashicorp/consul:latest
-    container_name: consul
+    image: hashicorp/consul
+    deploy:
+      replicas: 1
     environment:
       - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"allow","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
     ports:
@@ -64,4 +72,4 @@ services:
 
 networks:
   traefik_net:
-    driver: bridge
+    external: true

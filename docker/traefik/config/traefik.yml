@@ -11,6 +11,14 @@ entryPoints:
     address: ":8080"
   metrics:
     address: ":8082"
+
+certificatesResolvers:
+  autossl:
+    acme:
+      email: your-email@example.com
+      storage: /etc/traefik/acme.json
+      httpChallenge:
+        entryPoint: web
     
 
 providers:
@@ -19,7 +27,7 @@ providers:
     watch: true
   consulCatalog:
     endpoint:
-      address: "26.26.26.1:8500"
+      address: "consul:8500"
       token: "admin"
     exposedByDefault: true
     refreshInterval: "5s"
@@ -27,7 +35,7 @@ providers:
     connectByDefault: false
   consul:
     endpoints:
-      - "26.26.26.1:8500"
+      - "consul:8500"
     token: "admin"
     rootKey: "traefik"
       

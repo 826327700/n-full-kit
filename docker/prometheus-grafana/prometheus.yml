@@ -1,7 +1,0 @@
-global:
-  scrape_interval: 10s # 抓取间隔时间
-
-scrape_configs:
-  - job_name: 'traefik'
-    static_configs:
-      - targets: ['26.26.26.1:8082'] # Traefik 的 metrics 端点

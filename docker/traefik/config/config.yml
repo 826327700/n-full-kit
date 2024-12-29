@@ -27,3 +27,5 @@ http:
       middlewares:
         - auth
         - add-trailing-slash
+      # tls: 自动ssl申请和续期使用示例
+      #   certResolver: autossl  # 使用之前配置的 http 证书解析器
