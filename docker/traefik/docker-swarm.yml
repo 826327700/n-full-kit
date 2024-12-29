@@ -49,6 +49,9 @@ services:
     image: prom/prometheus:latest
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -66,10 +69,13 @@ services:
       - "8500:8500"  # Consul UI
       - "8600:8600"  # DNS
     volumes:
-      - ./consul/data:/consul/data
+      - consul-data:/consul/data
     networks:
       - traefik_net
 
 networks:
   traefik_net:
     external: true
+
+volumes:
+  consul-data:

@@ -101,7 +101,8 @@ networks:
 确保你已经设置好 Docker Swarm 环境。然后，在终端运行以下命令启动服务：
 
 ```bash
-docker stack deploy -c docker-compose.yml traefik_stack
+docker network create -d overlay traefik_net // 创建 名为traefik_net 的overlay 网络
+docker stack deploy -c docker-swarm.yml traefik_stack
 ```
 这会启动所有配置的服务，并将其部署到 Docker Swarm 集群中。
 
