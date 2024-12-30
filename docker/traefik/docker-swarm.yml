@@ -64,7 +64,8 @@ services:
     deploy:
       replicas: 1
     environment:
-      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"allow","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"deny","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+    command: agent -server -bootstrap-expect=1 -client=0.0.0.0 -ui -bind=127.0.0.1
     ports:
       - "8500:8500"  # Consul UI
       - "8600:8600"  # DNS
