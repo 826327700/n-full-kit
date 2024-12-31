@@ -15,9 +15,9 @@
 
 此架构已基于 Docker Swarm 配置，可以在 Docker Swarm 集群中部署。
 
-#### 1.1 配置 `docker-compose.yml`
+#### 1.1 配置 `docker-swarm.yml`
 
-确保你已经在项目根目录下创建了 `docker-compose.yml` 文件，并根据你的需要配置了 Traefik、Grafana、Prometheus 和 Consul 服务。
+确保你已经在项目根目录下创建了 `docker-swarm.yml` 文件，并根据你的需要配置了 Traefik、Grafana、Prometheus 和 Consul 服务。
 
 ```yaml
 version: '3.9'
@@ -30,7 +30,6 @@ services:
       placement:
         constraints:
           - node.role == manager
-    container_name: traefik
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -47,9 +46,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./config/traefik.yml:/etc/traefik/traefik.yml
-      - ./config/config.yml:/etc/traefik/config.yml
+      - ./config/vhost:/etc/traefik/vhost
       - ./certs:/etc/certs
       - ./logs:/var/log/traefik
+      - ./acme/acme.json:/etc/traefik/acme.json
     networks:
       - traefik_net
     labels:
@@ -60,18 +60,24 @@ services:
     deploy:
       replicas: 1
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin # Grafana 管理员密码
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
       - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:
       - traefik_net
 
-  prometheus:
+  prometheus: #推荐grafana面板导入id=17035/4475
     image: prom/prometheus:latest
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-storage:/prometheus  # 数据持久化挂载
     ports:
       - "9090:9090"
     networks:
@@ -82,18 +88,24 @@ services:
     deploy:
       replicas: 1
     environment:
-      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"allow","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"deny","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+    command: agent -server -bootstrap-expect=1 -client=0.0.0.0 -ui -bind=127.0.0.1
     ports:
       - "8500:8500"  # Consul UI
       - "8600:8600"  # DNS
     volumes:
-      - ./consul/data:/consul/data
+      - consul-data:/consul/data
     networks:
       - traefik_net
 
 networks:
   traefik_net:
     external: true
+
+volumes:
+  consul-data:
+  grafana-storage:
+  prometheus-storage:
 ```
 
 ### 1.2 启动服务
@@ -108,17 +120,15 @@ docker stack deploy -c docker-swarm.yml traefik_stack
 
 ### 1.3 配置文件说明
 
-- `Traefik`：在 ./config/traefik.yml 和 ./config/config.yml 配置文件中配置 Traefik 的路由规则和服务发现。
+- `Traefik`：在 ./config/traefik.yml 和 ./config/vhost/config.yml 配置文件中配置 Traefik 的路由规则和服务发现。
 
 - `Prometheus`：在 ./config/prometheus.yml 配置文件中配置 Prometheus 要采集的服务和目标。
-
-- `Consul`：在 ./consul/data 中存储 Consul 的数据。
 
 ### 2. 配置认证
 
 #### 2.1 Traefik
 
-如果你希望为 Traefik 的 Web UI (Dashboard) 配置认证，编辑 config/config.yml 文件，并启用基本认证：
+如果你希望为 Traefik 的 Web UI (Dashboard) 配置认证，编辑 config/vhost/config.yml 文件，并启用基本认证：
 
 ```yaml
 #... 10-14行
@@ -132,7 +142,7 @@ docker stack deploy -c docker-swarm.yml traefik_stack
 
 #### 2.2 Grafana
 
-Grafana 的管理员密码在 docker-compose.yml 文件中配置：
+Grafana 的管理员密码在 docker-swarm.yml 文件中配置：
 
 ```yaml
   grafana:
@@ -140,9 +150,11 @@ Grafana 的管理员密码在 docker-compose.yml 文件中配置：
     deploy:
       replicas: 1
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin # Grafana 管理员密码
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
       - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:
       - traefik_net
 ```
@@ -150,7 +162,7 @@ Grafana 的管理员密码在 docker-compose.yml 文件中配置：
 
 #### 2.3 Consul
 
-在 docker-compose.yml 中，已为 Consul 配置了默认的 ACL 令牌：
+在 docker-swarm.yml 中，已为 Consul 配置了默认的 ACL 令牌：
 
 ```yaml
   consul:
@@ -158,12 +170,13 @@ Grafana 的管理员密码在 docker-compose.yml 文件中配置：
     deploy:
       replicas: 1
     environment:
-      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"allow","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+      - CONSUL_LOCAL_CONFIG={"acl":{"enabled":true,"default_policy":"deny","enable_token_persistence":true,"tokens":{"master":"admin","agent":"admin"}}}
+    command: agent -server -bootstrap-expect=1 -client=0.0.0.0 -ui -bind=127.0.0.1
     ports:
       - "8500:8500"  # Consul UI
       - "8600:8600"  # DNS
     volumes:
-      - ./consul/data:/consul/data
+      - consul-data:/consul/data
     networks:
       - traefik_net
 ```
@@ -174,5 +187,5 @@ Prometheus 不需要专门的认证配置。如果你希望为 Prometheus 配置
 
 ### 3. 访问服务
 - `Traefik Dashboard`: 访问 http://localhost:8080，默认用户名和密码均为 admin。
-- `Grafana`: 访问 http://localhost:3000，默认管理员密码是你在 docker-compose.yml 中设置的（例如 admin）。
+- `Grafana`: 访问 http://localhost:3000，默认管理员密码是你在 docker-swarm.yml 中设置的（例如 admin）。
 - `Consul UI`: 访问 http://localhost:8500，默认master 和 agent 令牌的密码均为 admin。
