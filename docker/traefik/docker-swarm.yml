@@ -8,7 +8,6 @@ services:
       placement:
         constraints:
           - node.role == manager
-    container_name: traefik
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -25,7 +24,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./config/traefik.yml:/etc/traefik/traefik.yml
-      - ./config/config.yml:/etc/traefik/config.yml
+      - ./config/vhost:/etc/traefik/vhost
       - ./certs:/etc/certs
       - ./logs:/var/log/traefik
       - ./acme/acme.json:/etc/traefik/acme.json
@@ -42,6 +41,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
       - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:
       - traefik_net
 
@@ -54,6 +55,7 @@ services:
           - node.role == manager
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-storage:/prometheus  # 数据持久化挂载
     ports:
       - "9090:9090"
     networks:
@@ -80,3 +82,5 @@ networks:
 
 volumes:
   consul-data:
+  grafana-storage:
+  prometheus-storage:

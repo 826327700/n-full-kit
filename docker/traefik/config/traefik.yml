@@ -23,12 +23,12 @@ certificatesResolvers:
 
 providers:
   file:
-    filename: /etc/traefik/config.yml
+    directory: /etc/traefik/vhost
     watch: true
   consulCatalog:
     endpoint:
       address: "consul:8500"
-      token: "admin"
+      token: "a505326722"
     exposedByDefault: true
     refreshInterval: "5s"
     connectAware: true
@@ -36,8 +36,12 @@ providers:
   consul:
     endpoints:
       - "consul:8500"
-    token: "admin"
+    token: "a505326722"
     rootKey: "traefik"
+  swarm:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    watch: true
       
 log:
   level: "DEBUG"
