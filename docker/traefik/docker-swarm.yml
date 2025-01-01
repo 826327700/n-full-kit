@@ -12,8 +12,14 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - "80:80"     # HTTP
-      - "443:443"   # HTTPS
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
       - "8080:8080" # Dashboard
       - "8082:8082" # metrics
     logging:
@@ -76,6 +82,38 @@ services:
     networks:
       - traefik_net
 
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # Swarm 模式下设置副本数
+      placement:
+        constraints:
+          - node.role == manager  # 使 Loki 运行在 Swarm Manager 节点上
+    ports:
+      - "3100:3100"  # Loki API端口
+    volumes:
+      - loki-data:/data/loki  # 持久化存储 Loki 数据
+      - ./loki/config.yaml:/etc/loki/loki-config.yaml  # Loki 配置文件挂载
+    networks:
+      - traefik_net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager  # 使 Promtail 运行在 Swarm Manager 节点上
+    volumes:
+      - ./promtail/config.yml:/etc/promtail/config.yml  # Promtail 配置文件挂载
+      - ./logs:/var/log/traefik  # Traefik 日志目录挂载
+    networks:
+      - traefik_net
+
 networks:
   traefik_net:
     external: true
@@ -84,3 +122,4 @@ volumes:
   consul-data:
   grafana-storage:
   prometheus-storage:
+  loki-data:

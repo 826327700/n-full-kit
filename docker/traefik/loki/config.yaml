@@ -1,0 +1,24 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /data/loki/index
+    cache_location: /data/loki/cache
+  filesystem:
+    directory: /data/loki/chunks
+
+ingester:
+  max_transfer_retries: 5
+  chunk_idle_period: 3m
+  chunk_retain_period: 1m
+  max_chunk_bytes: 20971520  # 默认 10MB，可以适当增加
+  max_transfer_bytes: 83886080  # 默认 50MB，可以适当增加
+
+limits_config:
+  ingestion_rate_mb: 8  # 增加摄取速率限制，默认 4MB/s
+  ingestion_burst_size_mb: 16  # 增加摄取突发限制，默认 8MB
+  max_label_names_per_series: 30
+  max_label_value_length: 2048

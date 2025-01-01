@@ -1,0 +1,30 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 9095
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    batchsize: 500  # 降低单次日志发送条数
+    batchwait: 2s   # 增加日志发送的间隔时间
+
+scrape_configs:
+  - job_name: traefik
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: traefik
+          __path__: /var/log/traefik/access.log
+    pipeline_stages:
+      - json: # 将日志解析为 JSON
+          expressions:
+            RequestHost: RequestHost
+            ServiceName: ServiceName
+            entryPointName: entryPointName
+      - labels: # 指定哪些字段作为标签
+          RequestHost: ""
+          ServiceName: ""
+          entryPointName: ""
