@@ -66,6 +66,28 @@ services:
     networks:
       - traefik_net
 
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"  # Loki API端口
+    volumes:
+      - loki-data:/data/loki  # 持久化存储 Loki 数据
+      - ./loki/config.yaml:/etc/loki/loki-config.yaml  # Loki 配置文件挂载
+    networks:
+      - traefik_net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail/config.yml:/etc/promtail/config.yml  # Promtail 配置文件挂载
+      - ./logs:/var/log/traefik  # Traefik 日志目录挂载
+    networks:
+      - traefik_net
+
 networks:
   traefik_net:
     driver: bridge
@@ -74,3 +96,4 @@ volumes:
   consul-data:
   grafana-storage:
   prometheus-storage:
+  loki-data:

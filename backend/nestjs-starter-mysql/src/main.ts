@@ -53,7 +53,7 @@ async function bootstrap() {
 		jsonDocumentUrl: 'swagger-json',
 	});
 
-	const port = configService.get('app.port', 3000);
+	const port = configService.get('app.port', 3001);
 	await app.listen(port);
 
 	console.log(`Application is running on: ${await app.getUrl()}`);

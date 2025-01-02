@@ -46,7 +46,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
-      - "3000:3000"
+      - "8100:3000"
     volumes:
       - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:

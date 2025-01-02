@@ -48,13 +48,14 @@ import { ConsulService } from './common/modules/consul/consul.service';
 				};
 			},
 		}),
-		ConsulModule.forRoot({
-			host: '192.168.31.32',
-			port: 8500,
-			defaults: {
-				token: 'admin', // 如果需要的话
-			},
-		}),
+		// /**Consul客户端模块 */
+		// ConsulModule.forRoot({
+		// 	host: '192.168.31.32',
+		// 	port: 8500,
+		// 	defaults: {
+		// 		token: 'admin', // 如果需要的话
+		// 	},
+		// }),
 		/**Redis客户端模块 */
 		RedisClientModule,
 		/**权限信息收集模块 */
@@ -83,32 +84,32 @@ import { ConsulService } from './common/modules/consul/consul.service';
 	],
 })
 export class RootModule {
-	constructor(private readonly consulService: ConsulService) { }
+	// constructor(private readonly consulService: ConsulService) { }
 
-	async onModuleInit() {
-		console.log('RootModule onModuleInit');
-		this.consulService.register({
-			name: 'server-nest',
-			address: 'host.docker.internal',//这里没有填写具体的ip
-			port: 3000,
-			tags: [
-				"traefik.enable=true",
-				"traefik.http.routers.nest-service.rule=Host(`nest.localhost`) && PathPrefix(`/nest-service`)",
-				"traefik.http.routers.nest-service.entrypoints=web",
-				// // 定义路径前缀中间件
-				"traefik.http.middlewares.strip-test-prefixes.stripprefix.prefixes=/nest-service",
-				"traefik.http.routers.nest-service.middlewares=strip-test-prefixes@consulcatalog",
-				// 服务配置
-				"traefik.http.services.nest-service.loadbalancer.server.scheme=http",
-				`traefik.http.services.nest-service.loadbalancer.server.port=3000`,
-				"traefik.http.services.nest-service.loadbalancer.passhostheader=true",
-			],
-			check: {
-				http: 'http://192.168.31.32:3000/rate-limit/no-limit',
-				interval: '5s',
-				timeout: '5s',
-				deregistercriticalserviceafter: '30s',
-			},
-		});
-	}
+	// async onModuleInit() {
+	// 	console.log('RootModule onModuleInit');
+	// 	this.consulService.register({
+	// 		name: 'server-nest',
+	// 		address: '',//这里可填写具体的ip地址或host.docker.internal 也可以填写服务名称
+	// 		port: 3000,
+	// 		tags: [
+	// 			"traefik.enable=true",
+	// 			"traefik.http.routers.nest-service.rule=Host(`nest.localhost`) && PathPrefix(`/nest-service`)",
+	// 			"traefik.http.routers.nest-service.entrypoints=web",
+	// 			// 定义路径前缀中间件
+	// 			"traefik.http.middlewares.strip-test-prefixes.stripprefix.prefixes=/nest-service",
+	// 			"traefik.http.routers.nest-service.middlewares=strip-test-prefixes@consulcatalog",
+	// 			// 服务配置
+	// 			"traefik.http.services.nest-service.loadbalancer.server.scheme=http",
+	// 			`traefik.http.services.nest-service.loadbalancer.server.port=3000`,
+	// 			"traefik.http.services.nest-service.loadbalancer.passhostheader=true",
+	// 		],
+	// 		check: {
+	// 			http: 'http://192.168.31.32:3000/rate-limit/no-limit',
+	// 			interval: '5s',
+	// 			timeout: '5s',
+	// 			deregistercriticalserviceafter: '30s',
+	// 		},
+	// 	});
+	// }
 }
