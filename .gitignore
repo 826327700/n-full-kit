@@ -1,1 +1,2 @@
 docker/traefik/logs/*
+.DS_Store

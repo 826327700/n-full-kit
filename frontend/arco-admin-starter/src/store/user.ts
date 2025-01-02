@@ -66,7 +66,6 @@ export const useUserStore = defineStore('user',{
                 arr.push(createMenu(route))
             }
             res = arr.filter((item: any) => item) as MenuItem[]
-            console.log(res)
             return res
         },
     },

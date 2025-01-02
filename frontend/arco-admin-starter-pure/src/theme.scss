@@ -1,0 +1,88 @@
+body{
+    --border-radius-small: 6px !important;
+    --border-radius-medium: 6px !important;
+    --font-size-body-3: 13px !important;
+}
+body[arco-theme='dark']{
+    .custom-layout-frame{
+		&::before{
+			filter: brightness(0.3);
+		}
+    }
+    .logo-inner{
+        background-color: var(--color-bg-5)!important;
+    }
+	.login-bg{
+		&::before{
+			filter: brightness(0.3);
+		}
+		img{
+			filter: brightness(0.5);
+		}
+	}
+}
+.arco-menu-light {
+    background-color:unset!important;
+    .arco-menu-item{
+        background-color:unset!important;
+        &.arco-menu-selected{
+            background-color: rgb(var(--primary-6))!important;
+            color: var(--color-white)!important;
+            .arco-icon{
+                color: var(--color-white)!important;
+            }
+        }
+    }
+    .arco-menu-inline-header{
+        background-color:unset!important;
+    }
+}
+.arco-card{
+    border-radius: var(--border-radius-small)!important;
+    background-color: var(--color-bg-3)!important;
+    &.no-padding{
+       .arco-card-body{
+           padding: 0!important;
+       }
+    }
+    &.flex-column{
+		display: flex;
+		flex-direction: column;
+        .arco-card-body{
+            display: flex;
+            flex: 1;
+            // height: 0;
+            flex-direction: column;
+        }
+    }
+    &.fill{
+        height: 100%;
+        width: 100%;
+    }
+}
+.arco-popover-content{
+    .arco-menu-item{
+        .arco-icon{
+            margin-right: 10px!important;
+        }
+    }
+}
+.arco-popover-popup-content{
+    border: unset!important;
+}
+.arco-form{
+    &.no-margin{
+        .arco-form-item{
+            margin-bottom: 0px!important;
+        }
+    }
+}
+.arco-popover-content{
+    margin-top: 0!important;
+}
+.arco-table{
+	.arco-table-td{
+		font-size: 13px!important;
+	}
+}
+
