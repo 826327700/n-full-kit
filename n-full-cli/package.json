@@ -1,9 +1,9 @@
 {
   "name": "n-full-cli",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "一个基于 Node.js 的全栈开发套件N-Full-Kit的 CLI 工具",
   "author": "xiaobaozi",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "dist/main.js",
   "bin": {
     "n-full-cli": "./dist/main.js",
@@ -75,5 +75,14 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "keywords": [
+    "n-full-kit",
+    "n-full-cli",
+    "nestjs",
+    "vue",
+    "nodejs",
+    "fullstack",
+    "cli"
+  ]
 }

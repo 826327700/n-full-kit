@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BasicCommand } from './create.command';
+import { CreateCommand } from './create.command';
+import { InjectCommand } from './inject.command';
 
 @Module({
   imports: [],
-  providers: [BasicCommand],
+  providers: [CreateCommand,InjectCommand],
 })
 export class AppModule {}
