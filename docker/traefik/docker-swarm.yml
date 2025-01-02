@@ -25,7 +25,7 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-size: "100m"
+        max-size: "20m"
         max-file: "20"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

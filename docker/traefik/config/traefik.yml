@@ -52,6 +52,13 @@ accessLog:
   filePath: "/var/log/traefik/access.log"
   format: "json"
   bufferingSize: 100
+  fields:
+    headers:
+      defaultMode: drop
+      names:
+        Authorization: keep
+        User-Agent: keep
+        Origin: keep
 
 metrics:
   prometheus:
