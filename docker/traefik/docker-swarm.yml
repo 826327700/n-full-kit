@@ -31,7 +31,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./config/traefik.yml:/etc/traefik/traefik.yml
       - ./config/vhost:/etc/traefik/vhost
-      - ./certs:/etc/certs
       - ./logs:/var/log/traefik
       - ./acme/acme.json:/etc/traefik/acme.json
     networks:
