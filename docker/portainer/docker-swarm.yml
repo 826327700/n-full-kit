@@ -10,7 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # 绑定宿主机的Docker Socket
       - portainer_data:/data # 数据存储
     networks:
-      - traefik_net
+      - swarm_network
     restart: unless-stopped
     deploy:
       mode: replicated
@@ -24,5 +24,5 @@ volumes:
     driver: local
 
 networks:
-  traefik_net:
+  swarm_network:
     external: true 

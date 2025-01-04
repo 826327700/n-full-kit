@@ -14,8 +14,8 @@ services:
       - ./data:/data/db
     command: mongod --auth
     networks:
-      - mongo-network
+      - mongo_network
 
 networks:
-  mongo-network:
+  mongo_network:
     driver: bridge

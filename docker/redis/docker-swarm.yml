@@ -11,12 +11,12 @@ services:
       - ./data:/data
     command: redis-server --appendonly yes --requirepass admin123
     networks:
-      - swarm-network
+      - swarm_network
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
 
 networks:
-  swarm-network:
+  swarm_network:
     driver: overlay

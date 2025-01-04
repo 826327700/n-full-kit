@@ -53,7 +53,7 @@ services:
       - ./logs:/var/log/traefik
       - ./acme/acme.json:/etc/traefik/acme.json
     networks:
-      - traefik_net
+      - swarm_network
     labels:
       - "traefik.enable=true"
 
@@ -68,7 +68,7 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:
-      - traefik_net
+      - swarm_network
 
   prometheus: #推荐grafana面板导入id=17035/4475
     image: prom/prometheus:latest
@@ -83,7 +83,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - traefik_net
+      - swarm_network
 
   consul:
     image: hashicorp/consul
@@ -98,7 +98,7 @@ services:
     volumes:
       - consul-data:/consul/data
     networks:
-      - traefik_net
+      - swarm_network
 
   loki:
     image: grafana/loki:latest
@@ -115,7 +115,7 @@ services:
       - loki-data:/data/loki  # 持久化存储 Loki 数据
       - ./loki/config.yaml:/etc/loki/loki-config.yaml  # Loki 配置文件挂载
     networks:
-      - traefik_net
+      - swarm_network
 
   promtail:
     image: grafana/promtail:latest
@@ -130,10 +130,10 @@ services:
       - ./promtail/config.yml:/etc/promtail/config.yml  # Promtail 配置文件挂载
       - ./logs:/var/log/traefik  # Traefik 日志目录挂载
     networks:
-      - traefik_net
+      - swarm_network
 
 networks:
-  traefik_net:
+  swarm_network:
     external: true
 
 volumes:
@@ -148,7 +148,7 @@ volumes:
 确保你已经设置好 Docker Swarm 环境。然后，在终端运行以下命令启动服务：
 
 ```bash
-docker network create -d overlay traefik_net // 创建 名为traefik_net 的overlay 网络
+docker network create -d overlay swarm_network // 创建 名为swarm_network 的overlay 网络
 docker stack deploy -c docker-swarm.yml traefik_stack
 ```
 这会启动所有配置的服务，并将其部署到 Docker Swarm 集群中。
@@ -192,7 +192,7 @@ Grafana 的管理员密码在 docker-swarm.yml 文件中配置：
     volumes:
       - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:
-      - traefik_net
+      - swarm_network
 ```
 如果你想要更改 Grafana 的用户名或密码，可以修改此配置。
 
@@ -214,7 +214,7 @@ Grafana 的管理员密码在 docker-swarm.yml 文件中配置：
     volumes:
       - consul-data:/consul/data
     networks:
-      - traefik_net
+      - swarm_network
 ```
 默认配置中，master 和 agent 令牌的密码均为 admin。如果需要修改密码或权限，可以在 Consul 的配置文件中进行修改，或者在 UI 中设置。
 

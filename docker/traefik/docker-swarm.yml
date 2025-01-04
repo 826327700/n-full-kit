@@ -34,7 +34,7 @@ services:
       - ./logs:/var/log/traefik
       - ./acme/acme.json:/etc/traefik/acme.json
     networks:
-      - traefik_net
+      - swarm_network
     labels:
       - "traefik.enable=true"
 
@@ -49,7 +49,7 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana  # 添加卷挂载
     networks:
-      - traefik_net
+      - swarm_network
 
   prometheus: #推荐grafana面板导入id=17035/4475
     image: prom/prometheus:latest
@@ -64,7 +64,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - traefik_net
+      - swarm_network
 
   consul:
     image: hashicorp/consul
@@ -79,7 +79,7 @@ services:
     volumes:
       - consul-data:/consul/data
     networks:
-      - traefik_net
+      - swarm_network
 
   loki:
     image: grafana/loki:latest
@@ -96,7 +96,7 @@ services:
       - loki-data:/data/loki  # 持久化存储 Loki 数据
       - ./loki/config.yaml:/etc/loki/loki-config.yaml  # Loki 配置文件挂载
     networks:
-      - traefik_net
+      - swarm_network
 
   promtail:
     image: grafana/promtail:latest
@@ -111,10 +111,10 @@ services:
       - ./promtail/config.yml:/etc/promtail/config.yml  # Promtail 配置文件挂载
       - ./logs:/var/log/traefik  # Traefik 日志目录挂载
     networks:
-      - traefik_net
+      - swarm_network
 
 networks:
-  traefik_net:
+  swarm_network:
     external: true
 
 volumes:

@@ -11,8 +11,8 @@ services:
       - ./data:/data
     command: redis-server --appendonly yes --requirepass admin123
     networks:
-      - redis-network
+      - redis_network
 
 networks:
-  redis-network:
+  redis_network:
     driver: bridge
