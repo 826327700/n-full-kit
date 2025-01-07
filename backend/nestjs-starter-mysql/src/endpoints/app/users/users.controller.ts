@@ -8,7 +8,7 @@ import { LoginDto } from './dto/login.dto';
 import { Reflector } from '@nestjs/core';
 import { Auth, NoAuth } from 'src/common/decorators/auth.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
-import { createPageQueryResClass, PageQueryDto } from 'src/common/dto/page-query.dto';
+import { PageQueryDto } from 'src/common/dto/page-query.dto';
 
 @ApiTags('app端-增删改查示例(MySQL版)')
 @ApiBearerAuth('JWT-auth')
@@ -46,8 +46,9 @@ export class UsersController {
 	@Get()
 	@ApiOperation({ summary: '分页获取用户列表' })
 	@CustomApiResponse({
-        type:createPageQueryResClass(User),
-        description: '分页获取的用户列表'
+        type:User,
+        description: '分页获取的用户列表',
+		isPage:true
     })
 	findAll(@Query() pageQueryDto: PageQueryDto) {
 		return this.usersService.findAll(pageQueryDto);

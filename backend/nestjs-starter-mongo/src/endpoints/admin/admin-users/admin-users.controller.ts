@@ -8,7 +8,6 @@ import { Auth, NoAuth } from 'src/common/decorators/auth.decorator';
 import { PermissionGroup } from 'src/common/decorators/permission.decorator';
 import { NoCheckRoles } from 'src/common/decorators/roles.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
-import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
 import { AdminUserDto, QueryAdminUserDto } from './dto/query-admin-user.dto';
 import { IRequest } from 'src/common/interfaces/request';
 import { ENDPOINTS } from 'src/common/constants/endpoints';
@@ -71,8 +70,9 @@ export class AdminUsersController {
 	@Get()
 	@ApiOperation({ summary: '获取所有管理员用户' })
 	@CustomApiResponse({
-		type: createPageQueryResClass(AdminUserDto),
+		type: AdminUserDto,
 		description: "返回所有管理员用户列表",
+		isPage: true
 	})
 	findAll(@Query() query: QueryAdminUserDto) {
 		return this.adminUsersService.findAll(query);

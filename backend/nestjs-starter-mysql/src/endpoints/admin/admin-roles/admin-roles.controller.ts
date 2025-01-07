@@ -6,7 +6,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PermissionGroup } from 'src/common/decorators/permission.decorator';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
-import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
 import { AdminPermissionItemDto, AdminRoleDto, QueryAdminRoleDto } from './dto/query-admin-role.dto';
 import { AdminMenuItem, UpdateAdminMenusDto } from './dto/update-admin-menu.dto';
 import { JwtStrategys } from 'src/common/modules/auth/strategies/jwt.strategy';
@@ -35,8 +34,9 @@ export class AdminRolesController {
 	@Get()
 	@ApiOperation({ summary: '获取所有管理员角色' })
 	@CustomApiResponse({
-		type:createPageQueryResClass(AdminRoleDto),
+		type:AdminRoleDto,
 		description:"返回所有管理员角色列表",
+		isPage:true
 	})
 	async findAll(@Query() query: QueryAdminRoleDto) {
 		return this.adminRolesService.findAll(query);

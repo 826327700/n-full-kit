@@ -5,7 +5,6 @@ import { CreateAdminDictDto } from './dto/create-admin-dict.dto';
 import { UpdateAdminDictDto } from './dto/update-admin-dict.dto';
 import { AdminDictDto } from './dto/admin-dict.dto';
 import { CustomApiResponse } from 'src/common/decorators/api-response.decorator';
-import { createPageQueryResClass } from 'src/common/dto/page-query.dto';
 import { CreateAdminDictTypeDto } from './dto/create-admin-dict-type.dto';
 import { UpdateAdminDictTypeDto } from './dto/update-admin-dict-type.dto';
 import { QueryAdminDictTypeDto } from './dto/query-admin-dict-type.dto';
@@ -37,8 +36,9 @@ export class AdminDictController {
     @Get('type')
     @ApiOperation({ summary: '查询字典类型列表' })
     @CustomApiResponse({
-        type: createPageQueryResClass(AdminDictTypeDto),
+        type: AdminDictTypeDto,
         description: "返回字典类型列表",
+		isPage:true
     })
     findAllTypes(@Query() query: QueryAdminDictTypeDto) {
         return this.adminDictService.findAllTypes(query);

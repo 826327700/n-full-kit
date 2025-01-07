@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Auth, NoAuth } from '../../../common/decorators/auth.decorator';
 import { CustomApiResponse } from '../../../common/decorators/api-response.decorator';
-import { createPageQueryResClass, PageQueryDto } from '../../../common/dto/page-query.dto';
+import { PageQueryDto } from '../../../common/dto/page-query.dto';
 import { User } from './entities/user.schema';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -41,9 +41,11 @@ export class UsersController {
     @Get()
     @ApiOperation({ summary: '分页获取用户列表' })
     @CustomApiResponse({
-        type:createPageQueryResClass(User),
-        description: '分页获取的用户列表'
+        type:User,
+        description: '分页获取的用户列表',
+		isPage:true
     })
+	@NoAuth()
     findAll(@Query() pageQueryDto: PageQueryDto) {
         return this.usersService.findAll(pageQueryDto);
     }

@@ -64,7 +64,7 @@ export class UsersService {
         const { page = 1, pageSize = 10 } = query;
         const skip = (page - 1) * pageSize;
 
-        const [total, items] = await Promise.all([
+        const [total, list] = await Promise.all([
             this.userModel.countDocuments().exec(),
             this.userModel.find()
                 .skip(skip)
@@ -73,7 +73,7 @@ export class UsersService {
         ]);
 
         return {
-            items,
+            list,
             total,
             page: Number(page),
             pageSize: Number(pageSize),
