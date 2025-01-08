@@ -14,7 +14,31 @@ export class CreateCommand extends CommandRunner {
 		["NestJS+Mongo","backend/nestjs-starter-mongo"],
 		["Vue3+Arco Design Admin","frontend/arco-admin-starter"],
 		["Vue3+Arco Design Admin pure","frontend/arco-admin-starter-pure"],
+		["Flutter+GetX","frontend/flutter_starter"],
 	])
+
+	private successTip=new Map<string,any>([
+		["NestJS+Mysql",[
+			chalk.blue(`npm install or yarn install`),
+			chalk.blue(`npm run start:dev`),
+		]],
+		["NestJS+Mongo",[
+			chalk.blue(`npm install or yarn install`),
+			chalk.blue(`npm run start:dev`),
+		]],
+		["Vue3+Arco Design Admin",[
+			chalk.blue(`npm install or yarn install`),
+			chalk.blue(`npm run dev`),
+		]],
+		["Vue3+Arco Design Admin pure",[
+			chalk.blue(`npm install or yarn install`),
+			chalk.blue(`npm run dev`),
+		]],
+		["Flutter+GetX",[
+			chalk.blue(`flutter pub get`)
+		]],
+	])
+
 	private repositoryUrl="https://gitee.com/crazybaozi/n-full-kit.git"
 
 
@@ -55,7 +79,7 @@ export class CreateCommand extends CommandRunner {
 					type: 'list',
 					name: 'template',
 					message: 'Please select a frontend template / 请选择项目模板',
-					choices: ['Vue3+Arco Design Admin','Vue3+Arco Design Admin pure'],
+					choices: ['Vue3+Arco Design Admin','Vue3+Arco Design Admin pure','Flutter+GetX'],
 				},
 			]);
 		}
@@ -89,12 +113,9 @@ export class CreateCommand extends CommandRunner {
 				console.log(chalk.blue(`cd ${newProjectName}`));
 				console.log(chalk.green(`Then run the following command to install dependencies:`));
 				console.log(chalk.blue(`npm install or yarn install`));
-				if(type==='backend'){
-					console.log(chalk.blue(`npm run start:dev`));
-				}
-				if(type==='frontend'){
-					console.log(chalk.blue(`npm run dev`));
-				}
+				this.successTip.get(template).forEach((tip:string)=>{
+					console.log(tip);
+				})
 			} catch (error) {
 				
 			}
