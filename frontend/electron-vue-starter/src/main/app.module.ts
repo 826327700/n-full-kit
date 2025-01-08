@@ -3,7 +3,6 @@ import { app, shell, BrowserWindow } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
-import { AutoBinding } from './auto.binding';
 import { TestModule } from './modules/test/test.module'
 import log from 'electron-log/main';
 import { WindowsProvider } from './provider/window';
@@ -11,7 +10,6 @@ import { checkUpdate } from './check-update';
 
 @Module({
 	imports:[
-		AutoBinding,
 		TestModule
 	],
 })
@@ -48,7 +46,7 @@ export class AppModule implements OnModuleInit {
 
 		mainWindow.on('ready-to-show', () => {
 			mainWindow.show()
-			checkUpdate(mainWindow)
+			// checkUpdate(mainWindow)
 		})
 
 		mainWindow.webContents.on('did-finish-load', () => {

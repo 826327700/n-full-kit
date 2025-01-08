@@ -1,9 +1,10 @@
 
 <template>
 	<div class="hello-world">
-		<Versions></Versions>
 		{{state.text}}
-		<button @click="open" style="margin-top: 20px;">与主进程通信</button>
+		<button @click="test" style="margin: 20px 0;">与主进程通信(invoke)</button>
+		<button @click="test2" style="margin: 20px 0;">与主进程通信(send)</button>
+		<Versions></Versions>
 	</div>
 </template>
 <script setup lang="ts">
@@ -14,8 +15,11 @@ import Versions from './components/Versions.vue'
 const state=reactive({
 	text:""
 })
-const open=async ()=>{
+const test=async ()=>{
 	state.text=await window.api.TestController.test({name:"N-Full-Kit"})
+}
+const test2=async()=>{
+	window.api.TestController.test2({name:"N-Full-Kit"})
 }
 </script>
 <style lang="scss" scoped>

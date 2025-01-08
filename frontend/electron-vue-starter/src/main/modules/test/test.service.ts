@@ -12,7 +12,7 @@ export class TestService {
 		return `hello ${params.name} -- from main process`
 	}
 
-	async test2(params:TestDto):Promise<TestDto>{
-		return params
+	async test2(params:TestDto){
+		console.log("ipc on",params)
 	}
 }

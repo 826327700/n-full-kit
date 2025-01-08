@@ -1,6 +1,5 @@
 import { dialog } from 'electron';
 import log from 'electron-log/main';
-import config from '../config';
 const { ipcMain } = require('electron')
 const { autoUpdater } = require("electron-updater")
 
@@ -31,14 +30,11 @@ function getSystemInfo() {
     return systemType;
 }
 
-let publishUrl=""
+let publishUrl="" //填写远程安装包地址
 
 let isHandle=false
 export function checkUpdate(mainWindow,auto=true) {
 	log.info('checkUpdate start');
-
-	let systemType=getSystemInfo()
-	publishUrl=config.providerUrl[config.env][systemType]
 
 	const message = {
 		error: '检查更新出错',

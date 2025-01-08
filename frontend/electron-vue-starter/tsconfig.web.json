@@ -11,7 +11,7 @@
 	  "src/main/**/**/*.ts",
 	  "src/preload/*.d.ts",
 	  "src/preload/export.type.ts"
-	  ],
+, "auto-binding.ts"	  ],
 	"compilerOptions": {
 	  "strict": false,
 	  "composite": true,

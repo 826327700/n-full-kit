@@ -54,7 +54,6 @@ export function initialApp(){
 				const { exec } = require('child_process');
 				exec('killall qdrant_darwin_arm64')
 				exec('killall qdrant_darwin_x64')
-				console.log("关闭qdrant")
 			}
 		})
 	})
