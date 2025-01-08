@@ -15,6 +15,8 @@ export class CreateCommand extends CommandRunner {
 		["Vue3+Arco Design Admin","frontend/arco-admin-starter"],
 		["Vue3+Arco Design Admin pure","frontend/arco-admin-starter-pure"],
 		["Flutter+GetX","frontend/flutter_starter"],
+		["Uniapp+NutUI","frontend/uniapp-nutui-starter"],
+		["Electron+Vue+Nest","frontend/electron-vue-starter"],
 	])
 
 	private successTip=new Map<string,any>([
@@ -36,6 +38,14 @@ export class CreateCommand extends CommandRunner {
 		]],
 		["Flutter+GetX",[
 			chalk.blue(`flutter pub get`)
+		]],
+		["Uniapp+NutUI",[
+			chalk.blue(`npm install or yarn install`),
+			chalk.blue(`npm run dev:mp-weixin`),
+		]],
+		["Electron+Vue+Nest",[
+			chalk.blue(`npm install or yarn install`),
+			chalk.blue(`npm run dev`),
 		]],
 	])
 
@@ -79,7 +89,7 @@ export class CreateCommand extends CommandRunner {
 					type: 'list',
 					name: 'template',
 					message: 'Please select a frontend template / 请选择项目模板',
-					choices: ['Vue3+Arco Design Admin','Vue3+Arco Design Admin pure','Flutter+GetX'],
+					choices: ['Vue3+Arco Design Admin','Vue3+Arco Design Admin pure','Flutter+GetX','Uniapp+NutUI'],
 				},
 			]);
 		}
@@ -94,12 +104,16 @@ export class CreateCommand extends CommandRunner {
 				},
 			  ]);
 			if(projectNameAnswer){
-				await this.cloenTemplate(frameworkAnswer.template,projectNameAnswer.projectName,answers.type)
+				if(frameworkAnswer.template.startsWith("Flutter")&&projectNameAnswer.projectName.indexOf("-")>-1){
+					console.log(chalk.red(`\nFlutter project name cannot contain '-'`));
+					return
+				}
+				await this.cloenTemplate(frameworkAnswer.template,projectNameAnswer.projectName)
 			}
 		}
     }
 
-    public async cloenTemplate(template: string,newProjectName:string,type:string) {
+    public async cloenTemplate(template: string,newProjectName:string) {
 		
 		const targetDir=this.templateMap.get(template)
 		// 从this.repositoryUrl下载目标目录到当前目录
@@ -112,7 +126,6 @@ export class CreateCommand extends CommandRunner {
 				console.log(chalk.green(`\nTo get started, navigate to the project directory:`));
 				console.log(chalk.blue(`cd ${newProjectName}`));
 				console.log(chalk.green(`Then run the following command to install dependencies:`));
-				console.log(chalk.blue(`npm install or yarn install`));
 				this.successTip.get(template).forEach((tip:string)=>{
 					console.log(tip);
 				})
