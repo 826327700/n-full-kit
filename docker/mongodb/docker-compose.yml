@@ -12,7 +12,7 @@ services:
       - "27017:27017"
     volumes:
       - ./data:/data/db
-    command: mongod --auth
+    command: mongod --auth --replSet rs0
     networks:
       - mongo_network
 

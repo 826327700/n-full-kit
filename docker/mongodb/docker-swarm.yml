@@ -10,7 +10,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-    command: mongod --auth
+    command: mongod --auth --replSet rs0
     deploy:
       mode: replicated
       replicas: 1
