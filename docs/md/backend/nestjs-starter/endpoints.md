@@ -7,9 +7,11 @@ outline: deep
 ## endpoints
 `src/endpoints`目录是项目业务代码入口，所有的业务相关代码集中写在这个目录下，可以根据业务用途和分类，使用不同的目录名称进行归档，`src/endpoints`根目录下的`endpoints.module.ts`用于注册所有业务端点并导出给最外层的`root.module.ts`。
 
+::: tip 提示
 本模板中内置了`admin`和`app`两个大分类和大分类下的一些功能模块用于示例：
 - `admin` 提供给admin后台管理的接口
 - `app` 提供给前台应用程序的接口
+:::
 
 ```
 ├── admin // admin大分类
@@ -25,20 +27,38 @@ outline: deep
 │   └── users // app大分类下的功能模块 用户增删改查示例模块
 └── endpoints.module.ts // 将端点模块注册并导出给root.module.ts
 ```
-可以根据需求自行增加或删除端点分类。   
-**注意：如果需要使用内置的RBAC权限系统，请勿删除admin目录**
+可以根据需求自行增加或删除端点分类。
+::: danger 注意
+如果需要使用内置的RBAC权限系统，请勿删除admin目录
+:::
 
 ## 新增端点分类
-如果需要新增端点分类，只需要在`src/endpoints`下新建一个目录，例如`web`，然后在`web`内写入一个`web.module.ts`:
-```ts
+如果需要新增端点分类，只需要在`src/endpoints`下新建一个目录，例如`web`，然后在`web`内写入一个`web.module.ts`，然后将`WebModule`在`endpoints.module.ts`中注册即可:
+::: code-group
+```ts [src/endpoints/web/web.module.ts]
 import { Module } from '@nestjs/common';
 @Module({
-	imports: [
-		
-	],
+	imports: [],
 })
 export class WebModule {}
 ```
+```ts [src/endpoints/endpoints.module.ts]
+import { Module } from '@nestjs/common';
+import { AppModule } from './app/app.module';
+import { AdminModule } from './admin/admin.module';
+import { WebModule } from './web/web.module';// [!code focus]
+
+@Module({
+	imports: [
+		AppModule,
+		AdminModule,
+		WebModule,// [!code focus]
+	],
+	providers: [],
+})
+export class EndpointsModule { }
+```
+:::
 目录结构示例如下：
 ```
 ├── admin // admin大分类
@@ -52,4 +72,7 @@ export class WebModule {}
 │   ├── ...
 └── endpoints.module.ts 
 ```
-然后将`WebModule`在`endpoints.module.ts`中注册即可。后续`web`相关的功能模块，均在`web`目录下创建和编写即可。建议使用`@nestjs/cli`，在`web`目录下执行`nest g res xxx`即可创建功能模块，并自动注册到`WebModule`。
+::: tip 建议
+- 建议使用`@nestjs/cli`，在`src/endpoints`目录下执行`nest g mo web`即可创建web模块作为一个新的端点分类，并自动注册到`endpoints.module.ts`
+- 后续`web`相关的功能模块，均在`web`目录下创建和编写，在`web`目录下执行`nest g res xxx`即可创建功能模块，并自动注册到`WebModule`
+:::

@@ -1,5 +1,6 @@
 ---
 outline: deep
+lang: zh-CN
 ---
 
 # N-Full-Cli

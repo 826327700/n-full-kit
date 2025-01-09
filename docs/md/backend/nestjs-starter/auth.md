@@ -5,10 +5,12 @@ outline: deep
 # 身份认证
 
 ## JWT
-- <a href="https://jwt.io" target="_blank">JWT官方文档</a>   
-- <a href="https://jwt.p2hp.com/" target="_blank">JWT中文镜像站</a>  
+> [!NOTE] 参考
+> - <a href="https://jwt.io" target="_blank">JWT官方文档</a>   
+> - <a href="https://jwt.p2hp.com/" target="_blank">JWT中文镜像站</a>  
 
-本项目模板仅内置了基于`JWT`的身份认证方式，如有其他需要，请自行添加其他认证方式，<a href="https://docs.nestjs.com/recipes/passport" target="_blank">参考文档</a>。
+
+本项目模板仅内置了基于`JWT`的身份认证方式，如有其他需要，请自行添加其他认证方式，[参考文档](https://docs.nestjs.com/recipes/passport)。
 
 本项目模板的JWT认证模块位于`src/common/modules/auth`目录：
 ```
@@ -98,15 +100,18 @@ export class AppController {
     hello(){}
 }
 ```
+::: tip 提示
 在本项目模板中，不建议这么使用，因为本项目模板中封装了统一的`@Auth`和`@NoAuth`装饰器，它们同时具备了`RBAC`权限认证的功能(后面章节会有详细说明)。  
 <small>源码：src/common/decorators/auth.decorator.ts</small>
 - `@Auth(strategyName:string,checkRoles:boolean=false)`
   - `strategyName` `sting` 策略名称，也就是对应刚才我们声明的`app-jwt`和`admin-jwt`
   - `checkRoles` `boolean` 是否同时检查权限，默认false。
-- `@NoAuth` 用于排除某个接口不需要认证。
+- `@NoAuth()` 用于排除某个接口不需要认证。
+:::
+
 
 示例：
-```ts
+```ts{2,8}
 //使用JwtStrategys.admin.name避免魔术字符串，JwtStrategys变量来自jwt.strategy.ts
 @Auth(JwtStrategys.admin.name, true) 
 @Controller()
@@ -116,5 +121,38 @@ export class AppController {
 
     @NoAuth() //标记了@NoAuth，hello2无需认证
     hello2(){}
+}
+```
+
+## 发放凭证
+一般在登录接口登录通过后发放jwt凭证：
+- 通过注入位于`src/common/modules/auth/auth.module.ts`的`AuthModule`来获得`AuthService`所提供的`generateToken`方法，用于发放jwt凭证。
+  
+```ts
+// 使用 AuthService 生成 token
+const { access_token } = this.authService.generateToken({
+	userId: user._id.toString(),
+	roles: user.roles,
+	customData: {
+		username: user.username
+	}
+}, 'admin');
+```
+::: tip 提示
+generateToken(payload: JWTUser, strategyName: keyof typeof JwtStrategys)
+- `payload` 自定义的jwt信息对象，可根据需求修改
+- `strategyName` 策略key，JwtStrategys对象中的一级key字符串
+:::
+
+## 获取凭证信息
+前端拿到`access_token`之后，在请求头中携带`Authorization: Bearer <access_token>`，后端在`controller`的接口方法中通过`@Req()`装饰器获取req上下文，在`req.user`对象中就是解析后的`payload`：
+```ts{5-6}
+@Auth(JwtStrategys.app.name)
+@Controller()
+export class AppController {
+	@Get('hello')
+	hello(@Req() req){
+		console.log(req.user)
+	}
 }
 ```

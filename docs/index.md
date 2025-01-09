@@ -6,10 +6,13 @@ hero:
   name: "N-Full-Kit"
   text: "是一个基于nodejs的全栈开发套件"
   tagline: "高效的全栈开发工具"
+  image:
+    src: /logo.png
+    alt: VitePress
   actions:
     - theme: brand
       text: "快速开始"
-      link: "/md/backend/nestjs-starter.md"
+      link: "/md/cli/intro.md"
     - theme: alt
       text: "API 示例"
       link: "/api-examples"

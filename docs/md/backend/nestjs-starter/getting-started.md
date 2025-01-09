@@ -1,5 +1,6 @@
 ---
 outline: deep
+lang: zh-CN
 ---
 
 # 快速开始
@@ -7,7 +8,9 @@ outline: deep
 ## 概述
 基于NestJs开发的后端模板，提供了通用的开发环境和结构，封装了后端开发常用的功能模块，帮助开发者快速搭建后端应用。   
 模板分为MySQL和MongoDB两个版本，适用于不同的数据库类型，推荐选择`MongoDB版本`。
-**注：使用本模板需要具有一定NestJs开发经验。**
+::: warning 注意
+使用本模板需要具有一定NestJs开发经验。
+:::
 
 ## 创建项目
 1. 在准备存放项目的目录下，使用`n-full-cli`工具输入命令创建：
@@ -15,6 +18,32 @@ outline: deep
 3. 选择：`backend / 后端`
 4. 选择：`NestJS+Mysql`或者`nfull inject`
 5. 输入项目名称并确定，它将会按照名称创建一个项目目录
+
+```sh:no-line-numbers{4}
+T  nfull create
+|
+o  Please select the project type / 请选择项目类型
+|  ❯ backend / 后端 
+|    frontend / 前端 
+|
+o  Please select a backend template / 请选择项目模板
+|  My Awesome Project
+|  ❯ NestJS+Mysql 
+|    NestJS+Mongo
+|
+o  Please enter the project name: / 请输入你的项目名称
+|  nest-project
+| 
+o  downloading template...
+|
+o  Template downloaded successfully to ./nest-project
+|
+|  To get started, navigate to the project directory:
+|  cd nest-project
+|  Then run the following command to install dependencies:
+|  npm install or yarn install
+-  npm run start:dev
+```
 
 ## 项目目录
 本项目的目录结构如下：
