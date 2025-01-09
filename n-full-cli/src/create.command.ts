@@ -89,7 +89,7 @@ export class CreateCommand extends CommandRunner {
 					type: 'list',
 					name: 'template',
 					message: 'Please select a frontend template / 请选择项目模板',
-					choices: ['Vue3+Arco Design Admin','Vue3+Arco Design Admin pure','Flutter+GetX','Uniapp+NutUI'],
+					choices: ['Vue3+Arco Design Admin','Vue3+Arco Design Admin pure','Flutter+GetX','Uniapp+NutUI','Electron+Vue+Nest'],
 				},
 			]);
 		}

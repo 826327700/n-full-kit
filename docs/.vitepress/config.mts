@@ -6,7 +6,7 @@ export default defineConfig({
   description: "n-full-kit是一个基于nodejs的全栈开发套件,它可以帮助开发者快速的创建基于NestJs的后端项目初始化模板,基于Vue3+Arco Desgin的后台管理系统项目模板,以及创建和启动一些全栈架构中常用的开源程序,以用于部署和上线",
   markdown:{
     theme: {
-      light: 'catppuccin-frappe',
+      light: 'vitesse-light',
       dark: 'vitesse-dark'
     }
   },
@@ -19,12 +19,25 @@ export default defineConfig({
 
     sidebar: [
       {
+        text: '命令行工具',
+        items: [
+          { 
+            text: 'N-Full-Cli', 
+            link: '/md/cli/intro.md'
+          },
+        ]
+      },
+      {
         text: '后端',
         items: [
           { 
             text: 'NestJs后端模板', 
             items:[
-              { text: '快速开始', link: '/md/backend/nestjs-starter.md' },
+              { text: '快速开始', link: '/md/backend/nestjs-starter/getting-started.md' },
+              { text: '基础配置', link: '/md/backend/nestjs-starter/configuration.md' },
+              { text: '业务端点', link: '/md/backend/nestjs-starter/endpoints.md' },
+              { text: '身份认证', link: '/md/backend/nestjs-starter/auth.md' },
+              { text: 'RBAC权限', link: '/md/backend/nestjs-starter/rbac.md' },
             ]
           },
         ]
