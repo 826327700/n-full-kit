@@ -77,7 +77,7 @@ export class PermissionCollectService {
 			const permissionGroupDescription = Reflect.getMetadata(PERMISSION_GROUP_DESC, controllerPrototype.constructor)
 			// 仅收集含有@PermissionGroup装饰器的 Controller
 			if (permissionGroup) {
-				
+
 				// 获取 Controller 的 @Controller 元数据
 				const controllerPath = Reflect.getMetadata("path", controllerPrototype.constructor);
 				const startPath = extractFirstPath(controllerPath)
@@ -91,7 +91,7 @@ export class PermissionCollectService {
 					let noCheckRoles = Reflect.getMetadata(NO_CHECK_ROLES_KEY, method)
 					if (noCheckRoles) continue
 
-					let permissionKey = getPermissionKey(controllerPath,controllerName,methodName)
+					let permissionKey = Reflect.getMetadata(PERMISSION_KEY, method)||getPermissionKey(controllerPath,controllerName,methodName)
 					let permissionDescription = Reflect.getMetadata(PERMISSION_DESC, method)
 					if (!permissionDescription) {
 						// 获取 Swagger 的 @ApiOperation 元数据

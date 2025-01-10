@@ -32,7 +32,7 @@ export class RolesGuard implements CanActivate {
 		}
 
 		const request = context.switchToHttp().getRequest();
-		
+
 		// 使用聚合查询获取用户的所有有效角色权限
 		const userWithRoles = await this.adminUserModel.aggregate([
 			{
@@ -87,7 +87,7 @@ export class RolesGuard implements CanActivate {
 
 		// 获取当前方法的权限key
 		//@ts-ignore
-		let needPermission = getPermissionKey(context.getRequest().url, context.getClass().name, context.getHandler().name)
+		let needPermission = Reflect.getMetadata(PERMISSION_KEY, context.getHandler())||getPermissionKey(context.getRequest().url, context.getClass().name, context.getHandler().name)
 
 		// 检查是否包含所需的角色权限
 		if (userPermissions.includes('root') || userPermissions.includes(needPermission)) {
