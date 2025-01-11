@@ -15,7 +15,7 @@ hero:
       link: "/md/cli/intro.md"
     - theme: alt
       text: "Github"
-      link: "https://github.com/vuejs/vitepress"
+      link: "https://github.com/826327700/n-full-kit"
 
 features:
   - title: 快速开发

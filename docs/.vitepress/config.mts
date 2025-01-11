@@ -81,6 +81,7 @@ let nav=[
 // https://vitepress.yiov.top/
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  appearance:'dark', 
   title: "N-Full-Kit",
   description: "n-full-kit是一个基于nodejs的全栈开发套件,它可以帮助开发者快速的创建基于NestJs的后端项目初始化模板,基于Vue3+Arco Desgin的后台管理系统项目模板,以及创建和启动一些全栈架构中常用的开源程序,以用于部署和上线",
   // markdown:{
@@ -148,7 +149,7 @@ export default defineConfig({
     sidebar: nav,
   
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/826327700/n-full-kit' }
     ],
 
     //本地搜索
