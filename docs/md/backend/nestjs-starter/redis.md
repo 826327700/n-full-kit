@@ -189,4 +189,4 @@ export class RedisExampleService {
 ```
 > [!TIP] 提示
 > - 使用示例源码位于`src/endpoints/app/redis-example`
-> - 还没有redis？[使用docker快速启动一个redis]()
+> - 还没有redis？[使用docker快速启动一个redis](#)

@@ -308,4 +308,4 @@ export default routes
 `首次运行`或`每次变更路由`时，由具有`角色管理`权限的账号，在后台页面点击`更新菜单`按钮，即可自动上报菜单项。
 ![上报菜单](./assets/menu_demo3.png)
 
-更详细的前端向`RBAC权限`说明，请查看`Vue3+Arco Design Admin`模板的相关说明：[点击跳转](../../frontend/)
+更详细的前端向`RBAC权限`说明，请查看`Vue3+Arco Design Admin`模板的相关说明：[点击跳转](#)
