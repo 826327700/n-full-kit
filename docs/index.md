@@ -14,8 +14,8 @@ hero:
       text: "快速开始"
       link: "/md/cli/intro.md"
     - theme: alt
-      text: "API 示例"
-      link: "/api-examples"
+      text: "Github"
+      link: "https://github.com/vuejs/vitepress"
 
 features:
   - title: 快速开发

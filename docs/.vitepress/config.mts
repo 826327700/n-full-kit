@@ -25,10 +25,10 @@ let nav=[
               { text: '统一响应结构', link: '/md/backend/nestjs-starter/response.md' },
               { text: 'Swagger文档', link: '/md/backend/nestjs-starter/swagger.md' },
               { text: '日志输出', link: '/md/backend/nestjs-starter/logger.md' },
-              { text: 'redis应用', link: '/md/backend/nestjs-starter/rbac.md' },
-              { text: '缓存和限流', link: '/md/backend/nestjs-starter/rbac.md' },
-              { text: '字典自动收集', link: '/md/backend/nestjs-starter/rbac.md' },
-              { text: 'dockerfile部署', link: '/md/backend/nestjs-starter/rbac.md' },
+              { text: 'redis应用', link: '/md/backend/nestjs-starter/redis.md' },
+              { text: '缓存和限流', link: '/md/backend/nestjs-starter/cache-ratelimit.md' },
+              { text: '字典自动收集', link: '/md/backend/nestjs-starter/dict.md' },
+              { text: 'docker部署', link: '/md/backend/nestjs-starter/docker.md' },
             ]
           },
         ]
