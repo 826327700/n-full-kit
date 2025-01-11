@@ -21,8 +21,15 @@ const customFormat = printf(({ level, message, timestamp, ...metadata }) => {
 
 	return `[${timestamp}] ${level}: ${message}${metadataStr}`;
 });
-
+const defaultLevels = winston.config.npm.levels;
+// 添加自定义日志级别
+const customLevels = {
+  ...defaultLevels, // 保留默认级别
+  request: 6 // 添加自定义级别用于请求日志
+};
+console.log("defaultLevels",defaultLevels)
 export const winstonConfig = {
+	levels:customLevels,
 	transports: [
 		// 请求日志文件
 		new winston.transports.DailyRotateFile({
@@ -31,10 +38,10 @@ export const winstonConfig = {
 			zippedArchive: true,
 			maxSize: '20m',
 			maxFiles: '14d',
-			level: 'info',
+			level: 'request',
 			format: combine(
 				winston.format((info) => {
-					return info.level !== 'error' ? info : false;
+					return info.level === 'request' ? info : false;
 				})(),
 				timestamp(),
 				customFormat
@@ -49,6 +56,22 @@ export const winstonConfig = {
 			maxFiles: '14d',
 			level: 'error',
 			format: combine(
+				timestamp(),
+				customFormat,
+			),
+		}),
+		// 其他日志文件
+		new winston.transports.DailyRotateFile({
+			filename: 'logs/other/%DATE%.log',
+			datePattern: 'YYYY-MM-DD',
+			zippedArchive: true,
+			maxSize: '20m',
+			maxFiles: '14d',
+			level: 'silly',
+			format: combine(
+				winston.format((info) => {
+					return (info.level === 'request'||info.level === 'error') ? false : info;
+				})(),
 				timestamp(),
 				customFormat,
 			),

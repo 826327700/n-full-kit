@@ -1,7 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { WinstonLoggerService } from 'src/common/logger/winston.service';
 
 @Injectable()
 export class ErrorExampleService {
+	constructor(
+		private readonly logger: WinstonLoggerService,
+	) {}
 	testHttpError(){
 		// 测试 HTTP 异常
 		throw new HttpException({

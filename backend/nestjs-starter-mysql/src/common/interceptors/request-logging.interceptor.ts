@@ -23,7 +23,7 @@ export class RequestLoggingInterceptor implements NestInterceptor {
 			tap(() => {
 				const endTime = Date.now();
 				const duration = endTime - startTime;
-				this.logger.log(
+				this.logger.request(
 					`[Request] ${method} ${url} - ${duration}ms`,
 					{
 						ip,

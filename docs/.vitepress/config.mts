@@ -24,7 +24,7 @@ let nav=[
               { text: 'RBAC权限', link: '/md/backend/nestjs-starter/rbac.md' },
               { text: '统一响应结构', link: '/md/backend/nestjs-starter/response.md' },
               { text: 'Swagger文档', link: '/md/backend/nestjs-starter/swagger.md' },
-              { text: '日志配置', link: '/md/backend/nestjs-starter/rbac.md' },
+              { text: '日志输出', link: '/md/backend/nestjs-starter/logger.md' },
               { text: 'redis应用', link: '/md/backend/nestjs-starter/rbac.md' },
               { text: '缓存和限流', link: '/md/backend/nestjs-starter/rbac.md' },
               { text: '字典自动收集', link: '/md/backend/nestjs-starter/rbac.md' },

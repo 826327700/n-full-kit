@@ -29,4 +29,7 @@ export class WinstonLoggerService implements LoggerService {
   verbose(message: string, metadata?: any) {
     this.logger.verbose(message, metadata);
   }
+  request(message: string, metadata?: any) {
+    this.logger.log("request",message, metadata);
+  }
 }
