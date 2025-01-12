@@ -25,7 +25,7 @@ export class AdminDictService {
 
     async importEnumDict(){
         let enumFile=path.resolve(__dirname, '../../../../static/enum.json')
-        
+
         if(!fs.existsSync(enumFile)){
             return
         }

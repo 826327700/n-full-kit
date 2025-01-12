@@ -1,0 +1,50 @@
+# 第一阶段：构建阶段
+FROM node:18.17.0-alpine AS builder
+
+# 设置工作目录
+WORKDIR /app
+
+# 设置npm镜像源
+RUN npm config set registry https://registry.npmmirror.com
+
+# 复制package.json和package-lock.json
+COPY package*.json ./
+
+# 安装依赖
+RUN npm install
+RUN npm install @swc/cli @swc/core
+
+# 复制所有源代码
+COPY . .
+
+# 构建项目
+RUN npm run build
+
+# 第二阶段：生产阶段
+FROM node:18.17.0-alpine
+
+# 设置工作目录
+WORKDIR /app
+
+# 设置npm镜像源
+RUN npm config set registry https://registry.npmmirror.com
+
+# 仅复制构建输出和必要的文件
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/static ./static
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/.env ./
+COPY --from=builder /app/.env.development ./
+COPY --from=builder /app/.env.production ./
+
+# 安装生产依赖
+RUN npm install --only=production
+
+# 暴露应用端口
+EXPOSE 3000
+
+# 设置环境变量
+ENV NODE_ENV=production
+
+# 启动应用
+CMD ["node", "dist/main"]
