@@ -27,7 +27,6 @@ o  Please select the project type / 请选择项目类型
 |    frontend / 前端 
 |
 o  Please select a backend template / 请选择项目模板
-|  My Awesome Project
 |  ❯ NestJS+Mysql 
 |    NestJS+Mongo
 |

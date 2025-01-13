@@ -48,7 +48,9 @@ let nav=[
           { 
             text: 'Flutter+GetX', 
             items:[
-              { text: '快速开始', link: '/md/frontend/vue3-arco-design-starter.md' },
+              { text: '快速开始', link: '/md/frontend/flutter_starter/getting-started.md' },
+              { text: 'get_cli使用', link: '/md/frontend/flutter_starter/get_cli.md' },
+              { text: '主题和多语言', link: '/md/frontend/flutter_starter/theme-locale.md' },
             ]
           },
           { 

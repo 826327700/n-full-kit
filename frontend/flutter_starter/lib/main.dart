@@ -11,12 +11,12 @@ import 'l18n/translations.dart';
 import 'theme/theme.dart';
 
 Future<void> main() async {
+    WidgetsFlutterBinding.ensureInitialized();
 	LogUtil.init(isDebug: kDebugMode);
 
 	await SpUtil.getInstance();
 
-	var currentThemeName=SpUtil.getString('currentThemeName')??"默认";
-	var currentTheme=AppTheme.themeList.firstWhere((item)=>item.name==currentThemeName,orElse:() => AppTheme.themeList[0]);
+	var currentTheme=AppTheme.getCurrentTheme();
 	runApp(
 		GetMaterialApp(
 			title: "Application",

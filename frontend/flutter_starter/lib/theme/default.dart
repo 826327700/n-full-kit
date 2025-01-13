@@ -9,7 +9,7 @@ ThemeData get defaultThemeData=> ThemeData(
 	platform: TargetPlatform.iOS,
 	primaryColor:primaryColor,
 	primaryColorLight:primaryLite,
-	scaffoldBackgroundColor:const Color(0xfff1f7f3),
+	scaffoldBackgroundColor:const Color(0xfff6f6f7),
 	fontFamily: 'SourceHanSansCN',
 	textTheme: const TextTheme(
 		bodyLarge: TextStyle(fontSize: 24.0,color: Color(0xff111111)),
@@ -23,16 +23,16 @@ ThemeData get defaultThemeData=> ThemeData(
 	),
 	appBarTheme: const AppBarTheme(
 		centerTitle:true,
-		backgroundColor: Colors.white,
+		backgroundColor: Colors.blue,
 		elevation: 0,
 		iconTheme: IconThemeData(
-			color: Colors.black,
+			color: Colors.white,
 			size: 18
 		),
-		titleTextStyle:TextStyle(fontSize: 16,color: Colors.black),
-		toolbarTextStyle: TextStyle(fontSize: 16,color: Colors.black),
+		titleTextStyle:TextStyle(fontSize: 16,color: Colors.white),
+		toolbarTextStyle: TextStyle(fontSize: 16,color: Colors.white),
 		actionsIconTheme: IconThemeData(
-			color: Colors.black,
+			color: Colors.white,
 			size: 18
 		),
 	),

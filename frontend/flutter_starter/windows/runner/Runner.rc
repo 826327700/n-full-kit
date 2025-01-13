@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.xiaobaozi" "\0"
-            VALUE "FileDescription", "flutter_getx_template_v3" "\0"
+            VALUE "CompanyName", "com.example" "\0"
+            VALUE "FileDescription", "flutter_starter" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "flutter_getx_template_v3" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.xiaobaozi. All rights reserved." "\0"
-            VALUE "OriginalFilename", "flutter_getx_template_v3.exe" "\0"
-            VALUE "ProductName", "flutter_getx_template_v3" "\0"
+            VALUE "InternalName", "flutter_starter" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "flutter_starter.exe" "\0"
+            VALUE "ProductName", "flutter_starter" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
