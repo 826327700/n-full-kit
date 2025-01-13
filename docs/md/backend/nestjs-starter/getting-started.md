@@ -16,7 +16,7 @@ lang: zh-CN
 1. 在准备存放项目的目录下，使用`n-full-cli`工具输入命令创建：
 2. 输入命令：`nfull create`
 3. 选择：`backend / 后端`
-4. 选择：`NestJS+Mysql`或者`nfull inject`
+4. 选择：`NestJS+Mysql`或者`NestJS+Mongo`
 5. 输入项目名称并确定，它将会按照名称创建一个项目目录
 
 ```sh:no-line-numbers{4}

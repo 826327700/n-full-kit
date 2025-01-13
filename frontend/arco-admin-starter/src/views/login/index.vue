@@ -9,7 +9,7 @@
                     <a-form :model="form" ref="formRef" layout="vertical" class="login-form" @submit="login">
                         <a-form-item>
                             <h2>欢迎登录,后台管理系统</h2>
-                            <p>xxx业务综合管理系统 ver 1.0.0</p>
+                            <p>N-Full-Kit 后台管理系统 ver 1.0.0</p>
                         </a-form-item>
                         <a-form-item label="账号" field="username" :rules="[{ required: true, message: '请输入登录账号' }]">
                             <a-input v-model="form.username" placeholder="请输入登录账号" @press-enter="login"></a-input>
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-		<p class="copyright">Copyright © 2024 N-Full-Kit Powered By Vue3+Arco Design</p>
+		<p class="copyright">Copyright © 2025 N-Full-Kit Powered By Vue3+Arco Design</p>
     </div>
 </template>
 

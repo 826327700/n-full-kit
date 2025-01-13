@@ -39,7 +39,10 @@ let nav=[
           { 
             text: 'Admin管理模板', 
             items:[
-              { text: '快速开始', link: '/md/frontend/vue3-arco-design-starter.md' },
+              { text: '快速开始', link: '/md/frontend/arco-admin-starter/getting-started.md' },
+              { text: '菜单配置', link: '/md/frontend/arco-admin-starter/menus.md' },
+              { text: 'RBAC权限', link: '/md/frontend/arco-admin-starter/rbac.md' },
+              { text: '生成请求代码', link: '/md/frontend/arco-admin-starter/swagger-api.md' },
             ]
           },
           { 
