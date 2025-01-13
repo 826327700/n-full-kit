@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user',{
 					this.userInfo.nickname="admin"
 					router.replace({ name: 'dashboard' })
 					resolve()
-				}, 1000);
+				}, 500);
 			})
 
 

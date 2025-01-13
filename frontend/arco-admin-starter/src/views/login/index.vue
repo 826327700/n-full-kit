@@ -12,10 +12,10 @@
                             <p>N-Full-Kit 后台管理系统 ver 1.0.0</p>
                         </a-form-item>
                         <a-form-item label="账号" field="username" :rules="[{ required: true, message: '请输入登录账号' }]">
-                            <a-input v-model="form.username" placeholder="请输入登录账号" @press-enter="login"></a-input>
+                            <a-input v-model="form.username" placeholder="请输入登录账号，默认root" @press-enter="login"></a-input>
                         </a-form-item>
                         <a-form-item label="密码" field="password" :rules="[{ required: true, message: '请输入登录密码' }]">
-                            <a-input-password v-model="form.password" placeholder="请输入登录密码" @press-enter="login"></a-input-password>
+                            <a-input-password v-model="form.password" placeholder="请输入登录密码，默认root123" @press-enter="login"></a-input-password>
                         </a-form-item>
                         <a-form-item>
                             <a-checkbox v-model="form.remember" name="remember" label="记住密码">保持登录</a-checkbox>
