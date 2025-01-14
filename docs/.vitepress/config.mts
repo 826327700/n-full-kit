@@ -65,6 +65,7 @@ let nav=[
             items:[
               { text: '快速开始', link: '/md/frontend/electron-vue-starter/getting-started.md' },
               { text: '主进程相关', link: '/md/frontend/electron-vue-starter/main-process.md' },
+              { text: '生成请求代码', link: '/md/frontend/electron-vue-starter/swagger-api.md' },
             ]
           },
         ]

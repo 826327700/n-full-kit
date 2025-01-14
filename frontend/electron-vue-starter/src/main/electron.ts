@@ -18,7 +18,7 @@ export function initialApp(){
 		});
 
 		app.whenReady().then(() => {
-			electronApp.setAppUserModelId('com.spritedance.caidan')
+			electronApp.setAppUserModelId('com.electron-vue-starter')
 
 			// Default open or close DevTools by F12 in development
 			// and ignore CommandOrControl + R in production.
