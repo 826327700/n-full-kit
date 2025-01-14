@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "N-Full-Kit"
-  text: "是一个基于nodejs的全栈开发套件"
+  text: "基于NodeJS的全栈开发套件"
   tagline: "高效的全栈开发工具"
   image:
     src: /logo.png
@@ -18,12 +18,12 @@ hero:
       link: "https://github.com/826327700/n-full-kit"
 
 features:
-  - title: 快速开发
-    details: "通过NestJs和Vue3，快速构建后端和前端应用。支持快速创建项目模板，减少开发时间和成本。"
-  - title: 现代化设计
-    details: "基于Arco Design的现代化UI组件，提升用户体验。提供了一系列的UI组件，帮助开发者快速构建美观和易用的界面。"
+  - title: 全栈开发
+    details: 提供从后端到前端的项目工程模板，前端涉及Web、App、小程序、桌面客户端等多端多平台
+  - title: 快速高效
+    details: 提供cli工具快速创建项目工程，快速搭建开发所需的常用软件，如数据库、Redis等
   - title: 开源支持
-    details: "提供多种开源程序模板，便于快速部署和上线。支持部署和管理多种开源程序，帮助开发者快速构建和部署应用。"
+    details: 所有项目工程模板均为开源，可以任意查阅和按需修改
 
 ## 文档目录
 
