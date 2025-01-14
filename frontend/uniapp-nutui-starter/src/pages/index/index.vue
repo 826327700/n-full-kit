@@ -7,14 +7,19 @@
 		<nut-button type="primary" @click="testStore.randomizeCounter">
 			随机数字
 		</nut-button>
+		<nut-button type="primary" @click="networkRequest">
+			网络请求
+		</nut-button>
 	</view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useTestStore } from '@/store/test'
-
+import { api } from '@/api'
 const testStore = useTestStore()
+const networkRequest = async () => {
+	api.app.errorExampleControllerTestHttpError()
+}
 </script>
 
 <style>
