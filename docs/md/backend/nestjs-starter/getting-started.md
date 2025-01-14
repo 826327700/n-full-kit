@@ -9,7 +9,10 @@ lang: zh-CN
 基于NestJs开发的后端模板，提供了通用的开发环境和结构，封装了后端开发常用的功能模块，帮助开发者快速搭建后端应用。   
 模板分为MySQL和MongoDB两个版本，适用于不同的数据库类型，推荐选择`MongoDB版本`。
 ::: warning 注意
-使用本模板需要具有一定NestJs开发经验。
+使用本模板需要具有一定NestJs开发经验。   
+相关参考文档：
+- [nestjs官网](https://nestjs.com/)
+- [nestjs中文](https://docs.nestjs.cn/)
 :::
 
 ## 创建项目

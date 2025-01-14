@@ -20,7 +20,8 @@ Flutter可用于以下开发场景：
 本模板结合流行的`GetX`框架，封装了一个较为纯净的项目起始模板，用于快速创建基于Flutter项目。
 
 ::: warning 注意
-使用本模板需要具有一定Flutter开发经验。
+使用本模板需要具有一定Flutter开发经验。   
+相关参考文档：
 - [Flutter官网](https://flutter.dev/docs/get-started/install)
 - [pub.dev](https://pub.dev)
 - [getx](https://pub.dev/packages/get)

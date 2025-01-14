@@ -56,13 +56,15 @@ let nav=[
           { 
             text: 'Uniapp+NutUI', 
             items:[
-              { text: '快速开始', link: '/md/frontend/vue3-arco-design-starter.md' },
+              { text: '快速开始', link: '/md/frontend/uniapp-nutui-starter/getting-started.md' },
+              { text: '生成请求代码', link: '/md/frontend/uniapp-nutui-starter/swagger-api.md' },
             ]
           },
           { 
             text: 'Electron+Vue+Nest', 
             items:[
-              { text: '快速开始', link: '/md/frontend/vue3-arco-design-starter.md' },
+              { text: '快速开始', link: '/md/frontend/electron-vue-starter/getting-started.md' },
+              { text: '主进程相关', link: '/md/frontend/electron-vue-starter/main-process.md' },
             ]
           },
         ]
