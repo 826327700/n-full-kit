@@ -24,12 +24,12 @@ Redis 适用于以下场景：
 ## 快速部署
 本项目的`n-full-cli`提供`Redis`的docker部署配置样板文件。
 1. 在准备存放项目的目录下，使用`n-full-cli`工具输入命令创建：
-2. 输入命令：`nfull inject`
+2. 输入命令：`nfull docker`
 3. 选择：`Redis`
 4. 选择：`docker-compose`或者`docker-swarm`（根据自己的docker模式选择）
 
 ```sh:no-line-numbers{6,10}
-T  nfull inject
+T  nfull docker
 |
 o  ? Please select the configuration you want to pop up / 请选择想要弹出的配置
 |    MySQL 

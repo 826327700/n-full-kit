@@ -7,7 +7,7 @@ import * as chalk from 'chalk';
 import * as ora from 'ora';
 import { downloadTemplate } from "./common";
 
-@Command({ name: 'inject', description: 'Pop up some docker-compose/swarm configurations file / 弹出一些docker-compose/swarm配置' })
+@Command({ name: 'docker', description: 'Pop up some docker-compose/swarm configurations file / 弹出一些docker-compose/swarm配置' })
 export class InjectCommand extends CommandRunner {
 
     private repositoryUrl="https://gitee.com/crazybaozi/n-full-kit.git"

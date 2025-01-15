@@ -25,7 +25,7 @@ npm install -g n-full-cli
        - Flutter+GetX
        - Uniapp+NutUI
        - Electron+Vue+Nest
-  - `nfull inject` 快速生成一个`docker-compose`或者`docker-swarm`配置文件
+  - `nfull docker` 快速生成一个`docker-compose`或者`docker-swarm`配置文件
      - MongoDB
      - MySQL
      - Redis

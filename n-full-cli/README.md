@@ -26,10 +26,10 @@ n-full-cli create
 
 ### 弹出 Docker 配置
 
-使用 `inject` 命令弹出一些 Docker Compose 或 Docker Swarm 配置文件：
+使用 `docker` 命令弹出一些 Docker Compose 或 Docker Swarm 配置文件：
 
 ```bash
-n-full-cli inject
+n-full-cli docker
 ```
 
 该命令将引导你选择要弹出的配置（例如 MongoDB、MySQL、Redis、Traefik 套件等），并根据选择下载相应的配置文件。
