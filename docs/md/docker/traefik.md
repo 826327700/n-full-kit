@@ -22,6 +22,17 @@ Traefik 套件是一个完整的服务代理和监控解决方案，包含以下
 - 日志集中管理
 - 服务发现和配置管理
 
+:::tip 提示
+各组件官方文档：
+- [Traefik](https://doc.traefik.io/traefik/)
+- [Grafana](https://grafana.com/docs/grafana/latest/)
+- [Prometheus](https://prometheus.io/docs/)
+- [Consul](https://developer.hashicorp.com/consul/docs)
+- [Loki](https://grafana.com/docs/loki/latest/)
+- [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
+- [Portainer](https://docs.portainer.io/)
+:::
+
 ## 快速部署
 本项目的`n-full-cli`提供`Traefik 套件`的docker部署配置样板文件。
 1. 在准备存放项目的目录下，使用`n-full-cli`工具输入命令创建：
