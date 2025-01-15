@@ -460,11 +460,11 @@ http:
 Prometheus 不需要专门的认证配置。如果你希望为 Prometheus 配置认证，可以在 traefik 中配置反向代理来启用基本认证，参考[2.4 Loki](#_2-4-loki)。
 
 ### 3. 访问服务
-- `Traefik Dashboard`: 访问 http://localhost:8080/dashboard，默认用户名和密码均为 admin。
-- `Grafana`: 访问 http://localhost:3000，默认管理员密码是你在 `docker-swarm.yml`/`docker-compose.yml` 中设置的（例如 admin）。
-- `Consul UI`: 访问 http://localhost:8500，默认master 和 agent 令牌的密码均为 admin。
-- `Loki API`: 访问 http://localhost:3100。
-- `Portainer`: 访问 http://localhost:9000
+- `Traefik Dashboard`: 访问 `http://localhost:8080/dashboard`，默认用户名和密码均为 admin。
+- `Grafana`: 访问 `http://localhost:3000`，默认管理员密码是你在 `docker-swarm.yml`/`docker-compose.yml` 中设置的（例如 admin）。
+- `Consul UI`: 访问 `http://localhost:8500`，默认master 和 agent 令牌的密码均为 admin。
+- `Loki API`: 访问 `http://localhost:3100`。
+- `Portainer`: 访问 `http://localhost:9000`。
 
 ## 示例截图
 ### Traefik
