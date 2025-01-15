@@ -219,7 +219,7 @@ Grafana 的管理员密码在 docker-swarm.yml 文件中配置：
 默认配置中，master 和 agent 令牌的密码均为 admin。如果需要修改密码或权限，可以在 Consul 的配置文件中进行修改，或者在 UI 中设置。
 
 #### 2.4 Prometheus   
-Prometheus 不需要专门的认证配置。如果你希望为 Prometheus 配置认证，可以在 prometheus.yml 中配置反向代理来启用基本认证。
+Prometheus 不需要专门的认证配置。如果你希望为 Prometheus 配置认证，可以在 traefik 中配置反向代理来启用基本认证。
 
 ### 3. 访问服务
 - `Traefik Dashboard`: 访问 http://localhost:8080，默认用户名和密码均为 admin。

@@ -112,6 +112,24 @@ services:
       - ./logs:/var/log/traefik  # Traefik 日志目录挂载
     networks:
       - swarm_network
+  
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - "9000:9000" # Web界面访问
+      - "8000:8000" # Edge Agent通信（可选）
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # 绑定宿主机的Docker Socket
+      - portainer_data:/data # 数据存储
+    networks:
+      - swarm_network
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager # 在Swarm模式下仅运行在管理节点（可选）
 
 networks:
   swarm_network:
@@ -122,3 +140,4 @@ volumes:
   grafana-storage:
   prometheus-storage:
   loki-data:
+  portainer_data:

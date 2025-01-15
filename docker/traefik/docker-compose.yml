@@ -88,6 +88,20 @@ services:
     networks:
       - swarm_network
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000" # Web界面访问
+      - "8000:8000" # Edge Agent通信（可选）
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # 绑定宿主机的Docker Socket
+      - portainer_data:/data # 数据存储
+    networks:
+      - swarm_network
+    restart: unless-stopped
+   
+
 networks:
   swarm_network:
     driver: bridge
@@ -97,3 +111,4 @@ volumes:
   grafana-storage:
   prometheus-storage:
   loki-data:
+  portainer_data:

@@ -76,10 +76,11 @@ let nav=[
           { 
             text: '环境搭建', 
             items:[
-              { text: 'MongoDB', link: '/md/frontend/vue3-arco-design-starter.md' },
-              { text: 'MySQL', link: '/md/frontend/vue3-arco-design-starter.md' },
-              { text: 'Redis', link: '/md/frontend/vue3-arco-design-starter.md' },
-              { text: 'Traefik suite', link: '/md/frontend/vue3-arco-design-starter.md' },
+              { text: 'docker', link: '/md/docker/docker.md' },
+              { text: 'MongoDB', link: '/md/docker/mongodb.md' },
+              { text: 'MySQL', link: '/md/docker/mysql.md' },
+              { text: 'Redis', link: '/md/docker/redis.md' },
+              { text: 'Traefik suite', link: '/md/docker/traefik.md' },
             ]
           },
         ]
