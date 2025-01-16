@@ -211,7 +211,6 @@ export class AdminUsersService {
 			return acc;
 		}, []);
 		if (permissions.includes('root')) {
-			let rootMenusAndPermissions = await this.getRootMenusAndPermissions();
 			menus = ['all'];
 			permissions = ['all'];
 		}
@@ -248,7 +247,6 @@ export class AdminUsersService {
 		}, []);
 
 		if (permissions.includes('root')) {
-			let rootMenusAndPermissions = await this.getRootMenusAndPermissions();
 			menus = ['all'];
 			permissions = ['all'];
 		}
@@ -256,24 +254,6 @@ export class AdminUsersService {
 		return {
 			id: user.id,
 			nickname: user.nickname,
-			menus,
-			permissions
-		};
-	}
-
-	async getRootMenusAndPermissions() {
-		let menus = [];
-		let permissions = [];
-
-		// 获取所有状态为 '0' 的菜单
-		const allMenuDocs = await this.adminMenuRepository.find({ where: { status: '0' } });
-		menus = allMenuDocs.map(item => item.name);
-
-		// 获取所有状态为 '0' 的权限
-		const allPermissions = await this.adminPermissionRepository.find({ where: { status: '0' } });
-		permissions = allPermissions.map(item => item.key);
-
-		return {
 			menus,
 			permissions
 		};

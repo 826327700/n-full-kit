@@ -49,6 +49,7 @@ export class AdminUsersService {
 		let rootRole = await this.adminRoleModel.findOne({ name: '超级管理员', permissions: { $in: ['root'] }, status: '0' })
 		if (!rootRole) {
 			rootRole = new this.adminRoleModel({
+				nickname: '超级管理员',
 				name: '超级管理员',
 				description: '超级管理员',
 				permissions: ['root'],
@@ -204,9 +205,8 @@ export class AdminUsersService {
 			return acc;
 		}, []);
 		if(permissions.includes('root')){
-			let rootMenusAndPermissions=await this.getRootMenusAndPermissions()
-			menus=rootMenusAndPermissions.menus
-			permissions=rootMenusAndPermissions.permissions
+			menus=["all"]
+			permissions=["all"]
 		}
 
 		return {
@@ -235,26 +235,12 @@ export class AdminUsersService {
 			return acc;
 		}, []);
 		if(permissions.includes('root')){
-			let rootMenusAndPermissions=await this.getRootMenusAndPermissions()
-			menus=rootMenusAndPermissions.menus
-			permissions=rootMenusAndPermissions.permissions
+			menus=["all"]
+			permissions=["all"]
 		}
 		return {
 			id: user._id,
 			nickname: user.nickname,
-			menus,
-			permissions
-		}
-	}
-
-	private async getRootMenusAndPermissions() {
-		let menus=[]
-		let permissions=[]
-		let allMenuDocs=await this.adminMenuModel.find({status:'0'})
-		menus=allMenuDocs.map(item=>item.name)
-		let allPermissions=await this.adminPermissionModel.find({status:'0'})
-		permissions=allPermissions.map(item=>item.key)
-		return {
 			menus,
 			permissions
 		}

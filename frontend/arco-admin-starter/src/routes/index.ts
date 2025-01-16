@@ -31,8 +31,10 @@ router.beforeEach(async (to, from, next) => {
 
     // 检查是否有权限访问
     const userStore = useUserStore()
+	if(!userStore.userInfo.id){//如果刷新页面，store中的用户信息会丢失，需要重新获取
+		await userStore.refreshLoginInfo()
+	}
     if(to.matched.length>0&&to.matched[0].name=='root'){
-        await userStore.refreshLoginInfo()
         if (!userStore.userInfo.menus.includes('all')&&!userStore.userInfo.menus.includes(to.name as string)){
             next({name:'404',replace:true})
         }
