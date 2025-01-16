@@ -9,7 +9,9 @@ outline: deep
 - `Arco Design Admin` UI库
 - `pinia` 状态管理库
 - `swagger-typescript-api` 自动根据`swagger文档`生成前端请求代码
-  
+
+**在线体验：** [https://admin-demo.xbzweb.com](https://admin-demo.xbzweb.com)
+
 以下是部分页面截图：
 ![登录页面](./assets/admin_demo1.png)
 ![欢迎页](./assets/admin_demo2.png)

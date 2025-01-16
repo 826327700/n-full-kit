@@ -91,7 +91,7 @@ let nav=[
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   appearance:'dark', 
-  title: "N-Full-Kit|基于NodeJS的全栈开发套件",
+  title: "N-Full-Kit",
   description: "n-full-kit是一个基于nodejs的全栈开发套件，它可以帮助开发者快速的创建从后端到前端的项目工程模板，前端涉及Web、App、小程序、桌面客户端等多端多平台，以及创建和启动一些全栈架构中常用的开源程序，以用于部署和上线",
   head:[
     ['meta', { name: 'keywords', content: 'n-full-kit,全栈开发,NodeJS,后端,前端,桌面客户端,小程序,App,开源程序,部署,上线' }],
