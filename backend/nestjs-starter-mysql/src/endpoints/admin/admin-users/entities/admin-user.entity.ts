@@ -34,11 +34,11 @@ export class AdminUser {
         type: 'text',
         transformer: {
             to: (value: string[]) => JSON.stringify(value),
-            from: (value: string) => JSON.parse(value || '[]')
+            from: (value: string) => JSON.parse(value || '[]').map((item: string) => Number(item))
         },
         comment: '用户角色'
     })
-    roles: string[];
+    roles: number[];
 
     @Column({
         type: 'varchar',

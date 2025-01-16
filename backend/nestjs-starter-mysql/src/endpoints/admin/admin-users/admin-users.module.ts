@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminUsersService } from './admin-users.service';
 import { AdminUsersController } from './admin-users.controller';
@@ -8,6 +8,7 @@ import { AdminRole } from '../admin-roles/entities/admin-role.entity';
 import { AdminPermission } from '../admin-roles/entities/admin-permission.entity';
 import { AdminMenu } from '../admin-roles/entities/admin-menu.entity';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([AdminUser, AdminRole, AdminPermission,AdminMenu]),
@@ -15,6 +16,6 @@ import { AdminMenu } from '../admin-roles/entities/admin-menu.entity';
   ],
   controllers: [AdminUsersController],
   providers: [AdminUsersService],
-  exports: [AdminUsersService]
+  exports: [AdminUsersService,TypeOrmModule.forFeature([AdminUser])]
 })
 export class AdminUsersModule { }

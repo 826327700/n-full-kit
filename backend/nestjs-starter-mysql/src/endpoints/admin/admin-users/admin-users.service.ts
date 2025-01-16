@@ -73,7 +73,7 @@ export class AdminUsersService {
 			nickname: '超级管理员',
 			username: 'root',
 			password: hashedPassword,
-			roles: [rootRole.id.toString()],
+			roles: [rootRole.id],
 			status: '0'
 		});
 
@@ -148,19 +148,19 @@ export class AdminUsersService {
 		}else{
 			delete updateAdminUserDto.password
 		}
-		
+
 		// 查找用户并更新
 		const user = await this.adminUserRepository.findOne({
 			where: { id }
 		});
-		
+
 		if (!user) {
 			throw new NotFoundException(`Admin user with ID ${id} not found`);
 		}
-		
+
 		// 使用 TypeORM 的 update 方法更新用户信息
 		await this.adminUserRepository.update(id, updateAdminUserDto);
-		
+
 		return 'ok';
 	}
 

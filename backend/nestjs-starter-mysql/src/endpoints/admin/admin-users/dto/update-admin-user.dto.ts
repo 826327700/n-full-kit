@@ -19,10 +19,10 @@ export class UpdateAdminUserDto {
     @IsOptional()
     password?: string;
 
-    @ApiProperty({ description: '用户绑定角色id，可绑定多个', example: [], type: [String] })
+    @ApiProperty({ description: '用户绑定角色id，可绑定多个', example: [], type: [Number] })
     @IsArray()
     @IsOptional()
-    roles?: string[];
+    roles?: number[];
 
     @ApiProperty({ description: '用户状态', example: '0', default: '0' })
     @IsString()
