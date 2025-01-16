@@ -106,7 +106,7 @@ import { api } from '@/api';
 import { AdminDictDto, AdminDictTypeDto } from '@/api/api';
 import { usePaginatedQuery } from '@/common/hooks/query-list';
 import { Form } from '@arco-design/web-vue';
-import { reactive, ref, useTemplateRef } from 'vue';
+import { reactive, ref } from 'vue';
 
 const queryFilter = reactive({
     keyword:"",
@@ -134,7 +134,7 @@ const getDictOptions = async (visible:boolean,type: string) => {
     })
 }
 
-const formRef = useTemplateRef<InstanceType<typeof Form>>("formRef")
+const formRef = ref<InstanceType<typeof Form>>()
 const form = reactive<any>({
     visible: false,
     id: "",
@@ -173,7 +173,7 @@ const submit = async () => {
     return true
 }
 
-const valueFormRef = useTemplateRef<InstanceType<typeof Form>>("formRef")
+const valueFormRef = ref<InstanceType<typeof Form>>()
 const valueForm = reactive<any>({
     visible: false,
     type: "",
