@@ -61,13 +61,15 @@ services:
       - "27017:27017"
     volumes:
       - ./data:/data/db
-    command: mongod --auth --replSet rs0
+      - ./mongo-keyfile:/data/keyfile/mongo-keyfile
+    command: mongod --auth --replSet rs0 --keyFile /data/keyfile/mongo-keyfile --bind_ip_all
     networks:
       - mongo_network
 
 networks:
   mongo_network:
     driver: bridge
+
 ```
 ```yml [docker-swarm.yml]
 version: '3.8'

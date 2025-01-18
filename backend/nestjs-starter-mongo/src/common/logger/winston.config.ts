@@ -27,7 +27,7 @@ const customLevels = {
   ...defaultLevels, // 保留默认级别
   request: 6 // 添加自定义级别用于请求日志
 };
-console.log("defaultLevels",defaultLevels)
+
 export const winstonConfig = {
 	levels:customLevels,
 	transports: [

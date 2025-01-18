@@ -8,11 +8,12 @@ import { AdminRoleSchema } from 'src/endpoints/admin/admin-roles/entities/admin-
         MongooseModule.forRootAsync({
             useFactory: async (configService: ConfigService) => {
                 const dbConfig = configService.get('mongodb');
-                return {
-                    // 使用 authSource=admin 指定认证数据库
-                    uri: `mongodb://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}?authSource=admin`,
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
+				let connectionString =`mongodb://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}?authSource=admin`
+				if(dbConfig.replicaSet){
+					connectionString = `${connectionString}&replicaSet=${dbConfig.replicaSet}`
+				}
+				return {
+                    uri: connectionString
                 };
             },
             inject: [ConfigService],

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Connection, Model } from 'mongoose';
 import { UserDocument, UserSchema } from './entities/user.schema';
 import { AuthService } from '../../../common/modules/auth/auth.service';
 import * as bcrypt from 'bcrypt';

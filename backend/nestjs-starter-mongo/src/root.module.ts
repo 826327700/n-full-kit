@@ -84,6 +84,7 @@ import { ConsulService } from './common/modules/consul/consul.service';
 	],
 })
 export class RootModule {
+	// 以下是注册服务到Consul的示例代码
 	// constructor(private readonly consulService: ConsulService) { }
 
 	// async onModuleInit() {
@@ -105,7 +106,7 @@ export class RootModule {
 	// 			"traefik.http.services.nest-service.loadbalancer.passhostheader=true",
 	// 		],
 	// 		check: {
-	// 			http: 'http://192.168.31.32:3000/rate-limit/no-limit',
+	// 			http: 'http://host.docker.internal:3000/',
 	// 			interval: '5s',
 	// 			timeout: '5s',
 	// 			deregistercriticalserviceafter: '30s',

@@ -29,6 +29,7 @@ export const mongodbConfig = registerAs('mongodb', () => ({
 	username: process.env.MONGODB_USERNAME || 'mongo',
 	password: process.env.MONGODB_PASSWORD || 'mongo',
 	database: process.env.MONGODB_DATABASE || 'nest_starter',
+	replicaSet: process.env.MONGODB_REPLICA_SET ,
 }));
 
 // Redis配置
