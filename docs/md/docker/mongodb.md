@@ -84,7 +84,9 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-    command: mongod --auth --replSet rs0
+    secrets:
+      - mongo-keyfile
+    command: mongod --auth --replSet rs0 --keyFile /run/secrets/mongo-keyfile --bind_ip_all
     deploy:
       mode: replicated
       replicas: 1
@@ -101,12 +103,61 @@ services:
 networks:
   swarm_network:
     driver: overlay
+    
+secrets:
+  mongo-keyfile:
+    external: true
 
 volumes:
   mongodb_data:
     driver: local
+
 ```
 :::
+
+### 启动
+启动docker前需要先创建`mongo-keyfile`密钥文件，在`docker-compose.yml`或者`docker-swarm.yml`同级目录下：
+```sh
+# 创建密钥文件
+openssl rand -base64 756 > ./mongo-keyfile
+# 设置权限
+chmod 600 ./mongo-keyfile
+
+# 启动mongodb
+docker compose up -d
+```
+如果使用`docker-swarm`，在创建将`mongo-keyfile`密钥文件之后，还需要将`mongo-keyfile`文件创建为`Docker Secret`:
+```sh
+# 创建密钥文件
+openssl rand -base64 756 > ./mongo-keyfile
+# 设置权限
+chmod 600 ./mongo-keyfile
+# 将 mongo-keyfile 文件创建为 Docker Secret
+docker secret create mongo-keyfile ./mongo-keyfile
+
+# 启动mongodb
+docker stack deploy -c docker-swarm.yml mongo_stack
+```
+
+### 初始化副本集
+首次启动需要初始化副本集：
+```sh
+# 使用mongosh工具连接到数据库
+> mongosh "mongodb://admin:admin123@localhost:27017/?authSource=admin"
+
+# 初始化副本集
+> rs.initiate({
+  _id: 'rs0',
+  members: [
+    {
+      _id: 0,
+      host: 'localhost:27017'
+    }
+  ]
+})
+```
+`mongosh`工具安装：[mongodb-shell](https://www.mongodb.com/zh-cn/docs/mongodb-shell/install/)
+
 :::tip 提示
 - 配置中默认使用`MongoDB`的`副本集`模式，以便支持`数据库事务`
 - 如果使用`docker-swarm`，运行前请先确认`swarm_network`网络是否存在

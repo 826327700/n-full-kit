@@ -10,7 +10,9 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-    command: mongod --auth --replSet rs0
+    secrets:
+      - mongo-keyfile
+    command: mongod --auth --replSet rs0 --keyFile /run/secrets/mongo-keyfile --bind_ip_all
     deploy:
       mode: replicated
       replicas: 1
@@ -27,6 +29,10 @@ services:
 networks:
   swarm_network:
     driver: overlay
+    
+secrets:
+  mongo-keyfile:
+    external: true
 
 volumes:
   mongodb_data:
