@@ -43,6 +43,7 @@ export const lokiConfig = registerAs('loki', () => ({
 	enabled: process.env.LOKI_ENABLED === 'true',
 	host: process.env.LOKI_HOST || 'localhost',
 	port: parseInt(process.env.LOKI_PORT, 10) || 3100,
+	basicAuth: process.env.LOKI_BASIC_AUTH,
 }));
 
 // 配置结构定义
