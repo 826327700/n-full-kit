@@ -49,8 +49,8 @@ REDIS_PASSWORD=
 
 # Loki日志配置
 LOKI_ENABLED=false
-LOKI_HOST=localhost
-LOKI_PORT=3100
+LOKI_HOST=localhost:3100
+LOKI_BASIC_AUTH=
 ```
 ```env [.env.production]
 # JWT配置
@@ -82,9 +82,9 @@ REDIS_PORT=6379
 REDIS_PASSWORD=
 
 # Loki日志配置
-LOKI_ENABLED=true
-LOKI_HOST=localhost
-LOKI_PORT=3100
+LOKI_ENABLED=false
+LOKI_HOST=localhost:3100
+LOKI_BASIC_AUTH=
 ```
 :::
 ::: tip 提示
@@ -165,8 +165,7 @@ export const redisConfig = registerAs('redis', () => ({
 // Loki配置
 export const lokiConfig = registerAs('loki', () => ({
 	enabled: process.env.LOKI_ENABLED === 'true',
-	host: process.env.LOKI_HOST || 'localhost',
-	port: parseInt(process.env.LOKI_PORT, 10) || 3100,
+	host: process.env.LOKI_HOST || 'localhost:3100',
 }));
 
 // 配置结构定义

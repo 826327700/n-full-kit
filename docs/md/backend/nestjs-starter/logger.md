@@ -61,8 +61,7 @@ src/common/logger/
    ```bash
    # Loki日志配置
    LOKI_ENABLED=false    # 是否启用Loki日志推送
-   LOKI_HOST=localhost   # Loki服务器地址
-   LOKI_PORT=3100       # Loki服务器端口
+   LOKI_HOST=localhost:3100   # Loki服务器地址含端口
    LOKI_BASIC_AUTH=     # Loki认证信息 没有认证则留空
    ```
    

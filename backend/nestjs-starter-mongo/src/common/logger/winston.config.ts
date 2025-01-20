@@ -86,6 +86,7 @@ export class WinstonConfig {
 				lokiConfig?.enabled && lokiConfig?.host ? new LokiTransport({
 					host: lokiConfig.host,
 					basicAuth: lokiConfig.basicAuth,
+					level: 'silly',
 					labels: { job: 'order-hub', environment: process.env.NODE_ENV },
 					json: true,
 					format: winston.format.json(),
@@ -93,7 +94,7 @@ export class WinstonConfig {
 						console.error('Loki connection error:', err);
 					},
 					timeout: 5000,
-					interval: 2000,
+					interval: 1,
 					replaceTimestamp: true
 				}) : null,
 			].filter(Boolean), // 过滤掉 null 的传输
