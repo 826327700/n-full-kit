@@ -49,7 +49,6 @@ export class AdminUsersService {
 		let rootRole = await this.adminRoleModel.findOne({ name: '超级管理员', permissions: { $in: ['root'] }, status: '0' })
 		if (!rootRole) {
 			rootRole = new this.adminRoleModel({
-				nickname: '超级管理员',
 				name: '超级管理员',
 				description: '超级管理员',
 				permissions: ['root'],
@@ -57,6 +56,7 @@ export class AdminUsersService {
 			});
 		}
 		const rootUser = new this.adminUserModel({
+			nickname: '超级管理员',
 			username: 'root',
 			password: hashedPassword,
 			roles: [rootRole._id],
